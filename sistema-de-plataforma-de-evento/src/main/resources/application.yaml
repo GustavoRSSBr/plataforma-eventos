@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/postgres
+    driverClassName: org.postgresql.Driver
+    password: 123456
+  application:
+    name: Aplicacao REST de uma plataforma Todos Eventos
+    projeto.jwtSecret: bxOksa8BHgdAhR80Y3pEYvS5M+MnF2sheFDqprkTqQ4odqoszJLW1ikw64/nT/dTvlgrcBTq7HfK1B9Gai2h5A==
+    projeto.jwtExpirationMs: 900000
+  mail:
+      host: smtp.gmail.com
+      port: 587
+      username: infotodoseventos@gmail.com
+      password: raocywkouhuuzaaf
+      properties.mail.smtp.auth: true
+      properties.mail.smtp.starttls.enable: true
+  springdoc:
+    api-docs:
+      path: /v3/api-docs
+    swagger-ui:
+      path: /swagger-ui.html
+server:
+  port: '27031'
+
+
+
