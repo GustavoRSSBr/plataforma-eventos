@@ -2,18 +2,16 @@ package com.todoseventos.todos_eventos.dto;
 
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@Builder(toBuilder = true)
+@Builder
 public class CustomExceptionResponse {
 
     private String message;
-    private Object data;
 
-    public CustomExceptionResponse(String message, Object data) {
+    public CustomExceptionResponse(String message) {
 
         this.message = message;
-        this.data = data;
+
     }
 }

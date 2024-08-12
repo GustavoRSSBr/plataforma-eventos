@@ -169,6 +169,18 @@ public class ClienteService {
         return mapearPessoa(TipoClienteEnum.FISICA, pessoaFisicaEncontrada);
     }
 
+    public ClienteResponse verificarCpfOuCnpj(String identificador) {
+        ClienteResponse pessoa;
+        if (identificador.length() == 11) { // Assumindo que CPF tem 11 dígitos
+            pessoa = procurarPessoaPorCpf(identificador);
+        } else if (identificador.length() == 14) { // Assumindo que CNPJ tem 14 dígitos
+            pessoa = procurarPessoaPorCnpj(identificador);
+        } else {
+            throw new CustomException(CustomException.IDENTIFICADOR_INVALIDO);
+        }
+        return pessoa;
+    }
+
     /**
      * Procura uma pessoa jurídica pelo CNPJ.
      * @param cnpj O CNPJ da pessoa jurídica.

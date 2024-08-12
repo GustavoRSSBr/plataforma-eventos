@@ -2,13 +2,11 @@ package com.todoseventos.todos_eventos.dto;
 
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder(toBuilder = true)
+@Builder
 public class ClienteResponse {
-
     private Integer idPessoa;
     private String nome;
     private String email;
