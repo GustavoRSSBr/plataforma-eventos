@@ -3,6 +3,7 @@ package com.todoseventos.todos_eventos.controller;
 import com.todoseventos.todos_eventos.dto.responseDTO.CustomExceptionResponse;
 import com.todoseventos.todos_eventos.dto.requestDTO.ClienteRequest;
 import com.todoseventos.todos_eventos.dto.responseDTO.ClienteResponse;
+import com.todoseventos.todos_eventos.enuns.SuccessMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.usecase.ClienteService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,7 +31,7 @@ public class ClienteController {
     @PostMapping("/cliente")
     public ResponseEntity<?> postPessoa(@RequestBody ClienteRequest clienteRequest) {
         ClienteResponse response = clienteService.cadastrarNovaPessoa(clienteRequest);
-        return ResponseEntity.ok(new CustomExceptionResponse(CustomException.CADASTRO_CLIENTE));
+        return ResponseEntity.ok(new CustomExceptionResponse(SuccessMessages.CADASTRO_CLIENTE));
     }
 
     @Operation(description = "Operação para buscar cliente por CPF ou CNPJ")
@@ -67,6 +68,6 @@ public class ClienteController {
     @PutMapping("/pessoa/{identificador}")
     public ResponseEntity<?> putPessoa(@PathVariable("identificador") String identificador, @RequestBody ClienteRequest clienteRequest) {
         ClienteResponse response = clienteService.atualizarPessoa(identificador, clienteRequest);
-        return ResponseEntity.ok(new CustomExceptionResponse(CustomException.CLIENTE_ATUALIZADO));
+        return ResponseEntity.ok(new CustomExceptionResponse(SuccessMessages.CLIENTE_ATUALIZADO));
     }
 }

@@ -3,6 +3,7 @@ package com.todoseventos.todos_eventos.controller;
 import com.todoseventos.todos_eventos.dto.responseDTO.CustomExceptionResponse;
 import com.todoseventos.todos_eventos.dto.requestDTO.EventoRequest;
 import com.todoseventos.todos_eventos.dto.responseDTO.EventoResponse;
+import com.todoseventos.todos_eventos.enuns.SuccessMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.usecase.EventoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,7 +33,7 @@ public class EventoController {
     @PostMapping("/evento")
     public ResponseEntity<CustomExceptionResponse> cadastrarEvento(@RequestBody EventoRequest eventoRequest) {
         EventoResponse response = eventoService.cadastrarNovoEvento(eventoRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CustomExceptionResponse(CustomException.CADASTRO_EVENTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new CustomExceptionResponse(SuccessMessages.CADASTRO_EVENTO));
     }
 
     @Operation(description = "Operação para encerrar evento")
@@ -44,7 +45,7 @@ public class EventoController {
     @PutMapping("/encerrar/{idEvento}")
     public ResponseEntity<?> encerrarEvento(@PathVariable Integer idEvento) {
         EventoResponse response = eventoService.encerrarEvento(idEvento);
-        return ResponseEntity.status(HttpStatus.OK).body(new CustomExceptionResponse(CustomException.EVENTO_ENCERRADO));
+        return ResponseEntity.status(HttpStatus.OK).body(new CustomExceptionResponse(SuccessMessages.EVENTO_ENCERRADO));
     }
 
     @Operation(description = "Operação para listar todos os eventos")
@@ -79,7 +80,7 @@ public class EventoController {
     @PutMapping("/evento/{nomeEvento}")
     public ResponseEntity<?> atualizarEvento(@PathVariable String nomeEvento, @RequestBody EventoRequest eventoRequest) {
         EventoResponse response = eventoService.atualizarEvento(nomeEvento, eventoRequest);
-        return ResponseEntity.status(HttpStatus.OK).body(new CustomExceptionResponse(CustomException.EVENTO_ATUALIZADO));
+        return ResponseEntity.status(HttpStatus.OK).body(new CustomExceptionResponse(SuccessMessages.EVENTO_ATUALIZADO));
     }
 
     @Operation(description = "Operação para excluir evento")
@@ -91,6 +92,6 @@ public class EventoController {
     @DeleteMapping("/evento/{idEvento}")
     public ResponseEntity<?> excluirEvento(@PathVariable Integer idEvento) {
         eventoService.excluirEvento(idEvento);
-        return ResponseEntity.status(HttpStatus.OK).body(new CustomExceptionResponse(CustomException.EXCLUIR_EVENTO));
+        return ResponseEntity.status(HttpStatus.OK).body(new CustomExceptionResponse(SuccessMessages.EXCLUIR_EVENTO));
     }
 }

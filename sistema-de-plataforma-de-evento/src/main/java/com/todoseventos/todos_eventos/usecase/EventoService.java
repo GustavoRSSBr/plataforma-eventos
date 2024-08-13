@@ -5,6 +5,7 @@ import com.todoseventos.todos_eventos.enuns.CategoriaEnum;
 import com.todoseventos.todos_eventos.dto.responseDTO.CepResponse;
 import com.todoseventos.todos_eventos.dto.requestDTO.EventoRequest;
 import com.todoseventos.todos_eventos.dto.responseDTO.EventoResponse;
+import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.gateway.CepService;
 import com.todoseventos.todos_eventos.gateway.EmailService;
@@ -60,18 +61,18 @@ public class EventoService {
     public EventoResponse cadastrarNovoEvento(EventoRequest eventoRequest) {
 
         if (eventoRequest.getCategoria() == null) {
-            throw new CustomException(CustomException.TIPO_CATEGORIA_INVALIDO);
+            throw new CustomException(ExceptionMessages.TIPO_CATEGORIA_INVALIDO);
         }
         // Verificar se a categoria é válida
         CategoriaModel categoriaModel = ICategoriaDao.buscarNomeCategoria(eventoRequest.getCategoria().name());
 
         if (Objects.isNull(categoriaModel)) {
-            throw new CustomException(CustomException.CATEGORIA_INVALIDA);
+            throw new CustomException(ExceptionMessages.CATEGORIA_INVALIDA);
         }
 
         // Validar o CEP
         if (!validacoes.validarCep(eventoRequest.getCep())) {
-            throw new CustomException(CustomException.CEP_INVALIDO);
+            throw new CustomException(ExceptionMessages.CEP_INVALIDO);
         }
 
         // Consultar e preencher dados do CEP
@@ -115,8 +116,13 @@ public class EventoService {
      * @return Um objeto de resposta contendo os detalhes do evento encerrado.
      */
     public EventoResponse encerrarEvento(Integer idEvento) {
+<<<<<<< Updated upstream
         EventoModel evento = IEventoDao.procurarPorId(idEvento)
                 .orElseThrow(() -> new CustomException(CustomException.EVENTO_NAO_ENCONTRADO));
+=======
+        EventoModel evento = eventoDao.procurarPorId(idEvento)
+                .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
+>>>>>>> Stashed changes
         evento.setStatus("CANCELADO");
         EventoModel updatedEvento = IEventoDao.atualizarEvento(evento);
 
@@ -146,9 +152,15 @@ public class EventoService {
      * @return Um objeto de resposta contendo os detalhes do evento encerrado.
      */
     private EventoResponse mapearEncerramentoEvento(EventoModel evento) {
+<<<<<<< Updated upstream
         CategoriaModel categoria = ICategoriaDao.procurarId(evento.getId_categoria());
         EnderecoModel endereco = IEnderecoDao.procurarPorIdEvento(evento.getIdEvento())
                 .orElseThrow(() -> new CustomException(CustomException.ENDERECO_NAO_ENCONTRADO + evento.getNome_evento()));
+=======
+        CategoriaModel categoria = categoriaDao.procurarId(evento.getId_categoria());
+        EnderecoModel endereco = enderecoDao.procurarPorIdEvento(evento.getIdEvento())
+                .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + evento.getNome_evento()));
+>>>>>>> Stashed changes
 
         return EventoResponse.builder()
                 .idEvento(evento.getIdEvento())
@@ -203,7 +215,7 @@ public class EventoService {
         try {
             eventoModelList = IEventoDao.localizarEvento();
         } catch (Exception e) {
-            throw new CustomException(CustomException.ERRO_BUSCAR_EVENTOS + e.getMessage());
+            throw new CustomException(ExceptionMessages.ERRO_BUSCAR_EVENTOS + e.getMessage());
         }
 
         for (EventoModel eventoModel : eventoModelList) {
@@ -213,14 +225,19 @@ public class EventoService {
             try {
                 categoriaModel = ICategoriaDao.procurarId(eventoModel.getId_categoria());
             } catch (Exception e) {
-                throw new CustomException(CustomException.ERRO_BUSCAR_CATEGORIA_EVENTO + e.getMessage());
+                throw new CustomException(ExceptionMessages.ERRO_BUSCAR_CATEGORIA_EVENTO + e.getMessage());
             }
 
             try {
+<<<<<<< Updated upstream
                 enderecoModel = IEnderecoDao.procurarPorIdEvento(eventoModel.getIdEvento())
                         .orElseThrow(() -> new CustomException(CustomException.ENDERECO_NAO_ENCONTRADO + eventoModel.getNome_evento()));
+=======
+                enderecoModel = enderecoDao.procurarPorIdEvento(eventoModel.getIdEvento())
+                        .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + eventoModel.getNome_evento()));
+>>>>>>> Stashed changes
             } catch (Exception e) {
-                throw new CustomException(CustomException.ERRO_BUSCAR_ENDERECO_EVENTO + e.getMessage());
+                throw new CustomException(ExceptionMessages.ERRO_BUSCAR_ENDERECO_EVENTO + e.getMessage());
             }
 
             EventoResponse eventoResponse = mapearEvento(categoriaModel, eventoModel, enderecoModel);
@@ -235,12 +252,21 @@ public class EventoService {
      * @return Um objeto de resposta contendo os detalhes do evento localizado.
      */
     public EventoResponse procurarEventoPorNome(String nomeEvento) {
+<<<<<<< Updated upstream
         EventoModel eventoModel = IEventoDao.procurarPorNome(nomeEvento)
                 .orElseThrow(() -> new CustomException(CustomException.EVENTO_NAO_ENCONTRADO));
 
         CategoriaModel categoriaModel = ICategoriaDao.procurarId(eventoModel.getId_categoria());
         EnderecoModel enderecoModel = IEnderecoDao.procurarPorIdEvento(eventoModel.getIdEvento())
                 .orElseThrow(() -> new CustomException(CustomException.ENDERECO_NAO_ENCONTRADO + nomeEvento));
+=======
+        EventoModel eventoModel = eventoDao.procurarPorNome(nomeEvento)
+                .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
+
+        CategoriaModel categoriaModel = categoriaDao.procurarId(eventoModel.getId_categoria());
+        EnderecoModel enderecoModel = enderecoDao.procurarPorIdEvento(eventoModel.getIdEvento())
+                .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + nomeEvento));
+>>>>>>> Stashed changes
 
         return mapearEvento(categoriaModel, eventoModel, enderecoModel);
     }
@@ -252,18 +278,23 @@ public class EventoService {
      * @return Um objeto de resposta contendo os detalhes do evento atualizado.
      */
     public EventoResponse atualizarEvento(String nomeEvento, EventoRequest eventoRequest) {
+<<<<<<< Updated upstream
         EventoModel eventoExistente = IEventoDao.procurarPorNome(nomeEvento)
                 .orElseThrow(() -> new CustomException(CustomException.EVENTO_NAO_ENCONTRADO));
+=======
+        EventoModel eventoExistente = eventoDao.procurarPorNome(nomeEvento)
+                .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
+>>>>>>> Stashed changes
 
         CategoriaModel categoriaModel = ICategoriaDao.buscarNomeCategoria(eventoRequest.getCategoria().name());
 
         if (categoriaModel == null) {
-            throw new CustomException(CustomException.CATEGORIA_INVALIDA);
+            throw new CustomException(ExceptionMessages.CATEGORIA_INVALIDA);
         }
 
         // Validar o CEP
         if (!validacoes.validarCep(eventoRequest.getCep())) {
-            throw new CustomException(CustomException.CEP_INVALIDO);
+            throw new CustomException(ExceptionMessages.CEP_INVALIDO);
         }
 
         // Consultar e preencher dados do CEP
@@ -281,8 +312,13 @@ public class EventoService {
 
         EventoModel eventoAtualizado = IEventoDao.atualizarEvento(eventoExistente);
 
+<<<<<<< Updated upstream
         EnderecoModel enderecoExistente = IEnderecoDao.procurarPorIdEvento(eventoExistente.getIdEvento())
                 .orElseThrow(() -> new CustomException(CustomException.ENDERECO_NAO_ENCONTRADO + nomeEvento));
+=======
+        EnderecoModel enderecoExistente = enderecoDao.procurarPorIdEvento(eventoExistente.getIdEvento())
+                .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + nomeEvento));
+>>>>>>> Stashed changes
 
         enderecoExistente.setRua(eventoRequest.getRua());
         enderecoExistente.setNumero(eventoRequest.getNumero());
@@ -301,8 +337,13 @@ public class EventoService {
      * @param idEvento O ID do evento a ser excluído.
      */
     public void excluirEvento(Integer idEvento) {
+<<<<<<< Updated upstream
         EventoModel eventoExistente = IEventoDao.procurarPorId(idEvento)
                 .orElseThrow(() -> new CustomException(CustomException.EVENTO_NAO_ENCONTRADO));
+=======
+        EventoModel eventoExistente = eventoDao.procurarPorId(idEvento)
+                .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
+>>>>>>> Stashed changes
 
         IEnderecoDao.deletarPorIdEvento(idEvento);
         IEventoDao.deletarPorId(idEvento);

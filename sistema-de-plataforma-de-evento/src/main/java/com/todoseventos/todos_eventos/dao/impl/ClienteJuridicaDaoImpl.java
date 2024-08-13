@@ -1,6 +1,10 @@
 package com.todoseventos.todos_eventos.dao.impl;
 
+<<<<<<< Updated upstream:sistema-de-plataforma-de-evento/src/main/java/com/todoseventos/todos_eventos/dao/impl/ClienteJuridicaDaoImpl.java
 import com.todoseventos.todos_eventos.dao.IClienteJuridicaDao;
+=======
+import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
+>>>>>>> Stashed changes:sistema-de-plataforma-de-evento/src/main/java/com/todoseventos/todos_eventos/dao/ClienteJuridicaDao.java
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.model.cliente.ClienteJuridicaModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +33,7 @@ class ClienteJuridicaDaoImpl implements IClienteJuridicaDao {
             });
             return pessoaJuridica;
         } catch (Exception e) {
-            throw new CustomException(CustomException.ERRO_SALVAR + e.getMessage());
+            throw new CustomException(ExceptionMessages.ERRO_SALVAR + e.getMessage());
         }
     }
 
@@ -46,7 +50,7 @@ class ClienteJuridicaDaoImpl implements IClienteJuridicaDao {
             });
             return pessoaJuridica;
         } catch (Exception e) {
-            throw new CustomException(CustomException.ERRO_ATUALIZAR + e.getMessage());
+            throw new CustomException(ExceptionMessages.ERRO_ATUALIZAR + e.getMessage());
         }
     }
 
@@ -57,7 +61,7 @@ class ClienteJuridicaDaoImpl implements IClienteJuridicaDao {
         try {
             return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ClienteJuridicaModel.class), cnpj);
         } catch (Exception e) {
-            throw new CustomException(CustomException.ERRO_BUSCAR_CLIENTE_CNPJ + e.getMessage());
+            throw new CustomException(ExceptionMessages.ERRO_BUSCAR_CLIENTE_CNPJ + e.getMessage());
         }
     }
 }

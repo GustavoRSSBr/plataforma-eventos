@@ -1,6 +1,10 @@
 package com.todoseventos.todos_eventos.dao.impl;
 
+<<<<<<< Updated upstream:sistema-de-plataforma-de-evento/src/main/java/com/todoseventos/todos_eventos/dao/impl/CategoriaDaoImpl.java
 import com.todoseventos.todos_eventos.dao.ICategoriaDao;
+=======
+import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
+>>>>>>> Stashed changes:sistema-de-plataforma-de-evento/src/main/java/com/todoseventos/todos_eventos/dao/CategoriaDao.java
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.model.evento.CategoriaModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +26,7 @@ class CategoriaDaoImpl implements ICategoriaDao {
         try {
             return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(CategoriaModel.class), idCategoria);
         } catch (Exception e) {
-            throw new CustomException(CustomException.ERRO_BUSCAR_POR_ID + e.getMessage());
+            throw new CustomException(ExceptionMessages.ERRO_BUSCAR_POR_ID + e.getMessage());
         }
     }
 
@@ -33,7 +37,7 @@ class CategoriaDaoImpl implements ICategoriaDao {
         try {
             return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(CategoriaModel.class), nomeCategoria);
         } catch (Exception e) {
-            throw new CustomException(CustomException.ERRO_BUSCAR_POR_NOME + e.getMessage());
+            throw new CustomException(ExceptionMessages.ERRO_BUSCAR_POR_NOME + e.getMessage());
         }
     }
 }

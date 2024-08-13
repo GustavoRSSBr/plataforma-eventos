@@ -1,5 +1,6 @@
 package com.todoseventos.todos_eventos.gateway;
 
+import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.model.evento.EnderecoModel;
 import jakarta.mail.MessagingException;
@@ -35,7 +36,7 @@ public class EmailService {
 
             emailSender.send(mimeMessage);
         } catch (MessagingException e) {
-            throw new CustomException(CustomException.ERRO_ENVIAR_EMAIL);
+            throw new CustomException(ExceptionMessages.ERRO_ENVIAR_EMAIL);
         }
     }
 
@@ -52,7 +53,7 @@ public class EmailService {
                 "<body>" +
                 "<h1>Inscrição Garantida!</h1>" +
                 "<p>Olá, " + nomePessoa + ",</p>" +
-                "<p>Sua inscrição no evento, " + nomeEvento + ", foi ganrantida! Não esqueca de confirma sua presença no botão abaixo.</p>" +
+                "<p>Sua inscrição no evento, " + nomeEvento + ", foi garantida! Não esqueça de confirmar a sua presença no botão abaixo.</p>" +
                 "<h3>INFORMAÇÕES DO EVENTO</h3>" +
                 "<p><strong>Data:</strong> " + dataEvento + "</p>" +
                 "<p><strong>Local:</strong> " + localEvento + "</p>" +
@@ -80,7 +81,7 @@ public class EmailService {
 
             emailSender.send(mimeMessage);
         } catch (MessagingException e) {
-            throw new CustomException(CustomException.ERRO_ENVIAR_EMAIL_CONFIRMACAO);
+            throw new CustomException(ExceptionMessages.ERRO_ENVIAR_EMAIL_CONFIRMACAO);
         }
     }
 
@@ -97,7 +98,7 @@ public class EmailService {
                 "<body>" +
                 "<h1>Confirmação de Participação</h1>" +
                 "<p>Olá, " + nomePessoa + ",</p>" +
-                "<p>Agradecemos a confirmação no evento " + nomeEvento + ". Aguardamos a sua presença.</p>" +
+                "<p>Agradecemos a confirmação no evento " + nomeEvento + ". Aguardamos a sua presença!</p>" +
                 "<h3>INFORMAÇÕES DO EVENTO</h3>" +
                 "<p><strong>Data:</strong> " + dataEvento + "</p>" +
                 "<p><strong>Local:</strong> " + endereco.getRua() + ", " + endereco.getNumero() + ", " + endereco.getBairro() + ", " + endereco.getCidade() + ", " + endereco.getUf() + "</p>" +
@@ -122,7 +123,7 @@ public class EmailService {
 
             emailSender.send(mimeMessage);
         } catch (MessagingException e) {
-            throw new CustomException(CustomException.ERRO_ENVIAR_EMAIL_CANCELAMENTO);
+            throw new CustomException(ExceptionMessages.ERRO_ENVIAR_EMAIL_CANCELAMENTO);
         }
     }
 

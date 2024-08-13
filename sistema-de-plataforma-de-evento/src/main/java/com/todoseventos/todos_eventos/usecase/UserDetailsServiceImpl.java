@@ -1,6 +1,8 @@
 package com.todoseventos.todos_eventos.usecase;
 
 
+import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
+import com.todoseventos.todos_eventos.enuns.SuccessMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.model.cliente.UserDetailsImpl;
 import com.todoseventos.todos_eventos.model.cliente.ClienteModel;
@@ -32,7 +34,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 });
 
         if (user == null) {
-            throw new CustomException(CustomException.TOKEN_EMAIL + email);
+            throw new CustomException(SuccessMessages.TOKEN_EMAIL + email);
         }
 
         return UserDetailsImpl.build(user);

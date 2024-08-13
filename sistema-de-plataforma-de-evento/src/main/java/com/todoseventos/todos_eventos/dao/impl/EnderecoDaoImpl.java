@@ -1,6 +1,10 @@
 package com.todoseventos.todos_eventos.dao.impl;
 
+<<<<<<< Updated upstream:sistema-de-plataforma-de-evento/src/main/java/com/todoseventos/todos_eventos/dao/impl/EnderecoDaoImpl.java
 import com.todoseventos.todos_eventos.dao.IEnderecoDao;
+=======
+import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
+>>>>>>> Stashed changes:sistema-de-plataforma-de-evento/src/main/java/com/todoseventos/todos_eventos/dao/EnderecoDao.java
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.model.evento.EnderecoModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +37,7 @@ class EnderecoDaoImpl implements IEnderecoDao {
             });
             return endereco;
         } catch (Exception e) {
-            throw new CustomException(CustomException.ERRO_SALVAR + e.getMessage());
+            throw new CustomException(ExceptionMessages.ERRO_SALVAR + e.getMessage());
         }
     }
 
@@ -50,7 +54,7 @@ class EnderecoDaoImpl implements IEnderecoDao {
             });
             return endereco;
         } catch (Exception e) {
-            throw new CustomException(CustomException.ERRO_ATUALIZAR + e.getMessage());
+            throw new CustomException(ExceptionMessages.ERRO_ATUALIZAR + e.getMessage());
         }
     }
 
@@ -63,7 +67,7 @@ class EnderecoDaoImpl implements IEnderecoDao {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         } catch (Exception e) {
-            throw new CustomException(CustomException.ENDERECO_NAO_ENCONTRADO + e.getMessage());
+            throw new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + e.getMessage());
         }
     }
 
@@ -78,7 +82,7 @@ class EnderecoDaoImpl implements IEnderecoDao {
                 return null;
             });
         } catch (Exception e) {
-            throw new CustomException(CustomException.ERRO_EXCLUIR + e.getMessage());
+            throw new CustomException(ExceptionMessages.ERRO_EXCLUIR + e.getMessage());
         }
     }
 

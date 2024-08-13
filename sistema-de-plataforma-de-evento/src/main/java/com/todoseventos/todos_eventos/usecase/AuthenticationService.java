@@ -2,6 +2,7 @@ package com.todoseventos.todos_eventos.usecase;
 
 import com.todoseventos.todos_eventos.dto.responseDTO.AcessDTO;
 import com.todoseventos.todos_eventos.dto.requestDTO.AuthenticationDTO;
+import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.security.jwt.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,10 +45,10 @@ public class AuthenticationService {
             return new AcessDTO(jwt);
         } catch (BadCredentialsException e) {
             // Lança uma exceção personalizada se as credenciais forem inválidas
-            throw new CustomException(CustomException.EMIAL_SENHA);
+            throw new CustomException(ExceptionMessages.EMAIL_SENHA);
         } catch (Exception e) {
             // Lança uma exceção personalizada se ocorrer um erro interno
-            throw new CustomException(CustomException.ERRO_INTERNO);
+            throw new CustomException(ExceptionMessages.ERRO_INTERNO);
         }
     }
 }

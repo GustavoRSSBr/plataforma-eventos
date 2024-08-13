@@ -1,6 +1,10 @@
 package com.todoseventos.todos_eventos.dao.impl;
 
+<<<<<<< Updated upstream:sistema-de-plataforma-de-evento/src/main/java/com/todoseventos/todos_eventos/dao/impl/ClienteFisicaDaoImpl.java
 import com.todoseventos.todos_eventos.dao.IClienteFisicaDao;
+=======
+import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
+>>>>>>> Stashed changes:sistema-de-plataforma-de-evento/src/main/java/com/todoseventos/todos_eventos/dao/ClienteFisicaDao.java
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.model.cliente.ClienteFisicaModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +34,7 @@ class ClienteFisicaDaoImpl implements IClienteFisicaDao {
             });
             return pessoaFisica;
         } catch (Exception e) {
-            throw new CustomException(CustomException.ERRO_SALVAR + e.getMessage());
+            throw new CustomException(ExceptionMessages.ERRO_SALVAR + e.getMessage());
         }
     }
 
@@ -48,7 +52,7 @@ class ClienteFisicaDaoImpl implements IClienteFisicaDao {
             });
             return pessoaFisica;
         } catch (Exception e) {
-            throw new CustomException(CustomException.ERRO_ATUALIZAR + e.getMessage());
+            throw new CustomException(ExceptionMessages.ERRO_ATUALIZAR + e.getMessage());
         }
     }
 
@@ -59,7 +63,7 @@ class ClienteFisicaDaoImpl implements IClienteFisicaDao {
         try {
             return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ClienteFisicaModel.class), cpf);
         } catch (Exception e) {
-            throw new CustomException(CustomException.ERRO_BUSCAR_CLIENTE_CPF + e.getMessage());
+            throw new CustomException(ExceptionMessages.ERRO_BUSCAR_CLIENTE_CPF + e.getMessage());
         }
     }
 }

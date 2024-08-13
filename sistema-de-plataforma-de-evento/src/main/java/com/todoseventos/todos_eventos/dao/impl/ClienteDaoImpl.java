@@ -1,6 +1,10 @@
 package com.todoseventos.todos_eventos.dao.impl;
 
+<<<<<<< Updated upstream:sistema-de-plataforma-de-evento/src/main/java/com/todoseventos/todos_eventos/dao/impl/ClienteDaoImpl.java
 import com.todoseventos.todos_eventos.dao.IClienteDao;
+=======
+import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
+>>>>>>> Stashed changes:sistema-de-plataforma-de-evento/src/main/java/com/todoseventos/todos_eventos/dao/ClienteDao.java
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.model.cliente.ClienteModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +32,7 @@ class ClienteDaoImpl implements IClienteDao {
         } catch (EmptyResultDataAccessException e) {
             return null;
         } catch (Exception e) {
-            throw new CustomException(CustomException.ERRO_BUSCAR_CLIENTE_CPF + e.getMessage());
+            throw new CustomException(ExceptionMessages.ERRO_BUSCAR_CLIENTE_CPF + e.getMessage());
         }
     }
 
@@ -41,7 +45,7 @@ class ClienteDaoImpl implements IClienteDao {
         } catch (EmptyResultDataAccessException e) {
             return null;
         } catch (Exception e) {
-            throw new CustomException(CustomException.ERRO_BUSCAR_CLIENTE_CNPJ + e.getMessage());
+            throw new CustomException(ExceptionMessages.ERRO_BUSCAR_CLIENTE_CNPJ + e.getMessage());
         }
     }
 
@@ -52,7 +56,7 @@ class ClienteDaoImpl implements IClienteDao {
         try {
             return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ClienteModel.class), email);
         } catch (Exception e) {
-            throw new CustomException(CustomException.ERRO_BUSCAR_USUARIO_POR_EMAIL + e.getMessage());
+            throw new CustomException(ExceptionMessages.ERRO_BUSCAR_USUARIO_POR_EMAIL + e.getMessage());
         }
     }
 
@@ -67,7 +71,7 @@ class ClienteDaoImpl implements IClienteDao {
             pessoa.setIdPessoa(idPessoa);
             return pessoa;
         } catch (Exception e) {
-            throw new CustomException(CustomException.ERRO_SALVAR_CLIENTE + e.getMessage());
+            throw new CustomException(ExceptionMessages.ERRO_SALVAR_CLIENTE + e.getMessage());
         }
     }
 
@@ -88,7 +92,7 @@ class ClienteDaoImpl implements IClienteDao {
             });
             return pessoa;
         } catch (Exception e) {
-            throw new CustomException(CustomException.ERRO_ATUALIZAR_CLIENTE + e.getMessage());
+            throw new CustomException(ExceptionMessages.ERRO_ATUALIZAR_CLIENTE + e.getMessage());
         }
     }
 
@@ -99,7 +103,7 @@ class ClienteDaoImpl implements IClienteDao {
         try {
             return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ClienteModel.class));
         } catch (Exception e) {
-            throw new CustomException(CustomException.ERRO_LISTAR_TODOS + e.getMessage());
+            throw new CustomException(ExceptionMessages.ERRO_LISTAR_TODOS + e.getMessage());
         }
     }
 }

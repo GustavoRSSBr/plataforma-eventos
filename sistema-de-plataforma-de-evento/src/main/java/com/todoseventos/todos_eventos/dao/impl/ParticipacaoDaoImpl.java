@@ -1,6 +1,10 @@
 package com.todoseventos.todos_eventos.dao.impl;
 
+<<<<<<< Updated upstream:sistema-de-plataforma-de-evento/src/main/java/com/todoseventos/todos_eventos/dao/impl/ParticipacaoDaoImpl.java
 import com.todoseventos.todos_eventos.dao.IParticipacaoDao;
+=======
+import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
+>>>>>>> Stashed changes:sistema-de-plataforma-de-evento/src/main/java/com/todoseventos/todos_eventos/dao/ParticipacaoDao.java
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.model.evento.ParticipacaoModel;
 import org.slf4j.Logger;
@@ -40,7 +44,7 @@ class ParticipacaoDaoImpl implements IParticipacaoDao {
             logger.info("Participação salva com ID: {}", idParticipacao);
             return participacao;
         } catch (Exception e) {
-            throw new CustomException(CustomException.ERRO_SALVAR_PARTICIPACAO + e.getMessage());
+            throw new CustomException(ExceptionMessages.ERRO_SALVAR_PARTICIPACAO + e.getMessage());
         }
     }
 
@@ -59,7 +63,7 @@ class ParticipacaoDaoImpl implements IParticipacaoDao {
             logger.info("Participação atualizada com ID: {}", participacao.getIdParticipacao());
             return participacao;
         } catch (Exception e) {
-            throw new CustomException(CustomException.ERRO_ATUALIZAR_PARTICIPACAO + e.getMessage());
+            throw new CustomException(ExceptionMessages.ERRO_ATUALIZAR_PARTICIPACAO + e.getMessage());
         }
     }
 
@@ -74,7 +78,7 @@ class ParticipacaoDaoImpl implements IParticipacaoDao {
             logger.warn("Nenhuma participação encontrada com ID: {}", idParticipacao);
             return null;
         } catch (Exception e) {
-            throw new CustomException(CustomException.PARTICIPACAO_NAO_ENCONTRADO_POR_ID + e.getMessage());
+            throw new CustomException(ExceptionMessages.PARTICIPACAO_NAO_ENCONTRADO_POR_ID + e.getMessage());
         }
     }
 
@@ -86,7 +90,7 @@ class ParticipacaoDaoImpl implements IParticipacaoDao {
             return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ParticipacaoModel.class), idEvento);
         } catch (Exception e) {
             logger.warn("Nenhuma participaçao encontrda");
-            throw new CustomException(CustomException.PARTICIPACAO_NAO_ENCONTRADO_POR_ID + e.getMessage());
+            throw new CustomException(ExceptionMessages.PARTICIPACAO_NAO_ENCONTRADO_POR_ID + e.getMessage());
         }
     }
 

@@ -2,6 +2,7 @@ package com.todoseventos.todos_eventos.usecase;
 
 import com.todoseventos.todos_eventos.dto.requestDTO.ClienteRequest;
 import com.todoseventos.todos_eventos.dto.responseDTO.ClienteResponse;
+import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.enuns.TipoClienteEnum;
 import com.todoseventos.todos_eventos.dao.IClienteDao;
 import com.todoseventos.todos_eventos.dao.IClienteFisicaDao;
@@ -50,13 +51,13 @@ public class ClienteService {
     public ClienteResponse cadastrarNovaPessoa(ClienteRequest clienteRequest) {
 
         if (clienteRequest.getTipo_pessoa() == null) {
-            throw new CustomException(CustomException.TIPO_CATEGORIA_INVALIDO);
+            throw new CustomException(ExceptionMessages.CATEGORIA_INVALIDA);
         }
 
         TipoClienteModel tipoClienteModel = ITipoClienteDao.buscarPorNomeTipoPessoa(clienteRequest.getTipo_pessoa().name());
 
         if (Objects.isNull(tipoClienteModel)) {
-            throw new CustomException(CustomException.CATEGORIA_INVALIDA);
+            throw new CustomException(ExceptionMessages.CATEGORIA_INVALIDA);
         }
 
         validarDados(clienteRequest);
@@ -98,36 +99,36 @@ public class ClienteService {
      */
     private void validarDados(ClienteRequest clienteRequest) {
         if (!validacoes.validarEmail(clienteRequest.getEmail())) {
-            throw new CustomException(CustomException.EMAIL_INVALIDO);
+            throw new CustomException(ExceptionMessages.EMAIL_INVALIDO);
         }
 
         if (!validacoes.validarNumeroTelefone(clienteRequest.getTelefone())) {
-            throw new CustomException(CustomException.TELEFONE_INVALIDO);
+            throw new CustomException(ExceptionMessages.TELEFONE_INVALIDO);
         }
 
         if (clienteRequest.getTipo_pessoa() == TipoClienteEnum.FISICA &&
                 !validacoes.validarDataNascimento(clienteRequest.getDataNascimento())) {
-            throw new CustomException(CustomException.DATA_NASCIMENTO_INVALIDA);
+            throw new CustomException(ExceptionMessages.DATA_NASCIMENTO_INVALIDA);
         }
 
         if (clienteRequest.getTipo_pessoa() == TipoClienteEnum.FISICA) {
             if (!validacoes.isCpfValid(clienteRequest.getCpf())) {
-                throw new CustomException(CustomException.CPF_INVALIDO);
+                throw new CustomException(ExceptionMessages.CPF_INVALIDO);
             }
 
             ClienteModel pessoaExistente = IClienteDao.procurarPorCpf(clienteRequest.getCpf());
             if (pessoaExistente != null) {
-                throw new CustomException(CustomException.CPF_JA_CADASTRADO);
+                throw new CustomException(ExceptionMessages.CPF_JA_CADASTRADO);
             }
 
         } else if (clienteRequest.getTipo_pessoa() == TipoClienteEnum.JURIDICA) {
             if (!validacoes.isCnpjValid(clienteRequest.getCnpj())) {
-                throw new CustomException(CustomException.CNPJ_INVALIDO);
+                throw new CustomException(ExceptionMessages.CNPJ_INVALIDO);
             }
 
             ClienteModel pessoaExistente = IClienteDao.procurarPorCnpj(clienteRequest.getCnpj());
             if (pessoaExistente != null) {
-                throw new CustomException(CustomException.CNPJ_JA_CADASTRADO);
+                throw new CustomException(ExceptionMessages.CNPJ_JA_CADASTRADO);
             }
         }
     }
@@ -164,7 +165,7 @@ public class ClienteService {
     public ClienteResponse procurarPessoaPorCpf(String cpf) {
         ClienteModel pessoaFisicaEncontrada = IClienteDao.procurarPorCpf(cpf);
         if (Objects.isNull(pessoaFisicaEncontrada)) {
-            throw new CustomException(CustomException.CPF_INVALIDO);
+            throw new CustomException(ExceptionMessages.CPF_INVALIDO);
         }
         return mapearPessoa(TipoClienteEnum.FISICA, pessoaFisicaEncontrada);
     }
@@ -176,7 +177,7 @@ public class ClienteService {
         } else if (identificador.length() == 14) { // Assumindo que CNPJ tem 14 dígitos
             pessoa = procurarPessoaPorCnpj(identificador);
         } else {
-            throw new CustomException(CustomException.IDENTIFICADOR_INVALIDO);
+            throw new CustomException(ExceptionMessages.IDENTIFICADOR_INVALIDO);
         }
         return pessoa;
     }
@@ -190,7 +191,7 @@ public class ClienteService {
         ClienteModel pessoaJuridicaEncontrada = IClienteDao.procurarPorCnpj(cnpj);
 
         if (Objects.isNull(pessoaJuridicaEncontrada)) {
-            throw new CustomException(CustomException.CNPJ_JA_CADASTRADO);
+            throw new CustomException(ExceptionMessages.CNPJ_JA_CADASTRADO);
         }
         return mapearPessoa(TipoClienteEnum.JURIDICA, pessoaJuridicaEncontrada);
     }
@@ -225,11 +226,11 @@ public class ClienteService {
         } else if (identificador.length() == 14) { // CNPJ
             pessoaExistente = IClienteDao.procurarPorCnpj(identificador);
         } else {
-            throw new CustomException(CustomException.IDENTIFICADOR_INVALIDO);
+            throw new CustomException(ExceptionMessages.IDENTIFICADOR_INVALIDO);
         }
 
         if (Objects.isNull(pessoaExistente)) {
-            throw new CustomException(CustomException.CLIENTE_NAO_ENCONTRADO);
+            throw new CustomException(ExceptionMessages.CLIENTE_NAO_ENCONTRADO);
         }
 
         TipoClienteModel tipoClienteModel = ITipoClienteDao.buscarPorNomeTipoPessoa(clienteRequest.getTipo_pessoa().name());

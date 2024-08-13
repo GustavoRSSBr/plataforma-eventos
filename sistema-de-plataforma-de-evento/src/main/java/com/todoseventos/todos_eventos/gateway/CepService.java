@@ -2,6 +2,7 @@ package com.todoseventos.todos_eventos.gateway;
 
 import com.google.gson.Gson;
 import com.todoseventos.todos_eventos.dto.responseDTO.CepResponse;
+import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +42,7 @@ public class CepService {
             return new Gson().fromJson(jsonCep.toString(), CepResponse.class);
         } catch (Exception e) {
             // Lança uma exceção personalizada se ocorrer um erro
-            throw new CustomException(CustomException.ERRO_BUSCAR_ENDERECO_EVENTO + e.getMessage());
+            throw new CustomException(ExceptionMessages.CEP_INVALIDO + e.getMessage());
         }
     }
 }

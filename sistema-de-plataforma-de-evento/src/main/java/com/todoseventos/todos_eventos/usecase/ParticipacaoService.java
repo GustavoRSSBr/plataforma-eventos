@@ -3,6 +3,7 @@ package com.todoseventos.todos_eventos.usecase;
 import com.todoseventos.todos_eventos.dao.*;
 import com.todoseventos.todos_eventos.dto.requestDTO.ParticipacaoRequest;
 import com.todoseventos.todos_eventos.dto.responseDTO.ParticipacaoResponse;
+import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.gateway.EmailService;
 import com.todoseventos.todos_eventos.model.evento.EnderecoModel;
@@ -49,6 +50,7 @@ public class ParticipacaoService {
         logger.info("Iniciando inscrição do participante: {}", request);
 
         // Procura o evento pelo ID
+<<<<<<< Updated upstream
         EventoModel evento = IEventoDao.procurarPorId(request.getIdEvento())
                 .orElseThrow(() -> new CustomException(CustomException.EVENTO_NAO_ENCONTRADO));
 
@@ -56,12 +58,21 @@ public class ParticipacaoService {
 
         EnderecoModel endereco = IEnderecoDao.procurarPorIdEvento(evento.getIdEvento())
                 .orElseThrow(() -> new CustomException(CustomException.ENDERECO_NAO_ENCONTRADO + evento.getNome_evento()));
+=======
+        EventoModel evento = eventoDao.procurarPorId(request.getIdEvento())
+                .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
+
+        // Procura o endereço do evento pelo ID do evento
+
+        EnderecoModel endereco = enderecoDao.procurarPorIdEvento(evento.getIdEvento())
+                .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + evento.getNome_evento()));
+>>>>>>> Stashed changes
 
         // Verifica se é um participante pessoa física
         if (request.getCpf() != null) {
             ClienteFisicaModel pessoaFisica = IClienteFisicaDao.procurarCpf(request.getCpf());
             if (Objects.isNull(pessoaFisica)) {
-                throw new CustomException(CustomException.PESSOA_FISICA_NAO_ENCONTRADA);
+                throw new CustomException(ExceptionMessages.PESSOA_FISICA_NAO_ENCONTRADA);
             }
 
             // Cria uma nova participação para pessoa física
@@ -83,7 +94,7 @@ public class ParticipacaoService {
             // Verifica se é um participante pessoa jurídica
             ClienteJuridicaModel pessoaJuridica = IClienteJuridicaDao.procurarCnpj(request.getCnpj());
             if (Objects.isNull(pessoaJuridica)) {
-                throw new CustomException(CustomException.PESSOA_JURIDICA_NAO_ENCONTRADA);
+                throw new CustomException(ExceptionMessages.PESSOA_JURIDICA_NAO_ENCONTRADA);
             }
 
             // Cria uma nova participação para pessoa jurídica
@@ -104,7 +115,7 @@ public class ParticipacaoService {
             return PessoaJuridica(savedParticipacao, pessoaJuridica, evento, endereco);
         } else {
             // Lança exceção se nem CPF nem CNPJ foram informados
-            throw new CustomException(CustomException.CPF_OU_CNPJ_NAO_INFORMADOS);
+            throw new CustomException(ExceptionMessages.CPF_OU_CNPJ_NAO_INFORMADOS);
         }
     }
 
@@ -117,7 +128,7 @@ public class ParticipacaoService {
         logger.info("Confirmando participação com ID: {}", idParticipacao);
         ParticipacaoModel participacao = IParticipacaoDao.localizarPorId(idParticipacao);
         if (Objects.isNull(participacao)) {
-            throw new CustomException(CustomException.PARTICIPACAO_NAO_ENCONTRADA);
+            throw new CustomException(ExceptionMessages.PARTICIPACAO_NAO_ENCONTRADA);
         }
 
         // Atualiza o status da participação para "CONFIRMADO"
@@ -126,10 +137,17 @@ public class ParticipacaoService {
         logger.info("Participação confirmada: {}", updatedParticipacao);
 
         // Obtém os detalhes do evento e endereço associados
+<<<<<<< Updated upstream
         EventoModel evento = IEventoDao.procurarPorId(updatedParticipacao.getIdEvento())
                 .orElseThrow(() -> new CustomException(CustomException.EVENTO_NAO_ENCONTRADO));
         EnderecoModel endereco = IEnderecoDao.procurarPorIdEvento(evento.getIdEvento())
                 .orElseThrow(() -> new CustomException(CustomException.ENDERECO_NAO_ENCONTRADO + evento.getNome_evento()));
+=======
+        EventoModel evento = eventoDao.procurarPorId(updatedParticipacao.getIdEvento())
+                .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
+        EnderecoModel endereco = enderecoDao.procurarPorIdEvento(evento.getIdEvento())
+                .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + evento.getNome_evento()));
+>>>>>>> Stashed changes
 
         // Envia e-mail de confirmação de participação
         if (updatedParticipacao.getCpf() != null) {

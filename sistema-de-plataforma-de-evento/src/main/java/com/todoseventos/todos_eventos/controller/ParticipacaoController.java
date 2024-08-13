@@ -3,6 +3,7 @@ package com.todoseventos.todos_eventos.controller;
 import com.todoseventos.todos_eventos.dto.responseDTO.CustomExceptionResponse;
 import com.todoseventos.todos_eventos.dto.requestDTO.ParticipacaoRequest;
 import com.todoseventos.todos_eventos.dto.responseDTO.ParticipacaoResponse;
+import com.todoseventos.todos_eventos.enuns.SuccessMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.usecase.ParticipacaoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,7 +31,7 @@ public class ParticipacaoController {
     @PostMapping("/participacao")
     public ResponseEntity<?> inscreverParticipante(@RequestBody ParticipacaoRequest request) {
         ParticipacaoResponse response = participacaoService.inscreverParticipante(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CustomExceptionResponse(CustomException.INSCRICAO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new CustomExceptionResponse(SuccessMessages.INSCRICAO));
     }
 
     @Operation(description = "Operação para confirmar participação no evento")
