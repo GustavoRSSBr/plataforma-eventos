@@ -1,10 +1,7 @@
 package com.todoseventos.todos_eventos.dao.impl;
 
-<<<<<<< Updated upstream:sistema-de-plataforma-de-evento/src/main/java/com/todoseventos/todos_eventos/dao/impl/CategoriaDaoImpl.java
 import com.todoseventos.todos_eventos.dao.ICategoriaDao;
-=======
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
->>>>>>> Stashed changes:sistema-de-plataforma-de-evento/src/main/java/com/todoseventos/todos_eventos/dao/CategoriaDao.java
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.model.evento.CategoriaModel;
 import org.springframework.beans.factory.annotation.Autowired;

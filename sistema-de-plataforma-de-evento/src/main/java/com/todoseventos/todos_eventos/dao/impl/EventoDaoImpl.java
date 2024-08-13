@@ -1,10 +1,7 @@
 package com.todoseventos.todos_eventos.dao.impl;
 
-<<<<<<< Updated upstream:sistema-de-plataforma-de-evento/src/main/java/com/todoseventos/todos_eventos/dao/impl/EventoDaoImpl.java
 import com.todoseventos.todos_eventos.dao.IEventoDao;
-=======
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
->>>>>>> Stashed changes:sistema-de-plataforma-de-evento/src/main/java/com/todoseventos/todos_eventos/dao/EventoDao.java
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.model.evento.EventoModel;
 import org.slf4j.Logger;
@@ -93,11 +90,7 @@ class EventoDaoImpl implements IEventoDao {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         } catch (Exception e) {
-<<<<<<< Updated upstream:sistema-de-plataforma-de-evento/src/main/java/com/todoseventos/todos_eventos/dao/impl/EventoDaoImpl.java
-            throw new CustomException(CustomException.ERRO_BUSCAR_POR_ID + e.getMessage());
-=======
             throw new CustomException(ExceptionMessages.ERRO_BUSCAR_POR_ID + e.getMessage());
->>>>>>> Stashed changes:sistema-de-plataforma-de-evento/src/main/java/com/todoseventos/todos_eventos/dao/EventoDao.java
         }
     }
 

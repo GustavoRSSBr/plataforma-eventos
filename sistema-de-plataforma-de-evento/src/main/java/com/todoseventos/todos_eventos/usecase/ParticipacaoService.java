@@ -50,23 +50,13 @@ public class ParticipacaoService {
         logger.info("Iniciando inscrição do participante: {}", request);
 
         // Procura o evento pelo ID
-<<<<<<< Updated upstream
         EventoModel evento = IEventoDao.procurarPorId(request.getIdEvento())
-                .orElseThrow(() -> new CustomException(CustomException.EVENTO_NAO_ENCONTRADO));
-
-        // Procura o endereço do evento pelo ID do evento
-
-        EnderecoModel endereco = IEnderecoDao.procurarPorIdEvento(evento.getIdEvento())
-                .orElseThrow(() -> new CustomException(CustomException.ENDERECO_NAO_ENCONTRADO + evento.getNome_evento()));
-=======
-        EventoModel evento = eventoDao.procurarPorId(request.getIdEvento())
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
 
         // Procura o endereço do evento pelo ID do evento
 
-        EnderecoModel endereco = enderecoDao.procurarPorIdEvento(evento.getIdEvento())
+        EnderecoModel endereco = IEnderecoDao.procurarPorIdEvento(evento.getIdEvento())
                 .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + evento.getNome_evento()));
->>>>>>> Stashed changes
 
         // Verifica se é um participante pessoa física
         if (request.getCpf() != null) {
@@ -137,17 +127,10 @@ public class ParticipacaoService {
         logger.info("Participação confirmada: {}", updatedParticipacao);
 
         // Obtém os detalhes do evento e endereço associados
-<<<<<<< Updated upstream
         EventoModel evento = IEventoDao.procurarPorId(updatedParticipacao.getIdEvento())
-                .orElseThrow(() -> new CustomException(CustomException.EVENTO_NAO_ENCONTRADO));
-        EnderecoModel endereco = IEnderecoDao.procurarPorIdEvento(evento.getIdEvento())
-                .orElseThrow(() -> new CustomException(CustomException.ENDERECO_NAO_ENCONTRADO + evento.getNome_evento()));
-=======
-        EventoModel evento = eventoDao.procurarPorId(updatedParticipacao.getIdEvento())
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
-        EnderecoModel endereco = enderecoDao.procurarPorIdEvento(evento.getIdEvento())
+        EnderecoModel endereco = IEnderecoDao.procurarPorIdEvento(evento.getIdEvento())
                 .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + evento.getNome_evento()));
->>>>>>> Stashed changes
 
         // Envia e-mail de confirmação de participação
         if (updatedParticipacao.getCpf() != null) {
