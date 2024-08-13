@@ -4,18 +4,20 @@ import com.todoseventos.todos_eventos.dto.responseDTO.CustomExceptionResponse;
 import com.todoseventos.todos_eventos.dto.requestDTO.EventoRequest;
 import com.todoseventos.todos_eventos.dto.responseDTO.EventoResponse;
 import com.todoseventos.todos_eventos.enuns.SuccessMessages;
-import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.usecase.EventoService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@Slf4j
 @RestController
 @RequestMapping(value = "/api")
 @CrossOrigin
@@ -31,8 +33,13 @@ public class EventoController {
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor ao realizar cadastro!")
     })
     @PostMapping("/evento")
-    public ResponseEntity<CustomExceptionResponse> cadastrarEvento(@RequestBody EventoRequest eventoRequest) {
+    public ResponseEntity<CustomExceptionResponse> cadastrarEvento(
+            @Parameter(description = "Dados necessários para cadastrar um novo evento.")
+            @Valid @RequestBody EventoRequest eventoRequest) {
+        long startTime = System.currentTimeMillis();
         EventoResponse response = eventoService.cadastrarNovoEvento(eventoRequest);
+
+        logElapsedTime("cadastrarEvento", startTime);
         return ResponseEntity.status(HttpStatus.CREATED).body(new CustomExceptionResponse(SuccessMessages.CADASTRO_EVENTO));
     }
 
@@ -43,19 +50,27 @@ public class EventoController {
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor ao encerrar evento!")
     })
     @PutMapping("/encerrar/{idEvento}")
-    public ResponseEntity<?> encerrarEvento(@PathVariable Integer idEvento) {
+    public ResponseEntity<?> encerrarEvento(
+            @Parameter(description = "Id do evento a ser encerrado.")
+            @Valid @PathVariable Integer idEvento) {
+        long startTime = System.currentTimeMillis();
         EventoResponse response = eventoService.encerrarEvento(idEvento);
+
+        logElapsedTime("encerrarEvento", startTime);
         return ResponseEntity.status(HttpStatus.OK).body(new CustomExceptionResponse(SuccessMessages.EVENTO_ENCERRADO));
+
     }
 
     @Operation(description = "Operação para listar todos os eventos")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista de eventos recuperada com sucesso!"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor ao listar eventos!")
-    })
+    }).
     @GetMapping("/evento")
     public ResponseEntity<?> listarEventos() {
+        long startTime = System.currentTimeMillis();
         List<EventoResponse> response = eventoService.localizarEventos();
+        logElapsedTime("listarEventos", startTime);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -66,8 +81,12 @@ public class EventoController {
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor ao procurar evento!")
     })
     @GetMapping("/evento/{nomeEvento}")
-    public ResponseEntity<?> procurarEventoPorNome(@PathVariable String nomeEvento) {
+    public ResponseEntity<?> procurarEventoPorNome(
+            @Parameter(description = "Nome do evento a ser procurado.")
+            @Valid @PathVariable String nomeEvento) {
+        long startTime = System.currentTimeMillis();
         EventoResponse response = eventoService.procurarEventoPorNome(nomeEvento);
+        logElapsedTime("procurarEventoPorNome", startTime);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -78,8 +97,13 @@ public class EventoController {
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor ao atualizar evento!")
     })
     @PutMapping("/evento/{nomeEvento}")
-    public ResponseEntity<?> atualizarEvento(@PathVariable String nomeEvento, @RequestBody EventoRequest eventoRequest) {
+    public ResponseEntity<?> atualizarEvento(
+            @Parameter(description = "Nome do evento a ser atualizado.")
+            @Valid @PathVariable String nomeEvento, @RequestBody EventoRequest eventoRequest) {
+        long startTime = System.currentTimeMillis();
         EventoResponse response = eventoService.atualizarEvento(nomeEvento, eventoRequest);
+
+        logElapsedTime("atualizarEvento", startTime);
         return ResponseEntity.status(HttpStatus.OK).body(new CustomExceptionResponse(SuccessMessages.EVENTO_ATUALIZADO));
     }
 
@@ -90,8 +114,24 @@ public class EventoController {
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor ao excluir evento!")
     })
     @DeleteMapping("/evento/{idEvento}")
-    public ResponseEntity<?> excluirEvento(@PathVariable Integer idEvento) {
+    public ResponseEntity<?> excluirEvento(
+            @Parameter(description = "Id do evento a ser excluído.")
+            @Valid @PathVariable Integer idEvento) {
+        long startTime = System.currentTimeMillis();
         eventoService.excluirEvento(idEvento);
+        logElapsedTime("excluirEvento", startTime);
         return ResponseEntity.status(HttpStatus.OK).body(new CustomExceptionResponse(SuccessMessages.EXCLUIR_EVENTO));
+    }
+
+    /**
+     * Método que registra o tempo decorrido de um método específico.
+     *
+     * @param methodName nome cujo o tempo de eecução está sendo medido.
+     * @param startTime Tempo de início da execução do método.
+     **/
+    private void logElapsedTime(String methodName, long startTime) {
+        long endTime = System.currentTimeMillis();
+        long elapsedTime = endTime - startTime;
+        log.info("Método: {}, Tempo decorrido: {} ms", methodName, elapsedTime);
     }
 }
