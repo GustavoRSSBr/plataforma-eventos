@@ -1,7 +1,7 @@
 package com.todoseventos.todos_eventos.usecase;
 
-import com.todoseventos.todos_eventos.dto.AcessDTO;
-import com.todoseventos.todos_eventos.dto.AuthenticationDTO;
+import com.todoseventos.todos_eventos.dto.responseDTO.AcessDTO;
+import com.todoseventos.todos_eventos.dto.requestDTO.AuthenticationDTO;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.security.jwt.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;

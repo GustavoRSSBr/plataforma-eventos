@@ -1,7 +1,7 @@
 package com.todoseventos.todos_eventos.gateway;
 
 import com.google.gson.Gson;
-import com.todoseventos.todos_eventos.dto.CepResponse;
+import com.todoseventos.todos_eventos.dto.responseDTO.CepResponse;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import org.springframework.stereotype.Service;
 

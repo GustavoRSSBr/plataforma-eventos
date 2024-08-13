@@ -1,10 +1,10 @@
 package com.todoseventos.todos_eventos.usecase;
 
 import com.todoseventos.todos_eventos.dao.*;
-import com.todoseventos.todos_eventos.dto.CategoriaEnum;
-import com.todoseventos.todos_eventos.dto.CepResponse;
-import com.todoseventos.todos_eventos.dto.EventoRequest;
-import com.todoseventos.todos_eventos.dto.EventoResponse;
+import com.todoseventos.todos_eventos.enuns.CategoriaEnum;
+import com.todoseventos.todos_eventos.dto.responseDTO.CepResponse;
+import com.todoseventos.todos_eventos.dto.requestDTO.EventoRequest;
+import com.todoseventos.todos_eventos.dto.responseDTO.EventoResponse;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.gateway.CepService;
 import com.todoseventos.todos_eventos.gateway.EmailService;

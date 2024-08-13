@@ -1,8 +1,8 @@
 package com.todoseventos.todos_eventos.controller;
 
-import com.todoseventos.todos_eventos.dto.CustomExceptionResponse;
-import com.todoseventos.todos_eventos.dto.EventoRequest;
-import com.todoseventos.todos_eventos.dto.EventoResponse;
+import com.todoseventos.todos_eventos.dto.responseDTO.CustomExceptionResponse;
+import com.todoseventos.todos_eventos.dto.requestDTO.EventoRequest;
+import com.todoseventos.todos_eventos.dto.responseDTO.EventoResponse;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.usecase.EventoService;
 import io.swagger.v3.oas.annotations.Operation;

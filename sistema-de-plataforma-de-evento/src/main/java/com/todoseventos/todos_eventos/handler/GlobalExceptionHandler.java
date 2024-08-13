@@ -1,6 +1,6 @@
 package com.todoseventos.todos_eventos.handler;
 
-import com.todoseventos.todos_eventos.dto.CustomExceptionResponse;
+import com.todoseventos.todos_eventos.dto.responseDTO.CustomExceptionResponse;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
