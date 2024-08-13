@@ -14,7 +14,9 @@ public class ExceptionMessages {
     public static final String ERRO_BUSCAR_EVENTOS = "Erro ao buscar eventos: ";
     public static final String ERRO_BUSCAR_CATEGORIA_EVENTO = "Erro ao buscar categoria do evento: ";
     public static final String ERRO_BUSCAR_ENDERECO_EVENTO = "Erro ao buscar endereço do evento: ";
-    public static final String EMAIL_INVALIDO = "Email inválido!";
+    public static final String EMAIL_INVALIDO = "E-mail inválido!";
+
+    public static final String EMAIL_DUPLICIDADE = "E-mail já cadastrado na plataforma! Informe outro e-mail.";
     public static final String TELEFONE_INVALIDO = "Número de celular inválido!";
     public static final String DATA_NASCIMENTO_INVALIDA = "Data de nascimento inválida!";
     public static final String CPF_INVALIDO = "CPF inválido! Verifiquei o dado informado.";
