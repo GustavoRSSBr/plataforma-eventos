@@ -7,13 +7,17 @@ import com.todoseventos.todos_eventos.enuns.SuccessMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.usecase.ParticipacaoService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 @CrossOrigin
@@ -29,8 +33,13 @@ public class ParticipacaoController {
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor ao realizar cadastro!")
     })
     @PostMapping("/participacao")
-    public ResponseEntity<?> inscreverParticipante(@RequestBody ParticipacaoRequest request) {
+    public ResponseEntity<?> inscreverParticipante(
+            @Parameter(description = "Dados para inscreve um participante.")
+            @Valid @RequestBody ParticipacaoRequest request) {
+        long startTime = System.currentTimeMillis();
         ParticipacaoResponse response = participacaoService.inscreverParticipante(request);
+
+        logElapsedTime("inscreverParticipante", startTime);
         return ResponseEntity.status(HttpStatus.CREATED).body(new CustomExceptionResponse(SuccessMessages.INSCRICAO));
     }
 
@@ -41,8 +50,24 @@ public class ParticipacaoController {
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor ao confirmar participação!")
     })
     @GetMapping("/confirmacao/{idParticipacao}")
-    public ResponseEntity<?> confirmarParticipacao(@PathVariable Integer idParticipacao) {
+    public ResponseEntity<?> confirmarParticipacao(
+            @Parameter(description = "Id do participante a ser confirmado.")
+            @Valid @PathVariable Integer idParticipacao) {
+        long startTime = System.currentTimeMillis();
         ParticipacaoResponse response = participacaoService.confirmarParticipacao(idParticipacao);
+        logElapsedTime("confirmarParticipacao", startTime);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    /**
+     * Método que registra o tempo decorrido de um método específico.
+     *
+     * @param methodName nome cujo o tempo de eecução está sendo medido.
+     * @param startTime Tempo de início da execução do método.
+     **/
+    private void logElapsedTime(String methodName, long startTime) {
+        long endTime = System.currentTimeMillis();
+        long elapsedTime = endTime - startTime;
+        log.info("Método: {}, Tempo decorrido: {} ms", methodName, elapsedTime);
     }
 }
