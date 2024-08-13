@@ -6,6 +6,8 @@ import com.todoseventos.todos_eventos.dto.CepResponse;
 import com.todoseventos.todos_eventos.dto.EventoRequest;
 import com.todoseventos.todos_eventos.dto.EventoResponse;
 import com.todoseventos.todos_eventos.exception.CustomException;
+import com.todoseventos.todos_eventos.gateway.CepService;
+import com.todoseventos.todos_eventos.gateway.EmailService;
 import com.todoseventos.todos_eventos.model.evento.CategoriaModel;
 import com.todoseventos.todos_eventos.model.evento.EnderecoModel;
 import com.todoseventos.todos_eventos.model.evento.EventoModel;

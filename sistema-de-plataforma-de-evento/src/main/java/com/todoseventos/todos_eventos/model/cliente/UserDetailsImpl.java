@@ -1,6 +1,5 @@
-package com.todoseventos.todos_eventos.usecase;
+package com.todoseventos.todos_eventos.model.cliente;
 
-import com.todoseventos.todos_eventos.model.cliente.ClienteModel;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

@@ -4,6 +4,7 @@ import com.todoseventos.todos_eventos.dao.*;
 import com.todoseventos.todos_eventos.dto.ParticipacaoRequest;
 import com.todoseventos.todos_eventos.dto.ParticipacaoResponse;
 import com.todoseventos.todos_eventos.exception.CustomException;
+import com.todoseventos.todos_eventos.gateway.EmailService;
 import com.todoseventos.todos_eventos.model.evento.EnderecoModel;
 import com.todoseventos.todos_eventos.model.evento.EventoModel;
 import com.todoseventos.todos_eventos.model.evento.ParticipacaoModel;

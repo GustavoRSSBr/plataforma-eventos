@@ -1,7 +1,7 @@
 package com.todoseventos.todos_eventos.security.jwt;
 
 import com.todoseventos.todos_eventos.exception.CustomException;
-import com.todoseventos.todos_eventos.usecase.UserDetailsImpl;
+import com.todoseventos.todos_eventos.model.cliente.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

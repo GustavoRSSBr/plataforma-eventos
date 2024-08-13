@@ -2,6 +2,7 @@ package com.todoseventos.todos_eventos.usecase;
 
 
 import com.todoseventos.todos_eventos.exception.CustomException;
+import com.todoseventos.todos_eventos.model.cliente.UserDetailsImpl;
 import com.todoseventos.todos_eventos.model.cliente.ClienteModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

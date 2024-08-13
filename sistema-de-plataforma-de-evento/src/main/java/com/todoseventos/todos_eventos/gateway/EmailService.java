@@ -1,4 +1,4 @@
-package com.todoseventos.todos_eventos.usecase;
+package com.todoseventos.todos_eventos.gateway;
 
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.model.evento.EnderecoModel;

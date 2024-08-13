@@ -3,7 +3,7 @@ package com.todoseventos.todos_eventos.controller;
 import com.todoseventos.todos_eventos.dto.AuthenticationDTO;
 import com.todoseventos.todos_eventos.dto.JwtResponse;
 import com.todoseventos.todos_eventos.security.jwt.JwtUtils;
-import com.todoseventos.todos_eventos.usecase.UserDetailsImpl;
+import com.todoseventos.todos_eventos.model.cliente.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

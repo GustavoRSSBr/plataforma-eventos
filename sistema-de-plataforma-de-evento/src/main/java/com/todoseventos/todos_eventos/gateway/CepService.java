@@ -1,4 +1,4 @@
-package com.todoseventos.todos_eventos.usecase;
+package com.todoseventos.todos_eventos.gateway;
 
 import com.google.gson.Gson;
 import com.todoseventos.todos_eventos.dto.CepResponse;
