@@ -6,11 +6,11 @@ import com.todoseventos.todos_eventos.dto.responseDTO.ParticipacaoResponseDTO;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.gateway.EmailService;
+import com.todoseventos.todos_eventos.model.cliente.ClienteFisico;
+import com.todoseventos.todos_eventos.model.cliente.ClienteJuridico;
 import com.todoseventos.todos_eventos.model.evento.Endereco;
 import com.todoseventos.todos_eventos.model.evento.Evento;
 import com.todoseventos.todos_eventos.model.evento.Participacao;
-import com.todoseventos.todos_eventos.model.cliente.ClienteFisico;
-import com.todoseventos.todos_eventos.model.cliente.ClienteJuridico;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +43,7 @@ public class ParticipacaoService {
 
     /**
      * Inscreve um participante em um evento.
+     *
      * @param request Objeto contendo os detalhes da participação, incluindo CPF ou CNPJ e ID do evento.
      * @return Um objeto de resposta de participação contendo os detalhes da inscrição.
      */
@@ -109,47 +110,14 @@ public class ParticipacaoService {
         }
     }
 
-    /**
-     * Confirma a participação de um participante em um evento.
-     * @param idParticipacao O ID da participação a ser confirmada.
-     * @return Um objeto de resposta de participação contendo os detalhes da confirmação.
-     */
-    public ParticipacaoResponseDTO confirmarParticipacao(Integer idParticipacao) {
-        logger.info("Confirmando participação com ID: {}", idParticipacao);
-        Participacao participacao = IParticipacaoJdbcTemplateDAO.localizarPorId(idParticipacao);
-        if (Objects.isNull(participacao)) {
-            throw new CustomException(ExceptionMessages.PARTICIPACAO_NAO_ENCONTRADA);
-        }
-
-        // Atualiza o status da participação para "CONFIRMADO"
-        participacao.setStatus("CONFIRMADO");
-        Participacao updatedParticipacao = IParticipacaoJdbcTemplateDAO.atualizarParticipacao(participacao);
-        logger.info("Participação confirmada: {}", updatedParticipacao);
-
-        // Obtém os detalhes do evento e endereço associados
-        Evento evento = IEventoJdbcTemplateDAO.procurarPorId(updatedParticipacao.getIdEvento())
-                .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
-        Endereco endereco = IEnderecoJdbcTemplateDAO.procurarPorIdEvento(evento.getIdEvento())
-                .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + evento.getNome_evento()));
-
-        // Envia e-mail de confirmação de participação
-        if (updatedParticipacao.getCpf() != null) {
-            ClienteFisico pessoaFisica = IClienteFisicaJdbcTemplateDAO.procurarCpf(updatedParticipacao.getCpf());
-            emailService.enviarEmailConfirmacao(pessoaFisica.getEmail(), "Confirmação de Participação", pessoaFisica.getNome(), evento.getNome_evento(), evento.getDataHora_evento(), endereco);
-            return PessoaFisica(updatedParticipacao, pessoaFisica, evento, endereco);
-        } else {
-            ClienteJuridico pessoaJuridica = IClienteJuridicaJdbcTemplateDAO.procurarCnpj(updatedParticipacao.getCnpj());
-            emailService.enviarEmailConfirmacao(pessoaJuridica.getEmail(), "Confirmação de Participação", pessoaJuridica.getNome(), evento.getNome_evento(), evento.getDataHora_evento(), endereco);
-            return PessoaJuridica(updatedParticipacao, pessoaJuridica, evento, endereco);
-        }
-    }
 
     /**
      * Cria um objeto de resposta de participação para pessoa física.
+     *
      * @param participacao O objeto de participação contendo os detalhes.
      * @param pessoaFisica O objeto pessoa física contendo os detalhes do participante.
-     * @param evento O objeto evento contendo os detalhes do evento.
-     * @param endereco O objeto endereço contendo os detalhes do local do evento.
+     * @param evento       O objeto evento contendo os detalhes do evento.
+     * @param endereco     O objeto endereço contendo os detalhes do local do evento.
      * @return Um objeto de resposta de participação.
      */
     public static ParticipacaoResponseDTO PessoaFisica(Participacao participacao, ClienteFisico pessoaFisica, Evento evento, Endereco endereco) {
@@ -168,10 +136,11 @@ public class ParticipacaoService {
 
     /**
      * Cria um objeto de resposta de participação para pessoa jurídica.
-     * @param participacao O objeto de participação contendo os detalhes.
+     *
+     * @param participacao   O objeto de participação contendo os detalhes.
      * @param pessoaJuridica O objeto pessoa jurídica contendo os detalhes do participante.
-     * @param evento O objeto evento contendo os detalhes do evento.
-     * @param endereco O objeto endereço contendo os detalhes do local do evento.
+     * @param evento         O objeto evento contendo os detalhes do evento.
+     * @param endereco       O objeto endereço contendo os detalhes do local do evento.
      * @return Um objeto de resposta de participação.
      */
     public static ParticipacaoResponseDTO PessoaJuridica(Participacao participacao, ClienteJuridico pessoaJuridica, Evento evento, Endereco endereco) {

@@ -41,22 +41,6 @@ class ParticipacaoJdbcTemplateJdbcTemplateDAOImpl implements IParticipacaoJdbcTe
 
     @Override
     @Transactional
-    public Participacao atualizarParticipacao(Participacao participacao) {
-        String sql = "SELECT atualizar_participacao(?, ?)";
-        logger.info("Executando SQL para atualizar participação: {}", sql);
-        jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
-            ps.setInt(1, participacao.getIdParticipacao());
-            ps.setString(2, participacao.getStatus());
-            ps.execute();
-            return null;
-        });
-        logger.info("Participação atualizada com ID: {}", participacao.getIdParticipacao());
-        return participacao;
-
-    }
-
-    @Override
-    @Transactional
     public Participacao localizarPorId(Integer idParticipacao) {
         String sql = "SELECT * FROM procurar_participacao_por_id(?)";
         logger.info("Executando SQL para buscar participação por ID: {}", sql);

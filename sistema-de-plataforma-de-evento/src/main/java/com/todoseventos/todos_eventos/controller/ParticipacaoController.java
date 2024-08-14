@@ -46,19 +46,4 @@ public class ParticipacaoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new CustomExceptionResponseDTO(SuccessMessages.INSCRICAO));
     }
 
-    @Operation(description = "Operação para confirmar participação no evento")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Participação no evento confirmada com sucesso!"),
-            @ApiResponse(responseCode = "400", description = "Erro ao confirmar participação!"),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor ao confirmar participação!")
-    })
-    @GetMapping("/confirmacao/{idParticipacao}")
-    public ResponseEntity<?> confirmarParticipacao(
-            @Parameter(description = "Id do participante a ser confirmado.")
-            @Valid @PathVariable Integer idParticipacao) {
-        long startTime = System.currentTimeMillis();
-        ParticipacaoResponseDTO response = participacaoService.confirmarParticipacao(idParticipacao);
-        LoggerUtils.logElapsedTime(LOGGER, "confirmarParticipacao", startTime);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
 }

@@ -6,7 +6,6 @@ import java.util.List;
 
 public interface IParticipacaoJdbcTemplateDAO {
     Participacao salvarParticipacao(Participacao participacao);
-    Participacao atualizarParticipacao(Participacao participacao);
     Participacao localizarPorId(Integer idParticipacao);
     List<Participacao> localizarPorIdEvento(Integer idEvento);
 }
