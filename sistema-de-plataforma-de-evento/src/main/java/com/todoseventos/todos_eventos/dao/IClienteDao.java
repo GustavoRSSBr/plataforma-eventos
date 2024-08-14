@@ -10,6 +10,4 @@ public interface IClienteDao {
     Cliente salvarCliente(Cliente pessoa);
     Cliente atualizarCliente(Cliente pessoa);
     List<Cliente> listarTodasPessoas();
-
-    boolean existeEmail(String email);
 }
