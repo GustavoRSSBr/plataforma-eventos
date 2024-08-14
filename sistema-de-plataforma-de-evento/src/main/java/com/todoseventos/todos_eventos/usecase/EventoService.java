@@ -1,10 +1,10 @@
 package com.todoseventos.todos_eventos.usecase;
 
 import com.todoseventos.todos_eventos.dao.*;
-import com.todoseventos.todos_eventos.enuns.CategoriaEnum;
-import com.todoseventos.todos_eventos.dto.responseDTO.CepResponseDTO;
 import com.todoseventos.todos_eventos.dto.requestDTO.EventoRequestDTO;
+import com.todoseventos.todos_eventos.dto.responseDTO.CepResponseDTO;
 import com.todoseventos.todos_eventos.dto.responseDTO.EventoResponseDTO;
+import com.todoseventos.todos_eventos.enuns.CategoriaEnum;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.gateway.CepService;
@@ -12,9 +12,6 @@ import com.todoseventos.todos_eventos.gateway.EmailService;
 import com.todoseventos.todos_eventos.model.evento.Categoria;
 import com.todoseventos.todos_eventos.model.evento.Endereco;
 import com.todoseventos.todos_eventos.model.evento.Evento;
-import com.todoseventos.todos_eventos.model.evento.Participacao;
-import com.todoseventos.todos_eventos.model.cliente.ClienteFisico;
-import com.todoseventos.todos_eventos.model.cliente.ClienteJuridico;
 import com.todoseventos.todos_eventos.utils.Validacoes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,9 +40,6 @@ public class EventoService {
     private IEnderecoJdbcTemplateDAO IEnderecoJdbcTemplateDAO;
 
     @Autowired
-    private IParticipacaoJdbcTemplateDAO IParticipacaoJdbcTemplateDAO;
-
-    @Autowired
     private IClienteFisicaJdbcTemplateDAO IClienteFisicaJdbcTemplateDAO;
 
     @Autowired
@@ -56,6 +50,7 @@ public class EventoService {
 
     /**
      * Cadastra um novo evento.
+     *
      * @param eventoRequestDTO Objeto contendo os detalhes do evento a ser cadastrado.
      * @return Um objeto de resposta contendo os detalhes do evento cadastrado.
      */
@@ -113,6 +108,7 @@ public class EventoService {
 
     /**
      * Encerra um evento.
+     *
      * @param idEvento O ID do evento a ser encerrado.
      * @return Um objeto de resposta contendo os detalhes do evento encerrado.
      */
@@ -123,28 +119,14 @@ public class EventoService {
         evento.setStatus("CANCELADO");
         Evento updatedEvento = IEventoJdbcTemplateDAO.atualizarEvento(evento);
 
-        // Envia e-mails de cancelamento para todos os participantes do evento
-        List<Participacao> participacoes = IParticipacaoJdbcTemplateDAO.localizarPorIdEvento(idEvento);
-        participacoes.forEach(participacao -> {
-            String email;
-            String nomePessoa;
-            if (participacao.getCpf() != null) {
-                ClienteFisico clienteFisica = IClienteFisicaJdbcTemplateDAO.procurarCpf(participacao.getCpf());
-                email = clienteFisica.getEmail();
-                nomePessoa = clienteFisica.getNome();
-            } else {
-                ClienteJuridico clienteJuridica = IClienteJuridicaJdbcTemplateDAO.procurarCnpj(participacao.getCnpj());
-                email = clienteJuridica.getEmail();
-                nomePessoa = clienteJuridica.getNome();
-            }
-            emailService.enviarEmailCancelamento(email, nomePessoa, evento.getNome_evento());
-        });
+        //todo recurso de reembolso
 
         return mapearEncerramentoEvento(evento);
     }
 
     /**
      * Mapeia os detalhes do encerramento de um evento para um objeto de resposta.
+     *
      * @param evento O objeto evento contendo os detalhes do evento.
      * @return Um objeto de resposta contendo os detalhes do evento encerrado.
      */
@@ -173,8 +155,9 @@ public class EventoService {
 
     /**
      * Mapeia os detalhes de um evento para um objeto de resposta.
-     * @param categoria O objeto categoria contendo os detalhes da categoria do evento.
-     * @param eventoSalvo O objeto evento contendo os detalhes do evento salvo.
+     *
+     * @param categoria     O objeto categoria contendo os detalhes da categoria do evento.
+     * @param eventoSalvo   O objeto evento contendo os detalhes do evento salvo.
      * @param enderecoSalvo O objeto endereço contendo os detalhes do endereço salvo.
      * @return Um objeto de resposta contendo os detalhes do evento.
      */
@@ -198,6 +181,7 @@ public class EventoService {
 
     /**
      * Localiza todos os eventos cadastrados.
+     *
      * @return Uma lista de objetos de resposta contendo os detalhes dos eventos localizados.
      */
     public List<EventoResponseDTO> localizarEventos() {
@@ -236,6 +220,7 @@ public class EventoService {
 
     /**
      * Procura um evento pelo nome.
+     *
      * @param nomeEvento O nome do evento a ser procurado.
      * @return Um objeto de resposta contendo os detalhes do evento localizado.
      */
@@ -253,7 +238,8 @@ public class EventoService {
 
     /**
      * Atualiza um evento existente.
-     * @param nomeEvento O nome do evento a ser atualizado.
+     *
+     * @param nomeEvento       O nome do evento a ser atualizado.
      * @param eventoRequestDTO Objeto contendo os novos detalhes do evento.
      * @return Um objeto de resposta contendo os detalhes do evento atualizado.
      */
@@ -305,6 +291,7 @@ public class EventoService {
 
     /**
      * Exclui um evento.
+     *
      * @param idEvento O ID do evento a ser excluído.
      */
     public void excluirEvento(Integer idEvento) {
