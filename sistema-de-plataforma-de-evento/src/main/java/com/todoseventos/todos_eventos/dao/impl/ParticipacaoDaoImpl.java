@@ -3,7 +3,7 @@ package com.todoseventos.todos_eventos.dao.impl;
 import com.todoseventos.todos_eventos.dao.IParticipacaoDao;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
-import com.todoseventos.todos_eventos.model.evento.ParticipacaoModel;
+import com.todoseventos.todos_eventos.model.evento.Participacao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ class ParticipacaoDaoImpl implements IParticipacaoDao {
 
     @Override
     @Transactional
-    public ParticipacaoModel salvarParticipacao(ParticipacaoModel participacao) {
+    public Participacao salvarParticipacao(Participacao participacao) {
         String sql = "SELECT inserir_participacao(?, ?, ?, ?)";
         try {
             jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
@@ -47,7 +47,7 @@ class ParticipacaoDaoImpl implements IParticipacaoDao {
 
     @Override
     @Transactional
-    public ParticipacaoModel atualizarParticipacao(ParticipacaoModel participacao) {
+    public Participacao atualizarParticipacao(Participacao participacao) {
         String sql = "SELECT atualizar_participacao(?, ?)";
         logger.info("Executando SQL para atualizar participação: {}", sql);
         try {
@@ -66,11 +66,11 @@ class ParticipacaoDaoImpl implements IParticipacaoDao {
 
     @Override
     @Transactional
-    public ParticipacaoModel localizarPorId(Integer idParticipacao) {
+    public Participacao localizarPorId(Integer idParticipacao) {
         String sql = "SELECT * FROM procurar_participacao_por_id(?)";
         logger.info("Executando SQL para buscar participação por ID: {}", sql);
         try {
-            return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ParticipacaoModel.class), idParticipacao);
+            return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Participacao.class), idParticipacao);
         } catch (EmptyResultDataAccessException e) {
             logger.warn("Nenhuma participação encontrada com ID: {}", idParticipacao);
             return null;
@@ -81,17 +81,17 @@ class ParticipacaoDaoImpl implements IParticipacaoDao {
 
     @Override
     @Transactional
-    public List<ParticipacaoModel> localizarPorIdEvento(Integer idEvento) {
+    public List<Participacao> localizarPorIdEvento(Integer idEvento) {
         String sql = "SELECT * FROM procurar_participacoes_por_id_evento(?)";
         try {
-            return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ParticipacaoModel.class), idEvento);
+            return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Participacao.class), idEvento);
         } catch (Exception e) {
             logger.warn("Nenhuma participaçao encontrda");
             throw new CustomException(ExceptionMessages.PARTICIPACAO_NAO_ENCONTRADO_POR_ID + e.getMessage());
         }
     }
 
-    private void setPreparedStatementParameters(PreparedStatement ps, ParticipacaoModel participacao) throws SQLException {
+    private void setPreparedStatementParameters(PreparedStatement ps, Participacao participacao) throws SQLException {
         ps.setString(1, participacao.getCpf());
         ps.setString(2, participacao.getCnpj());
         ps.setInt(3, participacao.getIdEvento());

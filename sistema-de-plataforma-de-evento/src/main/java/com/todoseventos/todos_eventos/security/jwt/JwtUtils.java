@@ -1,7 +1,7 @@
 package com.todoseventos.todos_eventos.security.jwt;
 
 import com.todoseventos.todos_eventos.exception.CustomException;
-import com.todoseventos.todos_eventos.model.cliente.UserDetailsImpl;
+import com.todoseventos.todos_eventos.model.cliente.UserDetailsModelImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -22,7 +22,7 @@ public class JwtUtils {
     private int jwtExpirationMs;
 
     public String generateJwtToken(Authentication authentication) {
-        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
+        UserDetailsModelImpl userPrincipal = (UserDetailsModelImpl) authentication.getPrincipal();
         return Jwts.builder()
                 .setSubject(userPrincipal.getUsername())
                 .setIssuedAt(new Date())

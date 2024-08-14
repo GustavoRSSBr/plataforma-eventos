@@ -11,7 +11,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
-public class ClienteModel implements Serializable {
+public class Cliente implements Serializable {
 
     private Integer idPessoa;
     private String nome;

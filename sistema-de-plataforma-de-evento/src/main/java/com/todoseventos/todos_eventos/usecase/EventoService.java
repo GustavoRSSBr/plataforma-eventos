@@ -9,12 +9,12 @@ import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.gateway.CepService;
 import com.todoseventos.todos_eventos.gateway.EmailService;
-import com.todoseventos.todos_eventos.model.evento.CategoriaModel;
-import com.todoseventos.todos_eventos.model.evento.EnderecoModel;
-import com.todoseventos.todos_eventos.model.evento.EventoModel;
-import com.todoseventos.todos_eventos.model.evento.ParticipacaoModel;
-import com.todoseventos.todos_eventos.model.cliente.ClienteFisicaModel;
-import com.todoseventos.todos_eventos.model.cliente.ClienteJuridicaModel;
+import com.todoseventos.todos_eventos.model.evento.Categoria;
+import com.todoseventos.todos_eventos.model.evento.Endereco;
+import com.todoseventos.todos_eventos.model.evento.Evento;
+import com.todoseventos.todos_eventos.model.evento.Participacao;
+import com.todoseventos.todos_eventos.model.cliente.ClienteFisico;
+import com.todoseventos.todos_eventos.model.cliente.ClienteJuridico;
 import com.todoseventos.todos_eventos.utils.Validacoes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +25,7 @@ import java.util.Objects;
 
 @Service
 public class EventoService {
+
 
     @Autowired
     private IEventoDao IEventoDao;
@@ -64,9 +65,9 @@ public class EventoService {
             throw new CustomException(ExceptionMessages.TIPO_CATEGORIA_INVALIDO);
         }
         // Verificar se a categoria é válida
-        CategoriaModel categoriaModel = ICategoriaDao.buscarNomeCategoria(eventoRequest.getCategoria().name());
+        Categoria categoria = ICategoriaDao.buscarNomeCategoria(eventoRequest.getCategoria().name());
 
-        if (Objects.isNull(categoriaModel)) {
+        if (Objects.isNull(categoria)) {
             throw new CustomException(ExceptionMessages.CATEGORIA_INVALIDA);
         }
 
@@ -83,19 +84,19 @@ public class EventoService {
         eventoRequest.setUf(cepResponse.getUf());
 
         // Criar e salvar o evento
-        EventoModel evento = EventoModel.builder()
+        Evento evento = Evento.builder()
                 .nome_evento(eventoRequest.getNome_evento())
                 .dataHora_evento(eventoRequest.getDataHora_evento())
                 .dataHora_eventofinal(eventoRequest.getDataHora_eventofinal())
                 .descricao(eventoRequest.getDescricao())
                 .status("ATIVO")
-                .id_categoria(categoriaModel.getIdCategoria())
+                .id_categoria(categoria.getIdCategoria())
                 .build();
 
-        EventoModel eventoSalvo = IEventoDao.salvarEvento(evento);
+        Evento eventoSalvo = IEventoDao.salvarEvento(evento);
 
         // Criar e salvar o endereço
-        EnderecoModel endereco = EnderecoModel.builder()
+        Endereco endereco = Endereco.builder()
                 .idEvento(eventoSalvo.getIdEvento())
                 .rua(eventoRequest.getRua())
                 .numero(eventoRequest.getNumero())
@@ -105,9 +106,9 @@ public class EventoService {
                 .uf(eventoRequest.getUf())
                 .build();
 
-        EnderecoModel enderecoSalvo = IEnderecoDao.salverEndereco(endereco);
+        Endereco enderecoSalvo = IEnderecoDao.salverEndereco(endereco);
 
-        return mapearEvento(categoriaModel, eventoSalvo, enderecoSalvo);
+        return mapearEvento(categoria, eventoSalvo, enderecoSalvo);
     }
 
     /**
@@ -117,22 +118,22 @@ public class EventoService {
      */
     public EventoResponse encerrarEvento(Integer idEvento) {
 
-        EventoModel evento = IEventoDao.procurarPorId(idEvento)
+        Evento evento = IEventoDao.procurarPorId(idEvento)
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
         evento.setStatus("CANCELADO");
-        EventoModel updatedEvento = IEventoDao.atualizarEvento(evento);
+        Evento updatedEvento = IEventoDao.atualizarEvento(evento);
 
         // Envia e-mails de cancelamento para todos os participantes do evento
-        List<ParticipacaoModel> participacoes = IParticipacaoDao.localizarPorIdEvento(idEvento);
+        List<Participacao> participacoes = IParticipacaoDao.localizarPorIdEvento(idEvento);
         participacoes.forEach(participacao -> {
             String email;
             String nomePessoa;
             if (participacao.getCpf() != null) {
-                ClienteFisicaModel clienteFisica = IClienteFisicaDao.procurarCpf(participacao.getCpf());
+                ClienteFisico clienteFisica = IClienteFisicaDao.procurarCpf(participacao.getCpf());
                 email = clienteFisica.getEmail();
                 nomePessoa = clienteFisica.getNome();
             } else {
-                ClienteJuridicaModel clienteJuridica = IClienteJuridicaDao.procurarCnpj(participacao.getCnpj());
+                ClienteJuridico clienteJuridica = IClienteJuridicaDao.procurarCnpj(participacao.getCnpj());
                 email = clienteJuridica.getEmail();
                 nomePessoa = clienteJuridica.getNome();
             }
@@ -147,9 +148,10 @@ public class EventoService {
      * @param evento O objeto evento contendo os detalhes do evento.
      * @return Um objeto de resposta contendo os detalhes do evento encerrado.
      */
-    private EventoResponse mapearEncerramentoEvento(EventoModel evento) {
-        CategoriaModel categoria = ICategoriaDao.procurarId(evento.getId_categoria());
-        EnderecoModel endereco = IEnderecoDao.procurarPorIdEvento(evento.getIdEvento())
+    private EventoResponse mapearEncerramentoEvento(Evento evento) {
+
+        Categoria categoria = ICategoriaDao.procurarId(evento.getId_categoria());
+        Endereco endereco = IEnderecoDao.procurarPorIdEvento(evento.getIdEvento())
                 .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + evento.getNome_evento()));
 
         return EventoResponse.builder()
@@ -176,7 +178,7 @@ public class EventoService {
      * @param enderecoSalvo O objeto endereço contendo os detalhes do endereço salvo.
      * @return Um objeto de resposta contendo os detalhes do evento.
      */
-    private EventoResponse mapearEvento(CategoriaModel categoria, EventoModel eventoSalvo, EnderecoModel enderecoSalvo) {
+    private EventoResponse mapearEvento(Categoria categoria, Evento eventoSalvo, Endereco enderecoSalvo) {
         return EventoResponse.builder()
                 .idEvento(eventoSalvo.getIdEvento())
                 .nome_evento(eventoSalvo.getNome_evento())
@@ -199,33 +201,34 @@ public class EventoService {
      * @return Uma lista de objetos de resposta contendo os detalhes dos eventos localizados.
      */
     public List<EventoResponse> localizarEventos() {
-        List<EventoModel> eventoModelList;
+
+        List<Evento> eventoList;
         List<EventoResponse> eventoResponseList = new ArrayList<>();
 
         try {
-            eventoModelList = IEventoDao.localizarEvento();
+            eventoList = IEventoDao.localizarEvento();
         } catch (Exception e) {
             throw new CustomException(ExceptionMessages.ERRO_BUSCAR_EVENTOS + e.getMessage());
         }
 
-        for (EventoModel eventoModel : eventoModelList) {
-            CategoriaModel categoriaModel;
-            EnderecoModel enderecoModel;
+        for (Evento evento : eventoList) {
+            Categoria categoria;
+            Endereco endereco;
 
             try {
-                categoriaModel = ICategoriaDao.procurarId(eventoModel.getId_categoria());
+                categoria = ICategoriaDao.procurarId(evento.getId_categoria());
             } catch (Exception e) {
                 throw new CustomException(ExceptionMessages.ERRO_BUSCAR_CATEGORIA_EVENTO + e.getMessage());
             }
 
             try {
-                enderecoModel = IEnderecoDao.procurarPorIdEvento(eventoModel.getIdEvento())
-                        .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + eventoModel.getNome_evento()));
+                endereco = IEnderecoDao.procurarPorIdEvento(evento.getIdEvento())
+                        .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + evento.getNome_evento()));
             } catch (Exception e) {
                 throw new CustomException(ExceptionMessages.ERRO_BUSCAR_ENDERECO_EVENTO + e.getMessage());
             }
 
-            EventoResponse eventoResponse = mapearEvento(categoriaModel, eventoModel, enderecoModel);
+            EventoResponse eventoResponse = mapearEvento(categoria, evento, endereco);
             eventoResponseList.add(eventoResponse);
         }
         return eventoResponseList;
@@ -237,14 +240,15 @@ public class EventoService {
      * @return Um objeto de resposta contendo os detalhes do evento localizado.
      */
     public EventoResponse procurarEventoPorNome(String nomeEvento) {
-        EventoModel eventoModel = IEventoDao.procurarPorNome(nomeEvento)
+
+        Evento evento = IEventoDao.procurarPorNome(nomeEvento)
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
 
-        CategoriaModel categoriaModel = ICategoriaDao.procurarId(eventoModel.getId_categoria());
-        EnderecoModel enderecoModel = IEnderecoDao.procurarPorIdEvento(eventoModel.getIdEvento())
+        Categoria categoria = ICategoriaDao.procurarId(evento.getId_categoria());
+        Endereco endereco = IEnderecoDao.procurarPorIdEvento(evento.getIdEvento())
                 .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + nomeEvento));
 
-        return mapearEvento(categoriaModel, eventoModel, enderecoModel);
+        return mapearEvento(categoria, evento, endereco);
     }
 
     /**
@@ -254,12 +258,13 @@ public class EventoService {
      * @return Um objeto de resposta contendo os detalhes do evento atualizado.
      */
     public EventoResponse atualizarEvento(String nomeEvento, EventoRequest eventoRequest) {
-        EventoModel eventoExistente = IEventoDao.procurarPorNome(nomeEvento)
+
+        Evento eventoExistente = IEventoDao.procurarPorNome(nomeEvento)
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
 
-        CategoriaModel categoriaModel = ICategoriaDao.buscarNomeCategoria(eventoRequest.getCategoria().name());
+        Categoria categoria = ICategoriaDao.buscarNomeCategoria(eventoRequest.getCategoria().name());
 
-        if (categoriaModel == null) {
+        if (categoria == null) {
             throw new CustomException(ExceptionMessages.CATEGORIA_INVALIDA);
         }
 
@@ -279,11 +284,11 @@ public class EventoService {
         eventoExistente.setDataHora_evento(eventoRequest.getDataHora_evento());
         eventoExistente.setDataHora_eventofinal(eventoRequest.getDataHora_eventofinal());
         eventoExistente.setDescricao(eventoRequest.getDescricao());
-        eventoExistente.setId_categoria(categoriaModel.getIdCategoria());
+        eventoExistente.setId_categoria(categoria.getIdCategoria());
 
-        EventoModel eventoAtualizado = IEventoDao.atualizarEvento(eventoExistente);
+        Evento eventoAtualizado = IEventoDao.atualizarEvento(eventoExistente);
 
-        EnderecoModel enderecoExistente = IEnderecoDao.procurarPorIdEvento(eventoExistente.getIdEvento())
+        Endereco enderecoExistente = IEnderecoDao.procurarPorIdEvento(eventoExistente.getIdEvento())
                 .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + nomeEvento));
 
         enderecoExistente.setRua(eventoRequest.getRua());
@@ -293,9 +298,9 @@ public class EventoService {
         enderecoExistente.setCep(eventoRequest.getCep());
         enderecoExistente.setUf(eventoRequest.getUf());
 
-        EnderecoModel enderecoAtualizado = IEnderecoDao.atualizarEndereco(enderecoExistente);
+        Endereco enderecoAtualizado = IEnderecoDao.atualizarEndereco(enderecoExistente);
 
-        return mapearEvento(categoriaModel, eventoAtualizado, enderecoAtualizado);
+        return mapearEvento(categoria, eventoAtualizado, enderecoAtualizado);
     }
 
     /**
@@ -303,7 +308,8 @@ public class EventoService {
      * @param idEvento O ID do evento a ser excluído.
      */
     public void excluirEvento(Integer idEvento) {
-        EventoModel eventoExistente = IEventoDao.procurarPorId(idEvento)
+
+        Evento eventoExistente = IEventoDao.procurarPorId(idEvento)
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
         IEnderecoDao.deletarPorIdEvento(idEvento);
         IEventoDao.deletarPorId(idEvento);

@@ -1,4 +1,4 @@
-package com.todoseventos.todos_eventos.model.evento;
+package com.todoseventos.todos_eventos.model.cliente;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,8 +11,10 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
-public class CategoriaModel implements Serializable {
+public class ClienteJuridico implements Serializable {
 
-    private Integer idCategoria;
-    private String nomeCategoria;
+    private Integer idPessoa;
+    private String cnpj;
+    private String nome;
+    private String email;
 }

@@ -1,13 +1,13 @@
 package com.todoseventos.todos_eventos.dao;
 
-import com.todoseventos.todos_eventos.model.evento.ParticipacaoModel;
+import com.todoseventos.todos_eventos.model.evento.Participacao;
 
 import java.util.List;
 
 public interface IParticipacaoDao {
-    ParticipacaoModel salvarParticipacao(ParticipacaoModel participacao);
-    ParticipacaoModel atualizarParticipacao(ParticipacaoModel participacao);
-    ParticipacaoModel localizarPorId(Integer idParticipacao);
-    List<ParticipacaoModel> localizarPorIdEvento(Integer idEvento);
+    Participacao salvarParticipacao(Participacao participacao);
+    Participacao atualizarParticipacao(Participacao participacao);
+    Participacao localizarPorId(Integer idParticipacao);
+    List<Participacao> localizarPorIdEvento(Integer idEvento);
 }
 

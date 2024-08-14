@@ -1,11 +1,10 @@
 package com.todoseventos.todos_eventos.usecase;
 
 
-import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.enuns.SuccessMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
-import com.todoseventos.todos_eventos.model.cliente.UserDetailsImpl;
-import com.todoseventos.todos_eventos.model.cliente.ClienteModel;
+import com.todoseventos.todos_eventos.model.cliente.UserDetailsModelImpl;
+import com.todoseventos.todos_eventos.model.cliente.Cliente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,10 +22,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        ClienteModel user = jdbcTemplate.queryForObject("SELECT * FROM pessoa WHERE email = ?",
+        Cliente user = jdbcTemplate.queryForObject("SELECT * FROM pessoa WHERE email = ?",
                 new Object[]{email},
                 (rs, rowNum) -> {
-                    ClienteModel u = new ClienteModel();
+                    Cliente u = new Cliente();
                     u.setIdPessoa(rs.getInt("id_pessoa"));
                     u.setEmail(rs.getString("email"));
                     u.setSenha(rs.getString("senha"));
@@ -37,6 +36,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new CustomException(SuccessMessages.TOKEN_EMAIL + email);
         }
 
-        return UserDetailsImpl.build(user);
+        return UserDetailsModelImpl.build(user);
     }
 }

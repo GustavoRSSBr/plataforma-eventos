@@ -3,7 +3,7 @@ package com.todoseventos.todos_eventos.dao.impl;
 import com.todoseventos.todos_eventos.dao.ICategoriaDao;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
-import com.todoseventos.todos_eventos.model.evento.CategoriaModel;
+import com.todoseventos.todos_eventos.model.evento.Categoria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,10 +18,10 @@ class CategoriaDaoImpl implements ICategoriaDao {
 
     @Override
     @Transactional
-    public CategoriaModel procurarId(Integer idCategoria) {
+    public Categoria procurarId(Integer idCategoria) {
         String sql = "SELECT * FROM procurar_categoria_por_id(?)";
         try {
-            return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(CategoriaModel.class), idCategoria);
+            return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Categoria.class), idCategoria);
         } catch (Exception e) {
             throw new CustomException(ExceptionMessages.ERRO_BUSCAR_POR_ID + e.getMessage());
         }
@@ -29,10 +29,10 @@ class CategoriaDaoImpl implements ICategoriaDao {
 
     @Override
     @Transactional
-    public CategoriaModel buscarNomeCategoria(String nomeCategoria) {
+    public Categoria buscarNomeCategoria(String nomeCategoria) {
         String sql = "SELECT * FROM procurar_categoria_por_nome(?)";
         try {
-            return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(CategoriaModel.class), nomeCategoria);
+            return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Categoria.class), nomeCategoria);
         } catch (Exception e) {
             throw new CustomException(ExceptionMessages.ERRO_BUSCAR_POR_NOME + e.getMessage());
         }

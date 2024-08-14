@@ -3,7 +3,7 @@ package com.todoseventos.todos_eventos.dao.impl;
 import com.todoseventos.todos_eventos.dao.ITipoClienteDao;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
-import com.todoseventos.todos_eventos.model.cliente.TipoClienteModel;
+import com.todoseventos.todos_eventos.model.cliente.TipoCliente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,10 +18,10 @@ class TipoClienteDaoImpl implements ITipoClienteDao {
 
     @Override
     @Transactional
-    public TipoClienteModel buscarPorNomeTipoPessoa(String nomeTipoPessoa) {
+    public TipoCliente buscarPorNomeTipoPessoa(String nomeTipoPessoa) {
         String sql = "SELECT * FROM procurar_tipo_cliente_por_nome(?)";
         try {
-            return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(TipoClienteModel.class), nomeTipoPessoa);
+            return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(TipoCliente.class), nomeTipoPessoa);
         } catch (Exception e) {
             throw new CustomException(ExceptionMessages.ERRO_BUSCAR_POR_NOME + e.getMessage());
         }

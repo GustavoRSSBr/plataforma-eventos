@@ -5,12 +5,14 @@ import com.todoseventos.todos_eventos.dto.requestDTO.EventoRequest;
 import com.todoseventos.todos_eventos.dto.responseDTO.EventoResponse;
 import com.todoseventos.todos_eventos.enuns.SuccessMessages;
 import com.todoseventos.todos_eventos.usecase.EventoService;
+import com.todoseventos.todos_eventos.utils.LoggerUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,8 @@ import java.util.List;
 @RequestMapping(value = "/api")
 @CrossOrigin
 public class EventoController {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(EventoController.class);
 
     @Autowired
     private EventoService eventoService;
@@ -39,7 +43,7 @@ public class EventoController {
         long startTime = System.currentTimeMillis();
         EventoResponse response = eventoService.cadastrarNovoEvento(eventoRequest);
 
-        logElapsedTime("cadastrarEvento", startTime);
+        LoggerUtils.logElapsedTime(LOGGER, "cadastrarEvento", startTime);
         return ResponseEntity.status(HttpStatus.CREATED).body(new CustomExceptionResponse(SuccessMessages.CADASTRO_EVENTO));
     }
 
@@ -56,7 +60,7 @@ public class EventoController {
         long startTime = System.currentTimeMillis();
         EventoResponse response = eventoService.encerrarEvento(idEvento);
 
-        logElapsedTime("encerrarEvento", startTime);
+        LoggerUtils.logElapsedTime(LOGGER, "encerrarEvento", startTime);
         return ResponseEntity.status(HttpStatus.OK).body(new CustomExceptionResponse(SuccessMessages.EVENTO_ENCERRADO));
 
     }
@@ -70,7 +74,7 @@ public class EventoController {
     public ResponseEntity<?> listarEventos() {
         long startTime = System.currentTimeMillis();
         List<EventoResponse> response = eventoService.localizarEventos();
-        logElapsedTime("listarEventos", startTime);
+        LoggerUtils.logElapsedTime(LOGGER, "listarEventos", startTime);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -86,7 +90,7 @@ public class EventoController {
             @Valid @PathVariable String nomeEvento) {
         long startTime = System.currentTimeMillis();
         EventoResponse response = eventoService.procurarEventoPorNome(nomeEvento);
-        logElapsedTime("procurarEventoPorNome", startTime);
+        LoggerUtils.logElapsedTime(LOGGER, "procurarEventoPorNome", startTime);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -103,7 +107,7 @@ public class EventoController {
         long startTime = System.currentTimeMillis();
         EventoResponse response = eventoService.atualizarEvento(nomeEvento, eventoRequest);
 
-        logElapsedTime("atualizarEvento", startTime);
+        LoggerUtils.logElapsedTime(LOGGER, "atualizarEvento", startTime);
         return ResponseEntity.status(HttpStatus.OK).body(new CustomExceptionResponse(SuccessMessages.EVENTO_ATUALIZADO));
     }
 
@@ -120,20 +124,8 @@ public class EventoController {
         long startTime = System.currentTimeMillis();
         eventoService.excluirEvento(idEvento);
 
+        LoggerUtils.logElapsedTime(LOGGER, "excluirEvento", startTime);
 
-        logElapsedTime("excluirEvento", startTime);
         return ResponseEntity.status(HttpStatus.OK).body(new CustomExceptionResponse(SuccessMessages.EXCLUIR_EVENTO));
-    }
-
-    /**
-     * Método que registra o tempo decorrido de um método específico.
-     *
-     * @param methodName nome cujo o tempo de eecução está sendo medido.
-     * @param startTime Tempo de início da execução do método.
-     **/
-    private void logElapsedTime(String methodName, long startTime) {
-        long endTime = System.currentTimeMillis();
-        long elapsedTime = endTime - startTime;
-        log.info("Método: {}, Tempo decorrido: {} ms", methodName, elapsedTime);
     }
 }

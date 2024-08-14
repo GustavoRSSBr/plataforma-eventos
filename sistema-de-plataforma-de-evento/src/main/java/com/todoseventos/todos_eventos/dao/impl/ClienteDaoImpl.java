@@ -3,7 +3,7 @@ package com.todoseventos.todos_eventos.dao.impl;
 import com.todoseventos.todos_eventos.dao.IClienteDao;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
-import com.todoseventos.todos_eventos.model.cliente.ClienteModel;
+import com.todoseventos.todos_eventos.model.cliente.Cliente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -22,10 +22,10 @@ class ClienteDaoImpl implements IClienteDao {
 
     @Override
     @Transactional
-    public ClienteModel procurarPorCpf(String cpf) {
+    public Cliente procurarPorCpf(String cpf) {
         String sql = "SELECT * FROM procurar_cliente_por_cpf(?)";
         try {
-            return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ClienteModel.class), cpf);
+            return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Cliente.class), cpf);
         } catch (EmptyResultDataAccessException e) {
             return null;
         } catch (Exception e) {
@@ -35,10 +35,10 @@ class ClienteDaoImpl implements IClienteDao {
 
     @Override
     @Transactional
-    public ClienteModel procurarPorCnpj(String cnpj) {
+    public Cliente procurarPorCnpj(String cnpj) {
         String sql = "SELECT * FROM procurar_cliente_por_cnpj(?)";
         try {
-            return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ClienteModel.class), cnpj);
+            return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Cliente.class), cnpj);
         } catch (EmptyResultDataAccessException e) {
             return null;
         } catch (Exception e) {
@@ -48,10 +48,10 @@ class ClienteDaoImpl implements IClienteDao {
 
     @Override
     @Transactional
-    public ClienteModel procurarPorEmail(String email) {
+    public Cliente procurarPorEmail(String email) {
         String sql = "SELECT * FROM procurar_cliente_por_email(?)";
         try {
-            return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ClienteModel.class), email);
+            return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Cliente.class), email);
         } catch (EmptyResultDataAccessException e) {
             return null;
         } catch (Exception e) {
@@ -61,7 +61,7 @@ class ClienteDaoImpl implements IClienteDao {
 
     @Override
     @Transactional
-    public ClienteModel salvarCliente(ClienteModel pessoa) {
+    public Cliente salvarCliente(Cliente pessoa) {
         String sql = "SELECT inserir_cliente(?, ?, ?, ?, ?)";
         try {
             Integer idPessoa = jdbcTemplate.queryForObject(sql, new Object[]{
@@ -76,7 +76,7 @@ class ClienteDaoImpl implements IClienteDao {
 
     @Override
     @Transactional
-    public ClienteModel atualizarCliente(ClienteModel pessoa) {
+    public Cliente atualizarCliente(Cliente pessoa) {
         String sql = "SELECT atualizar_cliente(?, ?, ?, ?, ?, ?)";
         try {
             jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
@@ -97,10 +97,10 @@ class ClienteDaoImpl implements IClienteDao {
 
     @Override
     @Transactional
-    public List<ClienteModel> listarTodasPessoas() {
+    public List<Cliente> listarTodasPessoas() {
         String sql = "SELECT * FROM listar_todos_clientes()";
         try {
-            return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ClienteModel.class));
+            return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Cliente.class));
         } catch (Exception e) {
             throw new CustomException(ExceptionMessages.ERRO_LISTAR_TODOS + e.getMessage());
         }

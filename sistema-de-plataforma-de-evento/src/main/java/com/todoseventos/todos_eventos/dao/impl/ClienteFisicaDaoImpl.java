@@ -3,7 +3,7 @@ package com.todoseventos.todos_eventos.dao.impl;
 import com.todoseventos.todos_eventos.dao.IClienteFisicaDao;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
-import com.todoseventos.todos_eventos.model.cliente.ClienteFisicaModel;
+import com.todoseventos.todos_eventos.model.cliente.ClienteFisico;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,7 +19,7 @@ class ClienteFisicaDaoImpl implements IClienteFisicaDao {
 
     @Override
     @Transactional
-    public ClienteFisicaModel salvarCliFisico(ClienteFisicaModel pessoaFisica) {
+    public ClienteFisico salvarCliFisico(ClienteFisico pessoaFisica) {
         String sql = "SELECT inserir_cliente_fisico(?, ?, ?)";
         try {
             jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
@@ -37,7 +37,7 @@ class ClienteFisicaDaoImpl implements IClienteFisicaDao {
 
     @Override
     @Transactional
-    public ClienteFisicaModel atualizarCliFisico(ClienteFisicaModel pessoaFisica) {
+    public ClienteFisico atualizarCliFisico(ClienteFisico pessoaFisica) {
         String sql = "SELECT atualizar_cliente_fisico(?, ?, ?)";
         try {
             jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
@@ -55,10 +55,10 @@ class ClienteFisicaDaoImpl implements IClienteFisicaDao {
 
     @Override
     @Transactional
-    public ClienteFisicaModel procurarCpf(String cpf) {
+    public ClienteFisico procurarCpf(String cpf) {
         String sql = "SELECT * FROM procurar_cliente_fisico_por_cpf(?)";
         try {
-            return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ClienteFisicaModel.class), cpf);
+            return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ClienteFisico.class), cpf);
         } catch (Exception e) {
             throw new CustomException(ExceptionMessages.ERRO_BUSCAR_CLIENTE_CPF + e.getMessage());
         }

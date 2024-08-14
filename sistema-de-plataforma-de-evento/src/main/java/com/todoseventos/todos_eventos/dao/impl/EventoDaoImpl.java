@@ -3,7 +3,7 @@ package com.todoseventos.todos_eventos.dao.impl;
 import com.todoseventos.todos_eventos.dao.IEventoDao;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
-import com.todoseventos.todos_eventos.model.evento.EventoModel;
+import com.todoseventos.todos_eventos.model.evento.Evento;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ class EventoDaoImpl implements IEventoDao {
 
     @Override
     @Transactional
-    public EventoModel salvarEvento(EventoModel evento) {
+    public Evento salvarEvento(Evento evento) {
         String sql = "SELECT inserir_evento(?, ?, ?, ?, ?, ?)";
         try {
             jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
@@ -47,7 +47,7 @@ class EventoDaoImpl implements IEventoDao {
 
     @Override
     @Transactional
-    public EventoModel atualizarEvento(EventoModel evento) {
+    public Evento atualizarEvento(Evento evento) {
         String sql = "SELECT atualizar_evento(?, ?, ?, ?, ?, ?, ?)";
         try {
             jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
@@ -70,10 +70,10 @@ class EventoDaoImpl implements IEventoDao {
 
     @Override
     @Transactional
-    public Optional<EventoModel> procurarPorNome(String nomeEvento) {
+    public Optional<Evento> procurarPorNome(String nomeEvento) {
         String sql = "SELECT * FROM procurar_evento_por_nome(?)";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(EventoModel.class), nomeEvento.trim()));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Evento.class), nomeEvento.trim()));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         } catch (Exception e) {
@@ -83,10 +83,10 @@ class EventoDaoImpl implements IEventoDao {
 
     @Override
     @Transactional
-    public Optional<EventoModel> procurarPorId(Integer idEvento) {
+    public Optional<Evento> procurarPorId(Integer idEvento) {
         String sql = "SELECT * FROM procurar_evento_por_id(?)";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(EventoModel.class), idEvento));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Evento.class), idEvento));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         } catch (Exception e) {
@@ -96,11 +96,11 @@ class EventoDaoImpl implements IEventoDao {
 
     @Override
     @Transactional
-    public List<EventoModel> localizarEvento() {
+    public List<Evento> localizarEvento() {
         String sql = "SELECT * FROM localizar_evento()";
         logger.info("Executando SQL para buscar evento: {}", sql);
         try {
-            return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(EventoModel.class));
+            return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Evento.class));
         } catch (Exception e) {
             throw new CustomException(ExceptionMessages.ERRO_LISTAR_TODOS + e.getMessage());
         }
@@ -121,7 +121,7 @@ class EventoDaoImpl implements IEventoDao {
         }
     }
 
-    private void setPreparedStatementParameters(PreparedStatement ps, EventoModel evento) throws SQLException {
+    private void setPreparedStatementParameters(PreparedStatement ps, Evento evento) throws SQLException {
         ps.setString(1, evento.getNome_evento().trim());
         ps.setString(2, evento.getDataHora_evento());
         ps.setString(3, evento.getDataHora_eventofinal());

@@ -1,9 +1,9 @@
 package com.todoseventos.todos_eventos.dao;
 
-import com.todoseventos.todos_eventos.model.evento.CategoriaModel;
+import com.todoseventos.todos_eventos.model.evento.Categoria;
 
 public interface ICategoriaDao {
-    CategoriaModel procurarId(Integer idCategoria);
-    CategoriaModel buscarNomeCategoria(String nomeCategoria);
+    Categoria procurarId(Integer idCategoria);
+    Categoria buscarNomeCategoria(String nomeCategoria);
 }
 

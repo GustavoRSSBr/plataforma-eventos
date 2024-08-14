@@ -3,7 +3,7 @@ package com.todoseventos.todos_eventos.dao.impl;
 import com.todoseventos.todos_eventos.dao.IEnderecoDao;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
-import com.todoseventos.todos_eventos.model.evento.EnderecoModel;
+import com.todoseventos.todos_eventos.model.evento.Endereco;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -24,7 +24,7 @@ class EnderecoDaoImpl implements IEnderecoDao {
 
     @Override
     @Transactional
-    public EnderecoModel salverEndereco(EnderecoModel endereco) {
+    public Endereco salverEndereco(Endereco endereco) {
         String sql = "SELECT inserir_endereco(?, ?, ?, ?, ?, ?, ?)";
         try {
             jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
@@ -41,7 +41,7 @@ class EnderecoDaoImpl implements IEnderecoDao {
 
     @Override
     @Transactional
-    public EnderecoModel atualizarEndereco(EnderecoModel endereco) {
+    public Endereco atualizarEndereco(Endereco endereco) {
         String sql = "SELECT atualizar_endereco(?, ?, ?, ?, ?, ?, ?)";
         try {
             jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
@@ -57,10 +57,10 @@ class EnderecoDaoImpl implements IEnderecoDao {
 
     @Override
     @Transactional
-    public Optional<EnderecoModel> procurarPorIdEvento(Integer id) {
+    public Optional<Endereco> procurarPorIdEvento(Integer id) {
         String sql = "SELECT * FROM procurar_endereco_por_id_evento(?)";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(EnderecoModel.class), id));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Endereco.class), id));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         } catch (Exception e) {
@@ -83,7 +83,7 @@ class EnderecoDaoImpl implements IEnderecoDao {
         }
     }
 
-    private void setPreparedStatementParameters(PreparedStatement ps, EnderecoModel endereco) throws SQLException {
+    private void setPreparedStatementParameters(PreparedStatement ps, Endereco endereco) throws SQLException {
         ps.setString(1, endereco.getRua());
         ps.setString(2, endereco.getNumero());
         ps.setString(3, endereco.getBairro());

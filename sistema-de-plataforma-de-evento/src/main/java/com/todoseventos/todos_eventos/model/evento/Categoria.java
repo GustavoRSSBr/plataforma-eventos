@@ -5,17 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
-public class ParticipacaoModel {
-    private Integer idParticipacao;
-    private String cpf;
-    private String cnpj;
-    private Integer idEvento;
-    private String status;
+public class Categoria implements Serializable {
 
+    private Integer idCategoria;
+    private String nomeCategoria;
 }
-
-
