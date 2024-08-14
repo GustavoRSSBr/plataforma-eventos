@@ -1,13 +1,13 @@
 package com.todoseventos.todos_eventos.usecase;
 
-import com.todoseventos.todos_eventos.dto.requestDTO.ClienteRequest;
-import com.todoseventos.todos_eventos.dto.responseDTO.ClienteResponse;
+import com.todoseventos.todos_eventos.dto.requestDTO.ClienteRequestDTO;
+import com.todoseventos.todos_eventos.dto.responseDTO.ClienteResponseDTO;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.enuns.TipoClienteEnum;
-import com.todoseventos.todos_eventos.dao.IClienteDao;
-import com.todoseventos.todos_eventos.dao.IClienteFisicaDao;
-import com.todoseventos.todos_eventos.dao.IClienteJuridicaDao;
-import com.todoseventos.todos_eventos.dao.ITipoClienteDao;
+import com.todoseventos.todos_eventos.dao.IClienteJdbcTemplateDAO;
+import com.todoseventos.todos_eventos.dao.IClienteFisicaJdbcTemplateDAO;
+import com.todoseventos.todos_eventos.dao.IClienteJuridicaJdbcTemplateDAO;
+import com.todoseventos.todos_eventos.dao.ITipoClienteJdbcTemplateDAO;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.model.cliente.ClienteFisico;
 import com.todoseventos.todos_eventos.model.cliente.ClienteJuridico;
@@ -30,32 +30,32 @@ public class ClienteService {
     private Validacoes validacoes;
 
     @Autowired
-    private IClienteDao IClienteDao;
+    private IClienteJdbcTemplateDAO IClienteJdbcTemplateDAO;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private ITipoClienteDao ITipoClienteDao;
+    private ITipoClienteJdbcTemplateDAO ITipoClienteJdbcTemplateDAO;
 
     @Autowired
-    private IClienteFisicaDao IClienteFisicaDao;
+    private IClienteFisicaJdbcTemplateDAO IClienteFisicaJdbcTemplateDAO;
 
     @Autowired
-    private IClienteJuridicaDao IClienteJuridicaDao;
+    private IClienteJuridicaJdbcTemplateDAO IClienteJuridicaJdbcTemplateDAO;
 
     /**
      * Cadastra uma nova pessoa (física ou jurídica).
      * @param clienteRequest Objeto contendo os detalhes da pessoa a ser cadastrada.
      * @return Um objeto de resposta contendo os detalhes da pessoa cadastrada.
      */
-    public ClienteResponse cadastrarNovaPessoa(ClienteRequest clienteRequest) {
+    public ClienteResponseDTO cadastrarNovaPessoa(ClienteRequestDTO clienteRequest) {
 
         if (clienteRequest.getTipo_pessoa() == null) {
             throw new CustomException(ExceptionMessages.CATEGORIA_INVALIDA);
         }
 
-        TipoCliente tipoCliente = ITipoClienteDao.buscarPorNomeTipoPessoa(clienteRequest.getTipo_pessoa().name());
+        TipoCliente tipoCliente = ITipoClienteJdbcTemplateDAO.buscarPorNomeTipoPessoa(clienteRequest.getTipo_pessoa().name());
 
         if (Objects.isNull(tipoCliente)) {
             throw new CustomException(ExceptionMessages.CATEGORIA_INVALIDA);
@@ -74,7 +74,7 @@ public class ClienteService {
                 .tipo_pessoa(tipoCliente.getIdTipoPessoa())
                 .build();
 
-        Cliente pessoaSalva = IClienteDao.salvarCliente(pessoa);
+        Cliente pessoaSalva = IClienteJdbcTemplateDAO.salvarCliente(pessoa);
 
         if (clienteRequest.getTipo_pessoa() == TipoClienteEnum.FISICA) {
             ClienteFisico pessoaFisica = ClienteFisico.builder()
@@ -82,14 +82,14 @@ public class ClienteService {
                     .dataNascimento(clienteRequest.getDataNascimento())
                     .idPessoa(pessoaSalva.getIdPessoa())
                     .build();
-            IClienteFisicaDao.salvarCliFisico(pessoaFisica);
+            IClienteFisicaJdbcTemplateDAO.salvarCliFisico(pessoaFisica);
 
         } else if (clienteRequest.getTipo_pessoa() == TipoClienteEnum.JURIDICA) {
             ClienteJuridico pessoaJuridica = ClienteJuridico.builder()
                     .cnpj(clienteRequest.getCnpj())
                     .idPessoa(pessoaSalva.getIdPessoa())
                     .build();
-            IClienteJuridicaDao.salvarCliJuridico(pessoaJuridica);
+            IClienteJuridicaJdbcTemplateDAO.salvarCliJuridico(pessoaJuridica);
         }
         return mapearPessoa(clienteRequest.getTipo_pessoa(), pessoaSalva);
     }
@@ -98,7 +98,7 @@ public class ClienteService {
      * Valida os dados do cliente.
      * @param clienteRequest Objeto contendo os detalhes do cliente a ser validado.
      */
-    private void validarDados(ClienteRequest clienteRequest) {
+    private void validarDados(ClienteRequestDTO clienteRequest) {
         if (!validacoes.validarEmail(clienteRequest.getEmail())) {
             throw new CustomException(ExceptionMessages.EMAIL_INVALIDO);
         }
@@ -117,7 +117,7 @@ public class ClienteService {
                 throw new CustomException(ExceptionMessages.CPF_INVALIDO);
             }
 
-            Cliente pessoaExistente = IClienteDao.procurarPorCpf(clienteRequest.getCpf());
+            Cliente pessoaExistente = IClienteJdbcTemplateDAO.procurarPorCpf(clienteRequest.getCpf());
             if (pessoaExistente != null) {
                 throw new CustomException(ExceptionMessages.CPF_JA_CADASTRADO);
             }
@@ -127,7 +127,7 @@ public class ClienteService {
                 throw new CustomException(ExceptionMessages.CNPJ_INVALIDO);
             }
 
-            Cliente pessoaExistente = IClienteDao.procurarPorCnpj(clienteRequest.getCnpj());
+            Cliente pessoaExistente = IClienteJdbcTemplateDAO.procurarPorCnpj(clienteRequest.getCnpj());
             if (pessoaExistente != null) {
                 throw new CustomException(ExceptionMessages.CNPJ_JA_CADASTRADO);
             }
@@ -140,8 +140,8 @@ public class ClienteService {
      * @param pessoaSalva O objeto pessoa contendo os detalhes da pessoa salva.
      * @return Um objeto de resposta contendo os detalhes da pessoa.
      */
-    private static ClienteResponse mapearPessoa(TipoClienteEnum tipo_pessoa, Cliente pessoaSalva) {
-        ClienteResponse.ClienteResponseBuilder builder = ClienteResponse.builder()
+    private static ClienteResponseDTO mapearPessoa(TipoClienteEnum tipo_pessoa, Cliente pessoaSalva) {
+        ClienteResponseDTO.ClienteResponseDTOBuilder builder = ClienteResponseDTO.builder()
                 .nome(pessoaSalva.getNome())
                 .email(pessoaSalva.getEmail())
                 .senha(pessoaSalva.getSenha())
@@ -163,16 +163,16 @@ public class ClienteService {
      * @param cpf O CPF da pessoa física.
      * @return Um objeto de resposta contendo os detalhes da pessoa encontrada.
      */
-    public ClienteResponse procurarPessoaPorCpf(String cpf) {
-        Cliente pessoaFisicaEncontrada = IClienteDao.procurarPorCpf(cpf);
+    public ClienteResponseDTO procurarPessoaPorCpf(String cpf) {
+        Cliente pessoaFisicaEncontrada = IClienteJdbcTemplateDAO.procurarPorCpf(cpf);
         if (Objects.isNull(pessoaFisicaEncontrada)) {
             throw new CustomException(ExceptionMessages.CPF_INVALIDO);
         }
         return mapearPessoa(TipoClienteEnum.FISICA, pessoaFisicaEncontrada);
     }
 
-    public ClienteResponse verificarCpfOuCnpj(String identificador) {
-        ClienteResponse pessoa;
+    public ClienteResponseDTO verificarCpfOuCnpj(String identificador) {
+        ClienteResponseDTO pessoa;
         if (identificador.length() == 11) { // Assumindo que CPF tem 11 dígitos
             pessoa = procurarPessoaPorCpf(identificador);
         } else if (identificador.length() == 14) { // Assumindo que CNPJ tem 14 dígitos
@@ -188,8 +188,8 @@ public class ClienteService {
      * @param cnpj O CNPJ da pessoa jurídica.
      * @return Um objeto de resposta contendo os detalhes da pessoa encontrada.
      */
-    public ClienteResponse procurarPessoaPorCnpj(String cnpj) {
-        Cliente pessoaJuridicaEncontrada = IClienteDao.procurarPorCnpj(cnpj);
+    public ClienteResponseDTO procurarPessoaPorCnpj(String cnpj) {
+        Cliente pessoaJuridicaEncontrada = IClienteJdbcTemplateDAO.procurarPorCnpj(cnpj);
 
         if (Objects.isNull(pessoaJuridicaEncontrada)) {
             throw new CustomException(ExceptionMessages.CNPJ_JA_CADASTRADO);
@@ -201,15 +201,15 @@ public class ClienteService {
      * Lista todas as pessoas cadastradas.
      * @return Uma lista de objetos de resposta contendo os detalhes das pessoas cadastradas.
      */
-    public List<ClienteResponse> listarPessoas() {
-        List<Cliente> pessoasEncontradas = IClienteDao.listarTodasPessoas();
-        List<ClienteResponse> clienteResponse = new ArrayList<>();
+    public List<ClienteResponseDTO> listarPessoas() {
+        List<Cliente> pessoasEncontradas = IClienteJdbcTemplateDAO.listarTodasPessoas();
+        List<ClienteResponseDTO> clienteResponseDTO = new ArrayList<>();
 
         for (Cliente pessoa : pessoasEncontradas) {
             TipoClienteEnum tipoPessoa = pessoa.getCpf() != null ? TipoClienteEnum.FISICA : TipoClienteEnum.JURIDICA;
-            clienteResponse.add(mapearPessoa(tipoPessoa, pessoa));
+            clienteResponseDTO.add(mapearPessoa(tipoPessoa, pessoa));
         }
-        return clienteResponse;
+        return clienteResponseDTO;
     }
 
     /**
@@ -218,14 +218,14 @@ public class ClienteService {
      * @param clienteRequest Objeto contendo os novos detalhes da pessoa.
      * @return Um objeto de resposta contendo os detalhes da pessoa atualizada.
      */
-    public ClienteResponse atualizarPessoa(String identificador, ClienteRequest clienteRequest) {
+    public ClienteResponseDTO atualizarPessoa(String identificador, ClienteRequestDTO clienteRequest) {
         Cliente pessoaExistente;
 
 
         if (identificador.length() == 11) { // CPF
-            pessoaExistente = IClienteDao.procurarPorCpf(identificador);
+            pessoaExistente = IClienteJdbcTemplateDAO.procurarPorCpf(identificador);
         } else if (identificador.length() == 14) { // CNPJ
-            pessoaExistente = IClienteDao.procurarPorCnpj(identificador);
+            pessoaExistente = IClienteJdbcTemplateDAO.procurarPorCnpj(identificador);
         } else {
             throw new CustomException(ExceptionMessages.IDENTIFICADOR_INVALIDO);
         }
@@ -234,7 +234,7 @@ public class ClienteService {
             throw new CustomException(ExceptionMessages.CLIENTE_NAO_ENCONTRADO);
         }
 
-        TipoCliente tipoCliente = ITipoClienteDao.buscarPorNomeTipoPessoa(clienteRequest.getTipo_pessoa().name());
+        TipoCliente tipoCliente = ITipoClienteJdbcTemplateDAO.buscarPorNomeTipoPessoa(clienteRequest.getTipo_pessoa().name());
         String encodedPassword = passwordEncoder.encode(clienteRequest.getSenha());
 
         pessoaExistente.setNome(clienteRequest.getNome());
@@ -243,22 +243,22 @@ public class ClienteService {
         pessoaExistente.setTelefone(clienteRequest.getTelefone());
         pessoaExistente.setTipo_pessoa(tipoCliente.getIdTipoPessoa());
 
-        Cliente clienteAtualizado = IClienteDao.atualizarCliente(pessoaExistente);
+        Cliente clienteAtualizado = IClienteJdbcTemplateDAO.atualizarCliente(pessoaExistente);
 
         if (clienteRequest.getTipo_pessoa() == TipoClienteEnum.FISICA) {
-            ClienteFisico pessoaFisica = IClienteFisicaDao.procurarCpf(identificador);
+            ClienteFisico pessoaFisica = IClienteFisicaJdbcTemplateDAO.procurarCpf(identificador);
             if (pessoaFisica != null) {
                 pessoaFisica.setIdPessoa(clienteAtualizado.getIdPessoa());
                 pessoaFisica.setCpf(clienteRequest.getCpf());
                 pessoaFisica.setDataNascimento(clienteRequest.getDataNascimento());
-                IClienteFisicaDao.atualizarCliFisico(pessoaFisica);
+                IClienteFisicaJdbcTemplateDAO.atualizarCliFisico(pessoaFisica);
             }
         } else if (clienteRequest.getTipo_pessoa() == TipoClienteEnum.JURIDICA) {
-            ClienteJuridico pessoaJuridica = IClienteJuridicaDao.procurarCnpj(identificador);
+            ClienteJuridico pessoaJuridica = IClienteJuridicaJdbcTemplateDAO.procurarCnpj(identificador);
             if (pessoaJuridica != null) {
                 pessoaJuridica.setIdPessoa(clienteAtualizado.getIdPessoa());
                 pessoaJuridica.setCnpj(clienteRequest.getCnpj());
-                IClienteJuridicaDao.atualizarJuridico(pessoaJuridica);
+                IClienteJuridicaJdbcTemplateDAO.atualizarJuridico(pessoaJuridica);
             }
         }
         return mapearPessoa(clienteRequest.getTipo_pessoa(), clienteAtualizado);

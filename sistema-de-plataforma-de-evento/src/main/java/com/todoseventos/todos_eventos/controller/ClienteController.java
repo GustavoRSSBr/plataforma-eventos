@@ -1,8 +1,8 @@
 package com.todoseventos.todos_eventos.controller;
 
-import com.todoseventos.todos_eventos.dto.responseDTO.CustomExceptionResponse;
-import com.todoseventos.todos_eventos.dto.requestDTO.ClienteRequest;
-import com.todoseventos.todos_eventos.dto.responseDTO.ClienteResponse;
+import com.todoseventos.todos_eventos.dto.responseDTO.CustomExceptionResponseDTO;
+import com.todoseventos.todos_eventos.dto.requestDTO.ClienteRequestDTO;
+import com.todoseventos.todos_eventos.dto.responseDTO.ClienteResponseDTO;
 import com.todoseventos.todos_eventos.enuns.SuccessMessages;
 import com.todoseventos.todos_eventos.usecase.ClienteService;
 import com.todoseventos.todos_eventos.utils.LoggerUtils;
@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.yaml.snakeyaml.internal.Logger;
 
 import java.util.List;
 @Slf4j
@@ -38,12 +37,12 @@ public class ClienteController {
     @PostMapping("/cliente")
     public ResponseEntity<?> cadastraPessoa(
             @Parameter(description = "Dados do cliente a ser cadastrado")
-            @Valid @RequestBody ClienteRequest clienteRequest) {
+            @Valid @RequestBody ClienteRequestDTO clienteRequest) {
         long startTime = System.currentTimeMillis();
-        ClienteResponse response = clienteService.cadastrarNovaPessoa(clienteRequest);
+        ClienteResponseDTO response = clienteService.cadastrarNovaPessoa(clienteRequest);
 
         LoggerUtils.logElapsedTime(LOGGER, "cadastraPessoa", startTime);
-        return ResponseEntity.ok(new CustomExceptionResponse(SuccessMessages.CADASTRO_CLIENTE));
+        return ResponseEntity.ok(new CustomExceptionResponseDTO(SuccessMessages.CADASTRO_CLIENTE));
     }
 
     @Operation(description = "Operação para buscar cliente por CPF ou CNPJ")
@@ -57,7 +56,7 @@ public class ClienteController {
             @Parameter(description = "CFP ou CNPJ do cliente a ser buscado.")
             @Valid @PathVariable String identificador) {
         long startTime = System.currentTimeMillis();
-        ClienteResponse pessoa = clienteService.verificarCpfOuCnpj(identificador);
+        ClienteResponseDTO pessoa = clienteService.verificarCpfOuCnpj(identificador);
         LoggerUtils.logElapsedTime(LOGGER, "procuraPessoaCpfouCnpj", startTime);
         return ResponseEntity.ok(pessoa);
     }
@@ -70,7 +69,7 @@ public class ClienteController {
     @GetMapping("/pessoa")
     public ResponseEntity<?> listaTodasPessoas() {
         long startTime = System.currentTimeMillis();
-        List<ClienteResponse> response = clienteService.listarPessoas();
+        List<ClienteResponseDTO> response = clienteService.listarPessoas();
         LoggerUtils.logElapsedTime(LOGGER, "listaTodasPessoas", startTime);
         return ResponseEntity.ok(response);
     }
@@ -84,11 +83,11 @@ public class ClienteController {
     @PutMapping("/pessoa/{identificador}")
     public ResponseEntity<?> atualizaPessoaPorCpfouCnpj(
             @Parameter(description = "Atualiza os dados da pessoa.")
-            @Valid @PathVariable("identificador") String identificador, @RequestBody ClienteRequest clienteRequest) {
+            @Valid @PathVariable("identificador") String identificador, @RequestBody ClienteRequestDTO clienteRequest) {
         long startTime = System.currentTimeMillis();
-        ClienteResponse response = clienteService.atualizarPessoa(identificador, clienteRequest);
+        ClienteResponseDTO response = clienteService.atualizarPessoa(identificador, clienteRequest);
 
         LoggerUtils.logElapsedTime(LOGGER, "atualizaPessoaPorCpfouCnpj", startTime);
-        return ResponseEntity.ok(new CustomExceptionResponse(SuccessMessages.CLIENTE_ATUALIZADO));
+        return ResponseEntity.ok(new CustomExceptionResponseDTO(SuccessMessages.CLIENTE_ATUALIZADO));
     }
 }

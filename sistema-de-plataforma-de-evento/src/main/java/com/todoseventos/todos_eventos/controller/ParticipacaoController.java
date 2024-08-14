@@ -1,10 +1,9 @@
 package com.todoseventos.todos_eventos.controller;
 
-import com.todoseventos.todos_eventos.dto.responseDTO.CustomExceptionResponse;
-import com.todoseventos.todos_eventos.dto.requestDTO.ParticipacaoRequest;
-import com.todoseventos.todos_eventos.dto.responseDTO.ParticipacaoResponse;
+import com.todoseventos.todos_eventos.dto.responseDTO.CustomExceptionResponseDTO;
+import com.todoseventos.todos_eventos.dto.requestDTO.ParticipacaoRequestDTO;
+import com.todoseventos.todos_eventos.dto.responseDTO.ParticipacaoResponseDTO;
 import com.todoseventos.todos_eventos.enuns.SuccessMessages;
-import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.usecase.ParticipacaoService;
 import com.todoseventos.todos_eventos.utils.LoggerUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,12 +38,12 @@ public class ParticipacaoController {
     @PostMapping("/participacao")
     public ResponseEntity<?> inscreverParticipante(
             @Parameter(description = "Dados para inscreve um participante.")
-            @Valid @RequestBody ParticipacaoRequest request) {
+            @Valid @RequestBody ParticipacaoRequestDTO request) {
         long startTime = System.currentTimeMillis();
-        ParticipacaoResponse response = participacaoService.inscreverParticipante(request);
+        ParticipacaoResponseDTO response = participacaoService.inscreverParticipante(request);
 
         LoggerUtils.logElapsedTime(LOGGER, "inscreverParticipante", startTime);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CustomExceptionResponse(SuccessMessages.INSCRICAO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new CustomExceptionResponseDTO(SuccessMessages.INSCRICAO));
     }
 
     @Operation(description = "Operação para confirmar participação no evento")
@@ -58,7 +57,7 @@ public class ParticipacaoController {
             @Parameter(description = "Id do participante a ser confirmado.")
             @Valid @PathVariable Integer idParticipacao) {
         long startTime = System.currentTimeMillis();
-        ParticipacaoResponse response = participacaoService.confirmarParticipacao(idParticipacao);
+        ParticipacaoResponseDTO response = participacaoService.confirmarParticipacao(idParticipacao);
         LoggerUtils.logElapsedTime(LOGGER, "confirmarParticipacao", startTime);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

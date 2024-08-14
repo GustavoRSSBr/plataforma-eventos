@@ -1,8 +1,8 @@
 package com.todoseventos.todos_eventos.controller;
 
-import com.todoseventos.todos_eventos.dto.responseDTO.CustomExceptionResponse;
-import com.todoseventos.todos_eventos.dto.requestDTO.EventoRequest;
-import com.todoseventos.todos_eventos.dto.responseDTO.EventoResponse;
+import com.todoseventos.todos_eventos.dto.responseDTO.CustomExceptionResponseDTO;
+import com.todoseventos.todos_eventos.dto.requestDTO.EventoRequestDTO;
+import com.todoseventos.todos_eventos.dto.responseDTO.EventoResponseDTO;
 import com.todoseventos.todos_eventos.enuns.SuccessMessages;
 import com.todoseventos.todos_eventos.usecase.EventoService;
 import com.todoseventos.todos_eventos.utils.LoggerUtils;
@@ -37,14 +37,14 @@ public class EventoController {
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor ao realizar cadastro!")
     })
     @PostMapping("/evento")
-    public ResponseEntity<CustomExceptionResponse> cadastrarEvento(
+    public ResponseEntity<CustomExceptionResponseDTO> cadastrarEvento(
             @Parameter(description = "Dados necessários para cadastrar um novo evento.")
-            @Valid @RequestBody EventoRequest eventoRequest) {
+            @Valid @RequestBody EventoRequestDTO eventoRequestDTO) {
         long startTime = System.currentTimeMillis();
-        EventoResponse response = eventoService.cadastrarNovoEvento(eventoRequest);
+        EventoResponseDTO response = eventoService.cadastrarNovoEvento(eventoRequestDTO);
 
         LoggerUtils.logElapsedTime(LOGGER, "cadastrarEvento", startTime);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CustomExceptionResponse(SuccessMessages.CADASTRO_EVENTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new CustomExceptionResponseDTO(SuccessMessages.CADASTRO_EVENTO));
     }
 
     @Operation(description = "Operação para encerrar evento")
@@ -58,10 +58,10 @@ public class EventoController {
             @Parameter(description = "Id do evento a ser encerrado.")
             @Valid @PathVariable Integer idEvento) {
         long startTime = System.currentTimeMillis();
-        EventoResponse response = eventoService.encerrarEvento(idEvento);
+        EventoResponseDTO response = eventoService.encerrarEvento(idEvento);
 
         LoggerUtils.logElapsedTime(LOGGER, "encerrarEvento", startTime);
-        return ResponseEntity.status(HttpStatus.OK).body(new CustomExceptionResponse(SuccessMessages.EVENTO_ENCERRADO));
+        return ResponseEntity.status(HttpStatus.OK).body(new CustomExceptionResponseDTO(SuccessMessages.EVENTO_ENCERRADO));
 
     }
 
@@ -73,7 +73,7 @@ public class EventoController {
     @GetMapping("/evento")
     public ResponseEntity<?> listarEventos() {
         long startTime = System.currentTimeMillis();
-        List<EventoResponse> response = eventoService.localizarEventos();
+        List<EventoResponseDTO> response = eventoService.localizarEventos();
         LoggerUtils.logElapsedTime(LOGGER, "listarEventos", startTime);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -89,7 +89,7 @@ public class EventoController {
             @Parameter(description = "Nome do evento a ser procurado.")
             @Valid @PathVariable String nomeEvento) {
         long startTime = System.currentTimeMillis();
-        EventoResponse response = eventoService.procurarEventoPorNome(nomeEvento);
+        EventoResponseDTO response = eventoService.procurarEventoPorNome(nomeEvento);
         LoggerUtils.logElapsedTime(LOGGER, "procurarEventoPorNome", startTime);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -103,12 +103,12 @@ public class EventoController {
     @PutMapping("/evento/{nomeEvento}")
     public ResponseEntity<?> atualizarEvento(
             @Parameter(description = "Nome do evento a ser atualizado.")
-            @Valid @PathVariable String nomeEvento, @RequestBody EventoRequest eventoRequest) {
+            @Valid @PathVariable String nomeEvento, @RequestBody EventoRequestDTO eventoRequestDTO) {
         long startTime = System.currentTimeMillis();
-        EventoResponse response = eventoService.atualizarEvento(nomeEvento, eventoRequest);
+        EventoResponseDTO response = eventoService.atualizarEvento(nomeEvento, eventoRequestDTO);
 
         LoggerUtils.logElapsedTime(LOGGER, "atualizarEvento", startTime);
-        return ResponseEntity.status(HttpStatus.OK).body(new CustomExceptionResponse(SuccessMessages.EVENTO_ATUALIZADO));
+        return ResponseEntity.status(HttpStatus.OK).body(new CustomExceptionResponseDTO(SuccessMessages.EVENTO_ATUALIZADO));
     }
 
     @Operation(description = "Operação para excluir evento")
@@ -125,6 +125,6 @@ public class EventoController {
         eventoService.excluirEvento(idEvento);
 
         LoggerUtils.logElapsedTime(LOGGER, "excluirEvento", startTime);
-        return ResponseEntity.status(HttpStatus.OK).body(new CustomExceptionResponse(SuccessMessages.EXCLUIR_EVENTO));
+        return ResponseEntity.status(HttpStatus.OK).body(new CustomExceptionResponseDTO(SuccessMessages.EXCLUIR_EVENTO));
     }
 }
