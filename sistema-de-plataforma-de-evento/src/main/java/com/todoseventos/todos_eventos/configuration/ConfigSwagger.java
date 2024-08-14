@@ -19,3 +19,5 @@ public class ConfigSwagger {
                                 "registre participantes, emita ingressos e envie notificações automáticas."));
     }
 }
+
+   //http://localhost:27031/swagger-ui/index.html#/

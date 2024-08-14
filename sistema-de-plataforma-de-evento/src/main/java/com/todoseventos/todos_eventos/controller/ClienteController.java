@@ -5,15 +5,18 @@ import com.todoseventos.todos_eventos.dto.requestDTO.ClienteRequest;
 import com.todoseventos.todos_eventos.dto.responseDTO.ClienteResponse;
 import com.todoseventos.todos_eventos.enuns.SuccessMessages;
 import com.todoseventos.todos_eventos.usecase.ClienteService;
+import com.todoseventos.todos_eventos.utils.LoggerUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.yaml.snakeyaml.internal.Logger;
 
 import java.util.List;
 @Slf4j
@@ -21,6 +24,8 @@ import java.util.List;
 @RequestMapping(value = "/api")
 @CrossOrigin
 public class ClienteController {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ClienteController.class);
     @Autowired
     private ClienteService clienteService;
 
@@ -37,7 +42,7 @@ public class ClienteController {
         long startTime = System.currentTimeMillis();
         ClienteResponse response = clienteService.cadastrarNovaPessoa(clienteRequest);
 
-        logElapsedTime("cadastraPessoa", startTime);
+        LoggerUtils.logElapsedTime(LOGGER, "cadastraPessoa", startTime);
         return ResponseEntity.ok(new CustomExceptionResponse(SuccessMessages.CADASTRO_CLIENTE));
     }
 
@@ -53,7 +58,7 @@ public class ClienteController {
             @Valid @PathVariable String identificador) {
         long startTime = System.currentTimeMillis();
         ClienteResponse pessoa = clienteService.verificarCpfOuCnpj(identificador);
-        logElapsedTime("procuraPessoaCpfouCnpj", startTime);
+        LoggerUtils.logElapsedTime(LOGGER, "procuraPessoaCpfouCnpj", startTime);
         return ResponseEntity.ok(pessoa);
     }
 
@@ -66,7 +71,7 @@ public class ClienteController {
     public ResponseEntity<?> listaTodasPessoas() {
         long startTime = System.currentTimeMillis();
         List<ClienteResponse> response = clienteService.listarPessoas();
-        logElapsedTime("listaTodasPessoas", startTime);
+        LoggerUtils.logElapsedTime(LOGGER, "listaTodasPessoas", startTime);
         return ResponseEntity.ok(response);
     }
 
@@ -83,19 +88,7 @@ public class ClienteController {
         long startTime = System.currentTimeMillis();
         ClienteResponse response = clienteService.atualizarPessoa(identificador, clienteRequest);
 
-        logElapsedTime("atualizaPessoaPorCpfouCnpj", startTime);
+        LoggerUtils.logElapsedTime(LOGGER, "atualizaPessoaPorCpfouCnpj", startTime);
         return ResponseEntity.ok(new CustomExceptionResponse(SuccessMessages.CLIENTE_ATUALIZADO));
-    }
-
-    /**
-     * Método que registra o tempo decorrido de um método específico.
-     *
-     * @param methodName nome cujo o tempo de eecução está sendo medido.
-     * @param startTime Tempo de início da execução do método.
-     **/
-    private void logElapsedTime(String methodName, long startTime) {
-        long endTime = System.currentTimeMillis();
-        long elapsedTime = endTime - startTime;
-        log.info("Método: {}, Tempo decorrido: {} ms", methodName, elapsedTime);
     }
 }

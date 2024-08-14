@@ -5,6 +5,7 @@ import com.todoseventos.todos_eventos.dto.requestDTO.AuthenticationDTO;
 import com.todoseventos.todos_eventos.dto.responseDTO.JwtResponse;
 import com.todoseventos.todos_eventos.security.jwt.JwtUtils;
 import com.todoseventos.todos_eventos.model.cliente.UserDetailsImpl;
+import com.todoseventos.todos_eventos.utils.LoggerUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -27,6 +28,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 @CrossOrigin
 public class AutenticacaoController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AutenticacaoController.class);
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -54,19 +57,7 @@ public class AutenticacaoController {
         String jwt = jwtUtils.generateJwtToken(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        logElapsedTime("login", startTime);
+        LoggerUtils.logElapsedTime(LOGGER, "login", startTime);
         return ResponseEntity.ok(new JwtResponse(jwt));
-    }
-
-    /**
-    * Método que registra o tempo decorrido de um método específico.
-     *
-    * @param methodName nome cujo o tempo de eecução está sendo medido.
-     * @param startTime Tempo de início da execução do método.
-    **/
-    private void logElapsedTime(String methodName, long startTime) {
-        long endTime = System.currentTimeMillis();
-        long elapsedTime = endTime - startTime;
-        log.info("Método: {}, Tempo decorrido: {} ms", methodName, elapsedTime);
     }
 }

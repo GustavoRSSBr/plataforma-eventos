@@ -1,10 +1,14 @@
 package com.todoseventos.todos_eventos.usecase;
 
+import com.todoseventos.todos_eventos.controller.AutenticacaoController;
 import com.todoseventos.todos_eventos.dto.responseDTO.AcessDTO;
 import com.todoseventos.todos_eventos.dto.requestDTO.AuthenticationDTO;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.security.jwt.JwtUtils;
+import com.todoseventos.todos_eventos.utils.LoggerUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthenticationService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AutenticacaoController.class);
 
     @Autowired
     private AuthenticationManager authenticationManager;

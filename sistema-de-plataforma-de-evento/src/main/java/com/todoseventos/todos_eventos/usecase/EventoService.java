@@ -26,6 +26,7 @@ import java.util.Objects;
 @Service
 public class EventoService {
 
+
     @Autowired
     private IEventoDao IEventoDao;
 
@@ -148,6 +149,7 @@ public class EventoService {
      * @return Um objeto de resposta contendo os detalhes do evento encerrado.
      */
     private EventoResponse mapearEncerramentoEvento(EventoModel evento) {
+
         CategoriaModel categoria = ICategoriaDao.procurarId(evento.getId_categoria());
         EnderecoModel endereco = IEnderecoDao.procurarPorIdEvento(evento.getIdEvento())
                 .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + evento.getNome_evento()));
@@ -199,6 +201,7 @@ public class EventoService {
      * @return Uma lista de objetos de resposta contendo os detalhes dos eventos localizados.
      */
     public List<EventoResponse> localizarEventos() {
+
         List<EventoModel> eventoModelList;
         List<EventoResponse> eventoResponseList = new ArrayList<>();
 
@@ -237,6 +240,7 @@ public class EventoService {
      * @return Um objeto de resposta contendo os detalhes do evento localizado.
      */
     public EventoResponse procurarEventoPorNome(String nomeEvento) {
+
         EventoModel eventoModel = IEventoDao.procurarPorNome(nomeEvento)
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
 
@@ -254,6 +258,7 @@ public class EventoService {
      * @return Um objeto de resposta contendo os detalhes do evento atualizado.
      */
     public EventoResponse atualizarEvento(String nomeEvento, EventoRequest eventoRequest) {
+
         EventoModel eventoExistente = IEventoDao.procurarPorNome(nomeEvento)
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
 
@@ -303,6 +308,7 @@ public class EventoService {
      * @param idEvento O ID do evento a ser excluído.
      */
     public void excluirEvento(Integer idEvento) {
+
         EventoModel eventoExistente = IEventoDao.procurarPorId(idEvento)
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
         IEnderecoDao.deletarPorIdEvento(idEvento);
