@@ -50,6 +50,10 @@ public class ClienteService {
      */
     public ClienteResponse cadastrarNovaPessoa(ClienteRequest clienteRequest) {
 
+        if (IClienteDao.existeEmail(clienteRequest.getEmail())){
+            throw new CustomException(ExceptionMessages.EMAIL_DUPLICIDADE);
+        }
+
         if (clienteRequest.getTipo_pessoa() == null) {
             throw new CustomException(ExceptionMessages.CATEGORIA_INVALIDA);
         }

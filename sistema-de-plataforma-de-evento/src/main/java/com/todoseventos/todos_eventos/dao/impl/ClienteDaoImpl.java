@@ -1,10 +1,7 @@
 package com.todoseventos.todos_eventos.dao.impl;
 
-<<<<<<< Updated upstream:sistema-de-plataforma-de-evento/src/main/java/com/todoseventos/todos_eventos/dao/impl/ClienteDaoImpl.java
 import com.todoseventos.todos_eventos.dao.IClienteDao;
-=======
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
->>>>>>> Stashed changes:sistema-de-plataforma-de-evento/src/main/java/com/todoseventos/todos_eventos/dao/ClienteDao.java
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.model.cliente.ClienteModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +52,8 @@ class ClienteDaoImpl implements IClienteDao {
         String sql = "SELECT * FROM procurar_cliente_por_email(?)";
         try {
             return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ClienteModel.class), email);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
         } catch (Exception e) {
             throw new CustomException(ExceptionMessages.ERRO_BUSCAR_USUARIO_POR_EMAIL + e.getMessage());
         }
@@ -105,5 +104,11 @@ class ClienteDaoImpl implements IClienteDao {
         } catch (Exception e) {
             throw new CustomException(ExceptionMessages.ERRO_LISTAR_TODOS + e.getMessage());
         }
+    }
+
+    @Override
+    @Transactional
+    public boolean existeEmail(String email){
+        return procurarPorEmail(email) != null;
     }
 }

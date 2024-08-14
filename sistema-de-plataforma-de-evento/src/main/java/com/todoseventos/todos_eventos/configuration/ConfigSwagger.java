@@ -10,10 +10,12 @@ public class ConfigSwagger {
 
     @Bean
     public OpenAPI configOpenApi(){
-        return new OpenAPI().info(
-                new Info().description("Definiçao para Api da plataforma Todos Eventos")
+        return new OpenAPI()
+                .info(new Info()
                         .version("1.0.0")
-                        .title("Validações Api")
-        );
+                        .title("API Sistema para Plataforma de Eventos (SPDE)")
+                        .description("Documentação da API para o Sistema para Plataforma de Eventos (SPDE). " +
+                                "Gerencie eventos de forma eficiente: crie, edite, exclua eventos, " +
+                                "registre participantes, emita ingressos e envie notificações automáticas."));
     }
 }

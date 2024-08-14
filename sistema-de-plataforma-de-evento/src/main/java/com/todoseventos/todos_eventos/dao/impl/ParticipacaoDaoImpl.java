@@ -1,10 +1,7 @@
 package com.todoseventos.todos_eventos.dao.impl;
 
-<<<<<<< Updated upstream:sistema-de-plataforma-de-evento/src/main/java/com/todoseventos/todos_eventos/dao/impl/ParticipacaoDaoImpl.java
 import com.todoseventos.todos_eventos.dao.IParticipacaoDao;
-=======
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
->>>>>>> Stashed changes:sistema-de-plataforma-de-evento/src/main/java/com/todoseventos/todos_eventos/dao/ParticipacaoDao.java
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.model.evento.ParticipacaoModel;
 import org.slf4j.Logger;

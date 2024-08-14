@@ -65,7 +65,7 @@ public class EventoController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista de eventos recuperada com sucesso!"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor ao listar eventos!")
-    }).
+    })
     @GetMapping("/evento")
     public ResponseEntity<?> listarEventos() {
         long startTime = System.currentTimeMillis();
@@ -119,6 +119,8 @@ public class EventoController {
             @Valid @PathVariable Integer idEvento) {
         long startTime = System.currentTimeMillis();
         eventoService.excluirEvento(idEvento);
+
+
         logElapsedTime("excluirEvento", startTime);
         return ResponseEntity.status(HttpStatus.OK).body(new CustomExceptionResponse(SuccessMessages.EXCLUIR_EVENTO));
     }
