@@ -5,7 +5,6 @@ import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.model.cliente.Cliente;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCallback;
@@ -24,50 +23,36 @@ class ClienteJdbcTemplateJdbcTemplateDAOImpl implements IClienteJdbcTemplateDAO 
     @Transactional
     public Cliente procurarPorCpf(String cpf) {
         String sql = "SELECT * FROM procurar_cliente_por_cpf(?)";
-        try {
-            return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Cliente.class), cpf);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        } catch (Exception e) {
-            throw new CustomException(ExceptionMessages.ERRO_BUSCAR_CLIENTE_CPF + e.getMessage());
-        }
+
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Cliente.class), cpf);
+
     }
 
     @Override
     @Transactional
     public Cliente procurarPorCnpj(String cnpj) {
         String sql = "SELECT * FROM procurar_cliente_por_cnpj(?)";
-        try {
-            return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Cliente.class), cnpj);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        } catch (Exception e) {
-            throw new CustomException(ExceptionMessages.ERRO_BUSCAR_CLIENTE_CNPJ + e.getMessage());
-        }
+
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Cliente.class), cnpj);
+
     }
 
     @Override
     @Transactional
     public Cliente procurarPorEmail(String email) {
         String sql = "SELECT * FROM procurar_cliente_por_email(?)";
-        try {
-            return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Cliente.class), email);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        } catch (Exception e) {
-            throw new CustomException(ExceptionMessages.ERRO_BUSCAR_USUARIO_POR_EMAIL + e.getMessage());
-        }
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Cliente.class), email);
     }
 
     @Override
     @Transactional
     public Cliente salvarCliente(Cliente pessoa) {
         String sql = "SELECT inserir_cliente(?, ?, ?, ?, ?)";
-            Integer idPessoa = jdbcTemplate.queryForObject(sql, new Object[]{
-                    pessoa.getNome(), pessoa.getEmail(), pessoa.getSenha(), pessoa.getTelefone(), pessoa.getTipo_pessoa()
-            }, Integer.class);
-            pessoa.setIdPessoa(idPessoa);
-            return pessoa;
+        Integer idPessoa = jdbcTemplate.queryForObject(sql, new Object[]{
+                pessoa.getNome(), pessoa.getEmail(), pessoa.getSenha(), pessoa.getTelefone(), pessoa.getTipo_pessoa()
+        }, Integer.class);
+        pessoa.setIdPessoa(idPessoa);
+        return pessoa;
     }
 
     @Override
@@ -101,8 +86,4 @@ class ClienteJdbcTemplateJdbcTemplateDAOImpl implements IClienteJdbcTemplateDAO 
             throw new CustomException(ExceptionMessages.ERRO_LISTAR_TODOS + e.getMessage());
         }
     }
-<<<<<<< HEAD:sistema-de-plataforma-de-evento/src/main/java/com/todoseventos/todos_eventos/dao/impl/ClienteDaoImpl.java
 }
-=======
-}
->>>>>>> c89240d25e5a424839e741f8e0a1b23c0c1ba978:sistema-de-plataforma-de-evento/src/main/java/com/todoseventos/todos_eventos/dao/impl/ClienteJdbcTemplateJdbcTemplateDAOImpl.java

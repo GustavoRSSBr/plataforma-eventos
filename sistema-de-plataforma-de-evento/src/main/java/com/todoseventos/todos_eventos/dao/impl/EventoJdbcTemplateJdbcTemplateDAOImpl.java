@@ -1,13 +1,10 @@
 package com.todoseventos.todos_eventos.dao.impl;
 
 import com.todoseventos.todos_eventos.dao.IEventoJdbcTemplateDAO;
-import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
-import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.model.evento.Evento;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCallback;
@@ -31,40 +28,34 @@ class EventoJdbcTemplateJdbcTemplateDAOImpl implements IEventoJdbcTemplateDAO {
     @Transactional
     public Evento salvarEvento(Evento evento) {
         String sql = "SELECT inserir_evento(?, ?, ?, ?, ?, ?)";
-        try {
-            jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
-                setPreparedStatementParameters(ps, evento);
-                ps.execute();
-                return null;
-            });
-            Integer idEvento = jdbcTemplate.queryForObject("SELECT currval(pg_get_serial_sequence('evento','id_evento'))", Integer.class);
-            evento.setIdEvento(idEvento);
-            return evento;
-        } catch (Exception e) {
-            throw new CustomException(ExceptionMessages.ERRO_SALVAR + e.getMessage());
-        }
+        jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
+            setPreparedStatementParameters(ps, evento);
+            ps.execute();
+            return null;
+        });
+        Integer idEvento = jdbcTemplate.queryForObject("SELECT currval(pg_get_serial_sequence('evento','id_evento'))", Integer.class);
+        evento.setIdEvento(idEvento);
+        return evento;
+
     }
 
     @Override
     @Transactional
     public Evento atualizarEvento(Evento evento) {
         String sql = "SELECT atualizar_evento(?, ?, ?, ?, ?, ?, ?)";
-        try {
-            jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
-                ps.setInt(1, evento.getIdEvento());
-                ps.setString(2, evento.getNome_evento().trim());
-                ps.setString(3, evento.getDataHora_evento());
-                ps.setString(4, evento.getDataHora_eventofinal());
-                ps.setString(5, evento.getDescricao().trim());
-                ps.setString(6, evento.getStatus().trim());
-                ps.setInt(7, evento.getId_categoria());
-                ps.execute();
-                return null;
-            });
-            return evento;
-        } catch (Exception e) {
-            throw new CustomException(ExceptionMessages.ERRO_ATUALIZAR + e.getMessage());
-        }
+        jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
+            ps.setInt(1, evento.getIdEvento());
+            ps.setString(2, evento.getNome_evento().trim());
+            ps.setString(3, evento.getDataHora_evento());
+            ps.setString(4, evento.getDataHora_eventofinal());
+            ps.setString(5, evento.getDescricao().trim());
+            ps.setString(6, evento.getStatus().trim());
+            ps.setInt(7, evento.getId_categoria());
+            ps.execute();
+            return null;
+        });
+        return evento;
+
     }
 
 
@@ -72,26 +63,17 @@ class EventoJdbcTemplateJdbcTemplateDAOImpl implements IEventoJdbcTemplateDAO {
     @Transactional
     public Optional<Evento> procurarPorNome(String nomeEvento) {
         String sql = "SELECT * FROM procurar_evento_por_nome(?)";
-        try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Evento.class), nomeEvento.trim()));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        } catch (Exception e) {
-            throw new CustomException(ExceptionMessages.ERRO_BUSCAR_POR_NOME + e.getMessage());
-        }
+
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Evento.class), nomeEvento.trim()));
+
     }
 
     @Override
     @Transactional
     public Optional<Evento> procurarPorId(Integer idEvento) {
         String sql = "SELECT * FROM procurar_evento_por_id(?)";
-        try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Evento.class), idEvento));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        } catch (Exception e) {
-            throw new CustomException(ExceptionMessages.ERRO_BUSCAR_POR_ID + e.getMessage());
-        }
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Evento.class), idEvento));
+
     }
 
     @Override
@@ -99,26 +81,22 @@ class EventoJdbcTemplateJdbcTemplateDAOImpl implements IEventoJdbcTemplateDAO {
     public List<Evento> localizarEvento() {
         String sql = "SELECT * FROM localizar_evento()";
         logger.info("Executando SQL para buscar evento: {}", sql);
-        try {
-            return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Evento.class));
-        } catch (Exception e) {
-            throw new CustomException(ExceptionMessages.ERRO_LISTAR_TODOS + e.getMessage());
-        }
+
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Evento.class));
+
     }
 
     @Override
     @Transactional
     public void deletarPorId(Integer idEvento) {
         String sql = "SELECT deletar_evento(?)";
-        try {
-            jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
-                ps.setInt(1, idEvento);
-                ps.execute();
-                return null;
-            });
-        } catch (Exception e) {
-            throw new CustomException(ExceptionMessages.ERRO_EXCLUIR + e.getMessage());
-        }
+
+        jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
+            ps.setInt(1, idEvento);
+            ps.execute();
+            return null;
+        });
+
     }
 
     private void setPreparedStatementParameters(PreparedStatement ps, Evento evento) throws SQLException {

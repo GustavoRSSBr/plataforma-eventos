@@ -1,11 +1,8 @@
 package com.todoseventos.todos_eventos.dao.impl;
 
 import com.todoseventos.todos_eventos.dao.IEnderecoJdbcTemplateDAO;
-import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
-import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.model.evento.Endereco;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCallback;
@@ -26,16 +23,13 @@ class EnderecoJdbcTemplateJdbcTemplateDAOImpl implements IEnderecoJdbcTemplateDA
     @Transactional
     public Endereco salverEndereco(Endereco endereco) {
         String sql = "SELECT inserir_endereco(?, ?, ?, ?, ?, ?, ?)";
-        try {
-            jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
-                setPreparedStatementParameters(ps, endereco);
-                ps.execute();
-                return null;
-            });
-            return endereco;
-        } catch (Exception e) {
-            throw new CustomException(ExceptionMessages.ERRO_SALVAR + e.getMessage());
-        }
+        jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
+            setPreparedStatementParameters(ps, endereco);
+            ps.execute();
+            return null;
+        });
+        return endereco;
+
     }
 
 
@@ -43,44 +37,34 @@ class EnderecoJdbcTemplateJdbcTemplateDAOImpl implements IEnderecoJdbcTemplateDA
     @Transactional
     public Endereco atualizarEndereco(Endereco endereco) {
         String sql = "SELECT atualizar_endereco(?, ?, ?, ?, ?, ?, ?)";
-        try {
-            jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
-                setPreparedStatementParameters(ps, endereco);
-                ps.execute();
-                return null;
-            });
-            return endereco;
-        } catch (Exception e) {
-            throw new CustomException(ExceptionMessages.ERRO_ATUALIZAR + e.getMessage());
-        }
+        jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
+            setPreparedStatementParameters(ps, endereco);
+            ps.execute();
+            return null;
+        });
+        return endereco;
+
     }
 
     @Override
     @Transactional
     public Optional<Endereco> procurarPorIdEvento(Integer id) {
         String sql = "SELECT * FROM procurar_endereco_por_id_evento(?)";
-        try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Endereco.class), id));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        } catch (Exception e) {
-            throw new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + e.getMessage());
-        }
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Endereco.class), id));
+
     }
 
     @Override
     @Transactional
     public void deletarPorIdEvento(Integer idEvento) {
         String sql = "SELECT deletar_endereco(?)";
-        try {
-            jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
-                ps.setInt(1, idEvento);
-                ps.execute();
-                return null;
-            });
-        } catch (Exception e) {
-            throw new CustomException(ExceptionMessages.ERRO_EXCLUIR + e.getMessage());
-        }
+
+        jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
+            ps.setInt(1, idEvento);
+            ps.execute();
+            return null;
+        });
+
     }
 
     private void setPreparedStatementParameters(PreparedStatement ps, Endereco endereco) throws SQLException {
