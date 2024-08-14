@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class UserDetailsImpl implements UserDetails {
+public class UserDetailsModelImpl implements UserDetails {
     private Integer id;
     private String email;
     private String password;
@@ -20,7 +20,7 @@ public class UserDetailsImpl implements UserDetails {
      * @param authorities As autoridades (roles) do usuário.
      */
 
-    public UserDetailsImpl(Integer id, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsModelImpl(Integer id, String email, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -32,8 +32,8 @@ public class UserDetailsImpl implements UserDetails {
      * @param usuario O objeto ClienteModel contendo os detalhes do usuário.
      * @return Uma instância de UserDetailsImpl.
      */
-    public static UserDetailsImpl build(ClienteModel usuario) {
-        return new UserDetailsImpl(
+    public static UserDetailsModelImpl build(Cliente usuario) {
+        return new UserDetailsModelImpl(
                 usuario.getIdPessoa(),
                 usuario.getEmail(),
                 usuario.getSenha(),

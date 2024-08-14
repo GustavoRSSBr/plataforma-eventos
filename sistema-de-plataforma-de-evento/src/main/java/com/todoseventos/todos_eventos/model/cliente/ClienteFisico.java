@@ -11,7 +11,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
-public class ClienteFisicaModel implements Serializable {
+public class ClienteFisico implements Serializable {
 
     private Integer idPessoa;
     private String cpf;

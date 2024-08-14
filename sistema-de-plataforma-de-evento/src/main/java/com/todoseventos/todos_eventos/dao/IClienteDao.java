@@ -1,15 +1,15 @@
 package com.todoseventos.todos_eventos.dao;
 
-import com.todoseventos.todos_eventos.model.cliente.ClienteModel;
+import com.todoseventos.todos_eventos.model.cliente.Cliente;
 import java.util.List;
 
 public interface IClienteDao {
-    ClienteModel procurarPorCpf(String cpf);
-    ClienteModel procurarPorCnpj(String cnpj);
-    ClienteModel procurarPorEmail(String email);
-    ClienteModel salvarCliente(ClienteModel pessoa);
-    ClienteModel atualizarCliente(ClienteModel pessoa);
-    List<ClienteModel> listarTodasPessoas();
+    Cliente procurarPorCpf(String cpf);
+    Cliente procurarPorCnpj(String cnpj);
+    Cliente procurarPorEmail(String email);
+    Cliente salvarCliente(Cliente pessoa);
+    Cliente atualizarCliente(Cliente pessoa);
+    List<Cliente> listarTodasPessoas();
 
     boolean existeEmail(String email);
 }

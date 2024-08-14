@@ -1,9 +1,9 @@
 package com.todoseventos.todos_eventos.dao;
 
-import com.todoseventos.todos_eventos.model.cliente.ClienteJuridicaModel;
+import com.todoseventos.todos_eventos.model.cliente.ClienteJuridico;
 
 public interface IClienteJuridicaDao {
-    ClienteJuridicaModel salvarCliJuridico(ClienteJuridicaModel pessoaJuridica);
-    ClienteJuridicaModel atualizarJuridico(ClienteJuridicaModel pessoaJuridica);
-    ClienteJuridicaModel procurarCnpj(String cnpj);
+    ClienteJuridico salvarCliJuridico(ClienteJuridico pessoaJuridica);
+    ClienteJuridico atualizarJuridico(ClienteJuridico pessoaJuridica);
+    ClienteJuridico procurarCnpj(String cnpj);
 }

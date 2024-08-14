@@ -12,7 +12,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
-public class TipoClienteModel implements Serializable {
+public class TipoCliente implements Serializable {
 
     private Integer idTipoPessoa;
     private String nomeTipoPessoa;

@@ -4,7 +4,7 @@ package com.todoseventos.todos_eventos.controller;
 import com.todoseventos.todos_eventos.dto.requestDTO.AuthenticationDTO;
 import com.todoseventos.todos_eventos.dto.responseDTO.JwtResponse;
 import com.todoseventos.todos_eventos.security.jwt.JwtUtils;
-import com.todoseventos.todos_eventos.model.cliente.UserDetailsImpl;
+import com.todoseventos.todos_eventos.model.cliente.UserDetailsModelImpl;
 import com.todoseventos.todos_eventos.utils.LoggerUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -56,7 +56,7 @@ public class AutenticacaoController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        UserDetailsModelImpl userDetails = (UserDetailsModelImpl) authentication.getPrincipal();
         LoggerUtils.logElapsedTime(LOGGER, "login", startTime);
         return ResponseEntity.ok(new JwtResponse(jwt));
     }

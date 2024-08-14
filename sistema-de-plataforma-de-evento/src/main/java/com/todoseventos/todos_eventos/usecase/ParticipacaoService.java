@@ -6,11 +6,11 @@ import com.todoseventos.todos_eventos.dto.responseDTO.ParticipacaoResponse;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.gateway.EmailService;
-import com.todoseventos.todos_eventos.model.evento.EnderecoModel;
-import com.todoseventos.todos_eventos.model.evento.EventoModel;
-import com.todoseventos.todos_eventos.model.evento.ParticipacaoModel;
-import com.todoseventos.todos_eventos.model.cliente.ClienteFisicaModel;
-import com.todoseventos.todos_eventos.model.cliente.ClienteJuridicaModel;
+import com.todoseventos.todos_eventos.model.evento.Endereco;
+import com.todoseventos.todos_eventos.model.evento.Evento;
+import com.todoseventos.todos_eventos.model.evento.Participacao;
+import com.todoseventos.todos_eventos.model.cliente.ClienteFisico;
+import com.todoseventos.todos_eventos.model.cliente.ClienteJuridico;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,28 +50,28 @@ public class ParticipacaoService {
         logger.info("Iniciando inscrição do participante: {}", request);
 
         // Procura o evento pelo ID
-        EventoModel evento = IEventoDao.procurarPorId(request.getIdEvento())
+        Evento evento = IEventoDao.procurarPorId(request.getIdEvento())
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
 
         // Procura o endereço do evento pelo ID do evento
 
-        EnderecoModel endereco = IEnderecoDao.procurarPorIdEvento(evento.getIdEvento())
+        Endereco endereco = IEnderecoDao.procurarPorIdEvento(evento.getIdEvento())
                 .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + evento.getNome_evento()));
 
         // Verifica se é um participante pessoa física
         if (request.getCpf() != null) {
-            ClienteFisicaModel pessoaFisica = IClienteFisicaDao.procurarCpf(request.getCpf());
+            ClienteFisico pessoaFisica = IClienteFisicaDao.procurarCpf(request.getCpf());
             if (Objects.isNull(pessoaFisica)) {
                 throw new CustomException(ExceptionMessages.PESSOA_FISICA_NAO_ENCONTRADA);
             }
 
             // Cria uma nova participação para pessoa física
-            ParticipacaoModel participacao = ParticipacaoModel.builder()
+            Participacao participacao = Participacao.builder()
                     .cpf(request.getCpf())
                     .idEvento(request.getIdEvento())
                     .status("PENDENTE")
                     .build();
-            ParticipacaoModel savedParticipacao = IParticipacaoDao.salvarParticipacao(participacao);
+            Participacao savedParticipacao = IParticipacaoDao.salvarParticipacao(participacao);
 
             // Envia e-mail de confirmação para pessoa física
             String localEvento = endereco.getRua() + ", " + endereco.getNumero() + ", " + endereco.getBairro() + ", " + endereco.getCidade() + ", " + endereco.getUf();
@@ -82,19 +82,19 @@ public class ParticipacaoService {
         } else if (request.getCnpj() != null) {
 
             // Verifica se é um participante pessoa jurídica
-            ClienteJuridicaModel pessoaJuridica = IClienteJuridicaDao.procurarCnpj(request.getCnpj());
+            ClienteJuridico pessoaJuridica = IClienteJuridicaDao.procurarCnpj(request.getCnpj());
             if (Objects.isNull(pessoaJuridica)) {
                 throw new CustomException(ExceptionMessages.PESSOA_JURIDICA_NAO_ENCONTRADA);
             }
 
             // Cria uma nova participação para pessoa jurídica
-            ParticipacaoModel participacao = ParticipacaoModel.builder()
+            Participacao participacao = Participacao.builder()
                     .cnpj(request.getCnpj())
                     .idEvento(request.getIdEvento())
                     .status("PENDENTE")
                     .build();
             logger.info("Salvando participação para pessoa jurídica: {}", participacao);
-            ParticipacaoModel savedParticipacao = IParticipacaoDao.salvarParticipacao(participacao);
+            Participacao savedParticipacao = IParticipacaoDao.salvarParticipacao(participacao);
             logger.info("Participação salva: {}", savedParticipacao);
 
             // Envia e-mail de confirmação para pessoa jurídica
@@ -116,29 +116,29 @@ public class ParticipacaoService {
      */
     public ParticipacaoResponse confirmarParticipacao(Integer idParticipacao) {
         logger.info("Confirmando participação com ID: {}", idParticipacao);
-        ParticipacaoModel participacao = IParticipacaoDao.localizarPorId(idParticipacao);
+        Participacao participacao = IParticipacaoDao.localizarPorId(idParticipacao);
         if (Objects.isNull(participacao)) {
             throw new CustomException(ExceptionMessages.PARTICIPACAO_NAO_ENCONTRADA);
         }
 
         // Atualiza o status da participação para "CONFIRMADO"
         participacao.setStatus("CONFIRMADO");
-        ParticipacaoModel updatedParticipacao = IParticipacaoDao.atualizarParticipacao(participacao);
+        Participacao updatedParticipacao = IParticipacaoDao.atualizarParticipacao(participacao);
         logger.info("Participação confirmada: {}", updatedParticipacao);
 
         // Obtém os detalhes do evento e endereço associados
-        EventoModel evento = IEventoDao.procurarPorId(updatedParticipacao.getIdEvento())
+        Evento evento = IEventoDao.procurarPorId(updatedParticipacao.getIdEvento())
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
-        EnderecoModel endereco = IEnderecoDao.procurarPorIdEvento(evento.getIdEvento())
+        Endereco endereco = IEnderecoDao.procurarPorIdEvento(evento.getIdEvento())
                 .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + evento.getNome_evento()));
 
         // Envia e-mail de confirmação de participação
         if (updatedParticipacao.getCpf() != null) {
-            ClienteFisicaModel pessoaFisica = IClienteFisicaDao.procurarCpf(updatedParticipacao.getCpf());
+            ClienteFisico pessoaFisica = IClienteFisicaDao.procurarCpf(updatedParticipacao.getCpf());
             emailService.enviarEmailConfirmacao(pessoaFisica.getEmail(), "Confirmação de Participação", pessoaFisica.getNome(), evento.getNome_evento(), evento.getDataHora_evento(), endereco);
             return PessoaFisica(updatedParticipacao, pessoaFisica, evento, endereco);
         } else {
-            ClienteJuridicaModel pessoaJuridica = IClienteJuridicaDao.procurarCnpj(updatedParticipacao.getCnpj());
+            ClienteJuridico pessoaJuridica = IClienteJuridicaDao.procurarCnpj(updatedParticipacao.getCnpj());
             emailService.enviarEmailConfirmacao(pessoaJuridica.getEmail(), "Confirmação de Participação", pessoaJuridica.getNome(), evento.getNome_evento(), evento.getDataHora_evento(), endereco);
             return PessoaJuridica(updatedParticipacao, pessoaJuridica, evento, endereco);
         }
@@ -152,7 +152,7 @@ public class ParticipacaoService {
      * @param endereco O objeto endereço contendo os detalhes do local do evento.
      * @return Um objeto de resposta de participação.
      */
-    public static ParticipacaoResponse PessoaFisica(ParticipacaoModel participacao, ClienteFisicaModel pessoaFisica, EventoModel evento, EnderecoModel endereco) {
+    public static ParticipacaoResponse PessoaFisica(Participacao participacao, ClienteFisico pessoaFisica, Evento evento, Endereco endereco) {
         return ParticipacaoResponse.builder()
                 .idParticipacao(participacao.getIdParticipacao())
                 .nomePessoa(pessoaFisica.getNome())
@@ -174,7 +174,7 @@ public class ParticipacaoService {
      * @param endereco O objeto endereço contendo os detalhes do local do evento.
      * @return Um objeto de resposta de participação.
      */
-    public static ParticipacaoResponse PessoaJuridica(ParticipacaoModel participacao, ClienteJuridicaModel pessoaJuridica, EventoModel evento, EnderecoModel endereco) {
+    public static ParticipacaoResponse PessoaJuridica(Participacao participacao, ClienteJuridico pessoaJuridica, Evento evento, Endereco endereco) {
         return ParticipacaoResponse.builder()
                 .idParticipacao(participacao.getIdParticipacao())
                 .nomePessoa(pessoaJuridica.getNome())

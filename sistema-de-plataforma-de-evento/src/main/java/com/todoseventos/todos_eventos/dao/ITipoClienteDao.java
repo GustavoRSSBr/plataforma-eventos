@@ -1,7 +1,7 @@
 package com.todoseventos.todos_eventos.dao;
 
-import com.todoseventos.todos_eventos.model.cliente.TipoClienteModel;
+import com.todoseventos.todos_eventos.model.cliente.TipoCliente;
 
 public interface ITipoClienteDao {
-    TipoClienteModel buscarPorNomeTipoPessoa(String nomeTipoPessoa);
+    TipoCliente buscarPorNomeTipoPessoa(String nomeTipoPessoa);
 }

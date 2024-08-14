@@ -2,7 +2,7 @@ package com.todoseventos.todos_eventos.gateway;
 
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
-import com.todoseventos.todos_eventos.model.evento.EnderecoModel;
+import com.todoseventos.todos_eventos.model.evento.Endereco;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +70,7 @@ public class EmailService {
      * @param dataEvento A data do evento.
      * @param endereco O endereço do evento.
      */
-    public void enviarEmailConfirmacao(String destinatario, String assunto, String nomePessoa, String nomeEvento, String dataEvento, EnderecoModel endereco) {
+    public void enviarEmailConfirmacao(String destinatario, String assunto, String nomePessoa, String nomeEvento, String dataEvento, Endereco endereco) {
         MimeMessage mimeMessage = emailSender.createMimeMessage();
 
         try {
@@ -93,7 +93,7 @@ public class EmailService {
      * @param endereco O endereço do evento.
      * @return O corpo do e-mail em formato HTML.
      */
-    private String gerarCorpoEmailConfirmacao(String nomePessoa, String nomeEvento, String dataEvento, EnderecoModel endereco) {
+    private String gerarCorpoEmailConfirmacao(String nomePessoa, String nomeEvento, String dataEvento, Endereco endereco) {
         return "<html>" +
                 "<body>" +
                 "<h1>Confirmação de Participação</h1>" +

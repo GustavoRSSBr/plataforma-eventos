@@ -5,20 +5,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
-public class EnderecoModel implements Serializable {
-
-    private Long idEndereco;
+public class Participacao {
+    private Integer idParticipacao;
+    private String cpf;
+    private String cnpj;
     private Integer idEvento;
-    private String rua;
-    private String numero;
-    private String bairro;
-    private String cidade;
-    private String cep;
-    private String uf;
+    private String status;
+
 }
+
+
