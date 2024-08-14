@@ -1,8 +1,8 @@
 package com.todoseventos.todos_eventos.controller;
 
 
-import com.todoseventos.todos_eventos.dto.requestDTO.AuthenticationDTO;
-import com.todoseventos.todos_eventos.dto.responseDTO.JwtResponse;
+import com.todoseventos.todos_eventos.dto.requestDTO.AuthenticationRequestDTO;
+import com.todoseventos.todos_eventos.dto.responseDTO.JwtResponseDTO;
 import com.todoseventos.todos_eventos.security.jwt.JwtUtils;
 import com.todoseventos.todos_eventos.model.cliente.UserDetailsModelImpl;
 import com.todoseventos.todos_eventos.utils.LoggerUtils;
@@ -48,7 +48,7 @@ public class AutenticacaoController {
     @PostMapping("/login")
     public ResponseEntity<?> login(
             @Parameter(description = "Dados para fazer login")
-            @Valid @RequestBody AuthenticationDTO authDto) {
+            @Valid @RequestBody AuthenticationRequestDTO authDto) {
         long startTime = System.currentTimeMillis();
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authDto.getEmail(), authDto.getSenha()));
@@ -58,6 +58,6 @@ public class AutenticacaoController {
 
         UserDetailsModelImpl userDetails = (UserDetailsModelImpl) authentication.getPrincipal();
         LoggerUtils.logElapsedTime(LOGGER, "login", startTime);
-        return ResponseEntity.ok(new JwtResponse(jwt));
+        return ResponseEntity.ok(new JwtResponseDTO(jwt));
     }
 }

@@ -1,8 +1,8 @@
 package com.todoseventos.todos_eventos.usecase;
 
 import com.todoseventos.todos_eventos.dao.*;
-import com.todoseventos.todos_eventos.dto.requestDTO.ParticipacaoRequest;
-import com.todoseventos.todos_eventos.dto.responseDTO.ParticipacaoResponse;
+import com.todoseventos.todos_eventos.dto.requestDTO.ParticipacaoRequestDTO;
+import com.todoseventos.todos_eventos.dto.responseDTO.ParticipacaoResponseDTO;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.gateway.EmailService;
@@ -24,19 +24,19 @@ public class ParticipacaoService {
     private static final Logger logger = LoggerFactory.getLogger(ParticipacaoService.class);
 
     @Autowired
-    private IParticipacaoDao IParticipacaoDao;
+    private IParticipacaoJdbcTemplateDAO IParticipacaoJdbcTemplateDAO;
 
     @Autowired
-    private IEventoDao IEventoDao;
+    private IEventoJdbcTemplateDAO IEventoJdbcTemplateDAO;
 
     @Autowired
-    private IEnderecoDao IEnderecoDao;
+    private IEnderecoJdbcTemplateDAO IEnderecoJdbcTemplateDAO;
 
     @Autowired
-    private IClienteFisicaDao IClienteFisicaDao;
+    private IClienteFisicaJdbcTemplateDAO IClienteFisicaJdbcTemplateDAO;
 
     @Autowired
-    private IClienteJuridicaDao IClienteJuridicaDao;
+    private IClienteJuridicaJdbcTemplateDAO IClienteJuridicaJdbcTemplateDAO;
 
     @Autowired
     private EmailService emailService;
@@ -46,21 +46,21 @@ public class ParticipacaoService {
      * @param request Objeto contendo os detalhes da participação, incluindo CPF ou CNPJ e ID do evento.
      * @return Um objeto de resposta de participação contendo os detalhes da inscrição.
      */
-    public ParticipacaoResponse inscreverParticipante(ParticipacaoRequest request) {
+    public ParticipacaoResponseDTO inscreverParticipante(ParticipacaoRequestDTO request) {
         logger.info("Iniciando inscrição do participante: {}", request);
 
         // Procura o evento pelo ID
-        Evento evento = IEventoDao.procurarPorId(request.getIdEvento())
+        Evento evento = IEventoJdbcTemplateDAO.procurarPorId(request.getIdEvento())
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
 
         // Procura o endereço do evento pelo ID do evento
 
-        Endereco endereco = IEnderecoDao.procurarPorIdEvento(evento.getIdEvento())
+        Endereco endereco = IEnderecoJdbcTemplateDAO.procurarPorIdEvento(evento.getIdEvento())
                 .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + evento.getNome_evento()));
 
         // Verifica se é um participante pessoa física
         if (request.getCpf() != null) {
-            ClienteFisico pessoaFisica = IClienteFisicaDao.procurarCpf(request.getCpf());
+            ClienteFisico pessoaFisica = IClienteFisicaJdbcTemplateDAO.procurarCpf(request.getCpf());
             if (Objects.isNull(pessoaFisica)) {
                 throw new CustomException(ExceptionMessages.PESSOA_FISICA_NAO_ENCONTRADA);
             }
@@ -71,7 +71,7 @@ public class ParticipacaoService {
                     .idEvento(request.getIdEvento())
                     .status("PENDENTE")
                     .build();
-            Participacao savedParticipacao = IParticipacaoDao.salvarParticipacao(participacao);
+            Participacao savedParticipacao = IParticipacaoJdbcTemplateDAO.salvarParticipacao(participacao);
 
             // Envia e-mail de confirmação para pessoa física
             String localEvento = endereco.getRua() + ", " + endereco.getNumero() + ", " + endereco.getBairro() + ", " + endereco.getCidade() + ", " + endereco.getUf();
@@ -82,7 +82,7 @@ public class ParticipacaoService {
         } else if (request.getCnpj() != null) {
 
             // Verifica se é um participante pessoa jurídica
-            ClienteJuridico pessoaJuridica = IClienteJuridicaDao.procurarCnpj(request.getCnpj());
+            ClienteJuridico pessoaJuridica = IClienteJuridicaJdbcTemplateDAO.procurarCnpj(request.getCnpj());
             if (Objects.isNull(pessoaJuridica)) {
                 throw new CustomException(ExceptionMessages.PESSOA_JURIDICA_NAO_ENCONTRADA);
             }
@@ -94,7 +94,7 @@ public class ParticipacaoService {
                     .status("PENDENTE")
                     .build();
             logger.info("Salvando participação para pessoa jurídica: {}", participacao);
-            Participacao savedParticipacao = IParticipacaoDao.salvarParticipacao(participacao);
+            Participacao savedParticipacao = IParticipacaoJdbcTemplateDAO.salvarParticipacao(participacao);
             logger.info("Participação salva: {}", savedParticipacao);
 
             // Envia e-mail de confirmação para pessoa jurídica
@@ -114,31 +114,31 @@ public class ParticipacaoService {
      * @param idParticipacao O ID da participação a ser confirmada.
      * @return Um objeto de resposta de participação contendo os detalhes da confirmação.
      */
-    public ParticipacaoResponse confirmarParticipacao(Integer idParticipacao) {
+    public ParticipacaoResponseDTO confirmarParticipacao(Integer idParticipacao) {
         logger.info("Confirmando participação com ID: {}", idParticipacao);
-        Participacao participacao = IParticipacaoDao.localizarPorId(idParticipacao);
+        Participacao participacao = IParticipacaoJdbcTemplateDAO.localizarPorId(idParticipacao);
         if (Objects.isNull(participacao)) {
             throw new CustomException(ExceptionMessages.PARTICIPACAO_NAO_ENCONTRADA);
         }
 
         // Atualiza o status da participação para "CONFIRMADO"
         participacao.setStatus("CONFIRMADO");
-        Participacao updatedParticipacao = IParticipacaoDao.atualizarParticipacao(participacao);
+        Participacao updatedParticipacao = IParticipacaoJdbcTemplateDAO.atualizarParticipacao(participacao);
         logger.info("Participação confirmada: {}", updatedParticipacao);
 
         // Obtém os detalhes do evento e endereço associados
-        Evento evento = IEventoDao.procurarPorId(updatedParticipacao.getIdEvento())
+        Evento evento = IEventoJdbcTemplateDAO.procurarPorId(updatedParticipacao.getIdEvento())
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
-        Endereco endereco = IEnderecoDao.procurarPorIdEvento(evento.getIdEvento())
+        Endereco endereco = IEnderecoJdbcTemplateDAO.procurarPorIdEvento(evento.getIdEvento())
                 .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + evento.getNome_evento()));
 
         // Envia e-mail de confirmação de participação
         if (updatedParticipacao.getCpf() != null) {
-            ClienteFisico pessoaFisica = IClienteFisicaDao.procurarCpf(updatedParticipacao.getCpf());
+            ClienteFisico pessoaFisica = IClienteFisicaJdbcTemplateDAO.procurarCpf(updatedParticipacao.getCpf());
             emailService.enviarEmailConfirmacao(pessoaFisica.getEmail(), "Confirmação de Participação", pessoaFisica.getNome(), evento.getNome_evento(), evento.getDataHora_evento(), endereco);
             return PessoaFisica(updatedParticipacao, pessoaFisica, evento, endereco);
         } else {
-            ClienteJuridico pessoaJuridica = IClienteJuridicaDao.procurarCnpj(updatedParticipacao.getCnpj());
+            ClienteJuridico pessoaJuridica = IClienteJuridicaJdbcTemplateDAO.procurarCnpj(updatedParticipacao.getCnpj());
             emailService.enviarEmailConfirmacao(pessoaJuridica.getEmail(), "Confirmação de Participação", pessoaJuridica.getNome(), evento.getNome_evento(), evento.getDataHora_evento(), endereco);
             return PessoaJuridica(updatedParticipacao, pessoaJuridica, evento, endereco);
         }
@@ -152,8 +152,8 @@ public class ParticipacaoService {
      * @param endereco O objeto endereço contendo os detalhes do local do evento.
      * @return Um objeto de resposta de participação.
      */
-    public static ParticipacaoResponse PessoaFisica(Participacao participacao, ClienteFisico pessoaFisica, Evento evento, Endereco endereco) {
-        return ParticipacaoResponse.builder()
+    public static ParticipacaoResponseDTO PessoaFisica(Participacao participacao, ClienteFisico pessoaFisica, Evento evento, Endereco endereco) {
+        return ParticipacaoResponseDTO.builder()
                 .idParticipacao(participacao.getIdParticipacao())
                 .nomePessoa(pessoaFisica.getNome())
                 .emailPessoa(pessoaFisica.getEmail())
@@ -174,8 +174,8 @@ public class ParticipacaoService {
      * @param endereco O objeto endereço contendo os detalhes do local do evento.
      * @return Um objeto de resposta de participação.
      */
-    public static ParticipacaoResponse PessoaJuridica(Participacao participacao, ClienteJuridico pessoaJuridica, Evento evento, Endereco endereco) {
-        return ParticipacaoResponse.builder()
+    public static ParticipacaoResponseDTO PessoaJuridica(Participacao participacao, ClienteJuridico pessoaJuridica, Evento evento, Endereco endereco) {
+        return ParticipacaoResponseDTO.builder()
                 .idParticipacao(participacao.getIdParticipacao())
                 .nomePessoa(pessoaJuridica.getNome())
                 .emailPessoa(pessoaJuridica.getEmail())

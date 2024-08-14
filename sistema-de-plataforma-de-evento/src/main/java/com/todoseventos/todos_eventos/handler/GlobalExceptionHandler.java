@@ -1,6 +1,6 @@
 package com.todoseventos.todos_eventos.handler;
 
-import com.todoseventos.todos_eventos.dto.responseDTO.CustomExceptionResponse;
+import com.todoseventos.todos_eventos.dto.responseDTO.CustomExceptionResponseDTO;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import org.slf4j.Logger;
@@ -16,16 +16,16 @@ public class GlobalExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<CustomExceptionResponse> handleCustomException(CustomException ex) {
+    public ResponseEntity<CustomExceptionResponseDTO> handleCustomException(CustomException ex) {
         logger.error("CustomException: {}", ex.getMessage(), ex);
-        CustomExceptionResponse response = new CustomExceptionResponse(ex.getMessage());
+        CustomExceptionResponseDTO response = new CustomExceptionResponseDTO(ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<CustomExceptionResponse> handleGenericException(Exception ex) {
+    public ResponseEntity<CustomExceptionResponseDTO> handleGenericException(Exception ex) {
         logger.error("GenericException: {}", ex.getMessage(), ex);
-        CustomExceptionResponse response = new CustomExceptionResponse(ExceptionMessages.ERRO_INTERNO);
+        CustomExceptionResponseDTO response = new CustomExceptionResponseDTO(ExceptionMessages.ERRO_INTERNO);
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
