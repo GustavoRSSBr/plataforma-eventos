@@ -1,8 +1,6 @@
 package com.todoseventos.todos_eventos.dao.impl;
 
 import com.todoseventos.todos_eventos.dao.IClienteJdbcTemplateDAO;
-import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
-import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.model.cliente.Cliente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -59,32 +57,29 @@ class ClienteJdbcTemplateJdbcTemplateDAOImpl implements IClienteJdbcTemplateDAO 
     @Transactional
     public Cliente atualizarCliente(Cliente pessoa) {
         String sql = "SELECT atualizar_cliente(?, ?, ?, ?, ?, ?)";
-        try {
-            jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
-                ps.setInt(1, pessoa.getIdPessoa());
-                ps.setString(2, pessoa.getNome());
-                ps.setString(3, pessoa.getEmail());
-                ps.setString(4, pessoa.getSenha());
-                ps.setString(5, pessoa.getTelefone());
-                ps.setInt(6, pessoa.getTipo_pessoa());
-                ps.execute();
-                return null;
-            });
-            return pessoa;
-        } catch (Exception e) {
-            throw new CustomException(ExceptionMessages.ERRO_ATUALIZAR_CLIENTE + e.getMessage());
-        }
+
+        jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
+            ps.setInt(1, pessoa.getIdPessoa());
+            ps.setString(2, pessoa.getNome());
+            ps.setString(3, pessoa.getEmail());
+            ps.setString(4, pessoa.getSenha());
+            ps.setString(5, pessoa.getTelefone());
+            ps.setInt(6, pessoa.getTipo_pessoa());
+            ps.execute();
+            return null;
+        });
+        return pessoa;
+
     }
 
     @Override
     @Transactional
     public List<Cliente> listarTodasPessoas() {
         String sql = "SELECT * FROM listar_todos_clientes()";
-        try {
-            return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Cliente.class));
-        } catch (Exception e) {
-            throw new CustomException(ExceptionMessages.ERRO_LISTAR_TODOS + e.getMessage());
-        }
+
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Cliente.class));
+
+
     }
 }
 
