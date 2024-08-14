@@ -21,7 +21,6 @@ class ClienteFisicaDaoImpl implements IClienteFisicaDao {
     @Transactional
     public ClienteFisico salvarCliFisico(ClienteFisico pessoaFisica) {
         String sql = "SELECT inserir_cliente_fisico(?, ?, ?)";
-        try {
             jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
                 ps.setInt(1, pessoaFisica.getIdPessoa());
                 ps.setString(2, pessoaFisica.getCpf());
@@ -30,9 +29,7 @@ class ClienteFisicaDaoImpl implements IClienteFisicaDao {
                 return null;
             });
             return pessoaFisica;
-        } catch (Exception e) {
-            throw new CustomException(ExceptionMessages.ERRO_SALVAR + e.getMessage());
-        }
+
     }
 
     @Override

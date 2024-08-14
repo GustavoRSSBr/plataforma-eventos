@@ -21,7 +21,6 @@ class ClienteJuridicaDaoImpl implements IClienteJuridicaDao {
     @Transactional
     public ClienteJuridico salvarCliJuridico(ClienteJuridico pessoaJuridica) {
         String sql = "SELECT inserir_cliente_juridico(?, ?)";
-        try {
             jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
                 ps.setInt(1, pessoaJuridica.getIdPessoa());
                 ps.setString(2, pessoaJuridica.getCnpj());
@@ -29,9 +28,6 @@ class ClienteJuridicaDaoImpl implements IClienteJuridicaDao {
                 return null;
             });
             return pessoaJuridica;
-        } catch (Exception e) {
-            throw new CustomException(ExceptionMessages.ERRO_SALVAR + e.getMessage());
-        }
     }
 
     @Override

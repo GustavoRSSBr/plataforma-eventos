@@ -63,15 +63,11 @@ class ClienteDaoImpl implements IClienteDao {
     @Transactional
     public Cliente salvarCliente(Cliente pessoa) {
         String sql = "SELECT inserir_cliente(?, ?, ?, ?, ?)";
-        try {
             Integer idPessoa = jdbcTemplate.queryForObject(sql, new Object[]{
                     pessoa.getNome(), pessoa.getEmail(), pessoa.getSenha(), pessoa.getTelefone(), pessoa.getTipo_pessoa()
             }, Integer.class);
             pessoa.setIdPessoa(idPessoa);
             return pessoa;
-        } catch (Exception e) {
-            throw new CustomException(ExceptionMessages.ERRO_SALVAR_CLIENTE + e.getMessage());
-        }
     }
 
     @Override
@@ -104,11 +100,5 @@ class ClienteDaoImpl implements IClienteDao {
         } catch (Exception e) {
             throw new CustomException(ExceptionMessages.ERRO_LISTAR_TODOS + e.getMessage());
         }
-    }
-
-    @Override
-    @Transactional
-    public boolean existeEmail(String email){
-        return procurarPorEmail(email) != null;
     }
 }
