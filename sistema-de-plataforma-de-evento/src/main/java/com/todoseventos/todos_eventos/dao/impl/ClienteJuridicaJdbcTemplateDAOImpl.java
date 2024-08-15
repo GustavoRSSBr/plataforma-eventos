@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-class ClienteJuridicaJdbcTemplateJdbcTemplateDAOImpl implements IClienteJuridicaJdbcTemplateDAO {
+class ClienteJuridicaJdbcTemplateDAOImpl implements IClienteJuridicaJdbcTemplateDAO {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

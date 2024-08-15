@@ -1,14 +1,13 @@
 package com.todoseventos.todos_eventos.usecase;
 
+import com.todoseventos.todos_eventos.dao.*;
+import com.todoseventos.todos_eventos.dao.impl.CarteiraJdbcTemplateDAOImpl;
 import com.todoseventos.todos_eventos.dto.requestDTO.ClienteRequestDTO;
 import com.todoseventos.todos_eventos.dto.responseDTO.ClienteResponseDTO;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.enuns.TipoClienteEnum;
-import com.todoseventos.todos_eventos.dao.IClienteJdbcTemplateDAO;
-import com.todoseventos.todos_eventos.dao.IClienteFisicaJdbcTemplateDAO;
-import com.todoseventos.todos_eventos.dao.IClienteJuridicaJdbcTemplateDAO;
-import com.todoseventos.todos_eventos.dao.ITipoClienteJdbcTemplateDAO;
 import com.todoseventos.todos_eventos.exception.CustomException;
+import com.todoseventos.todos_eventos.model.carteira.CarteiraModel;
 import com.todoseventos.todos_eventos.model.cliente.ClienteFisico;
 import com.todoseventos.todos_eventos.model.cliente.ClienteJuridico;
 import com.todoseventos.todos_eventos.model.cliente.Cliente;
@@ -36,6 +35,9 @@ public class ClienteService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
+    private CarteiraService carteiraService;
+
+    @Autowired
     private ITipoClienteJdbcTemplateDAO ITipoClienteJdbcTemplateDAO;
 
     @Autowired
@@ -43,6 +45,9 @@ public class ClienteService {
 
     @Autowired
     private IClienteJuridicaJdbcTemplateDAO IClienteJuridicaJdbcTemplateDAO;
+
+    @Autowired
+    private ICarteiraJdbcTemplateDAO ICarteiraJdbcTemplateDAO;
 
     /**
      * Cadastra uma nova pessoa (física ou jurídica).
@@ -76,6 +81,8 @@ public class ClienteService {
 
         Cliente pessoaSalva = IClienteJdbcTemplateDAO.salvarCliente(pessoa);
 
+        carteiraService.criarCarteiraParaNovoCliente(pessoaSalva.getIdPessoa());
+
         if (clienteRequest.getTipo_pessoa() == TipoClienteEnum.FISICA) {
             ClienteFisico pessoaFisica = ClienteFisico.builder()
                     .cpf(clienteRequest.getCpf())
@@ -91,6 +98,7 @@ public class ClienteService {
                     .build();
             IClienteJuridicaJdbcTemplateDAO.salvarCliJuridico(pessoaJuridica);
         }
+
         return mapearPessoa(clienteRequest.getTipo_pessoa(), pessoaSalva);
     }
 

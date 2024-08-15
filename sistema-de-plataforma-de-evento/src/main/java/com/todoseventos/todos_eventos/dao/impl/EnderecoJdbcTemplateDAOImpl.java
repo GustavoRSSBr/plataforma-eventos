@@ -14,7 +14,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 @Repository
-class EnderecoJdbcTemplateJdbcTemplateDAOImpl implements IEnderecoJdbcTemplateDAO {
+class EnderecoJdbcTemplateDAOImpl implements IEnderecoJdbcTemplateDAO {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-class CategoriaJdbcTemplateJdbcTemplateDAOImpl implements ICategoriaJdbcTemplateDAO {
+class CategoriaJdbcTemplateDAOImpl implements ICategoriaJdbcTemplateDAO {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-class ClienteJdbcTemplateJdbcTemplateDAOImpl implements IClienteJdbcTemplateDAO {
+class ClienteJdbcTemplateDAOImpl implements IClienteJdbcTemplateDAO {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

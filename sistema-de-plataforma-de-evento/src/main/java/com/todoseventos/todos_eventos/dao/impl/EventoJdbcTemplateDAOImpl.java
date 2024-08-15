@@ -17,9 +17,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-class EventoJdbcTemplateJdbcTemplateDAOImpl implements IEventoJdbcTemplateDAO {
+class EventoJdbcTemplateDAOImpl implements IEventoJdbcTemplateDAO {
 
-    private static final Logger logger = LoggerFactory.getLogger(EventoJdbcTemplateJdbcTemplateDAOImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(EventoJdbcTemplateDAOImpl.class);
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
