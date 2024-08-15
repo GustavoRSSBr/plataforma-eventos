@@ -239,14 +239,18 @@ public class EventoService {
     /**
      * Atualiza um evento existente.
      *
-     * @param nomeEvento       O nome do evento a ser atualizado.
+     * @param idEvento       O nome do evento a ser atualizado.
      * @param eventoRequestDTO Objeto contendo os novos detalhes do evento.
      * @return Um objeto de resposta contendo os detalhes do evento atualizado.
      */
-    public EventoResponseDTO atualizarEvento(String nomeEvento, EventoRequestDTO eventoRequestDTO) {
+    public EventoResponseDTO atualizarEvento(Integer idEvento, EventoRequestDTO eventoRequestDTO) {
 
-        Evento eventoExistente = IEventoJdbcTemplateDAO.procurarPorNome(nomeEvento)
+        Evento eventoExistente = IEventoJdbcTemplateDAO.procurarPorId(idEvento)
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
+
+
+//        Evento eventoExistente = IEventoJdbcTemplateDAO.procurarPorNome(nomeEvento)
+//                .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
 
         Categoria categoria = ICategoriaJdbcTemplateDAO.buscarNomeCategoria(eventoRequestDTO.getCategoria().name());
 
@@ -269,13 +273,11 @@ public class EventoService {
         eventoExistente.setDataHora_eventofinal(eventoRequestDTO.getDataHora_eventofinal());
         eventoExistente.setDescricao(eventoRequestDTO.getDescricao());
         eventoExistente.setId_categoria(categoria.getIdCategoria());
-//        eventoExistente.setValorIngresso(eventoRequestDTO.getValorIngresso());
-//        eventoExistente.setLimitePessoas(eventoRequestDTO.getLimitePessoas());
 
         Evento eventoAtualizado = IEventoJdbcTemplateDAO.atualizarEvento(eventoExistente);
 
         Endereco enderecoExistente = IEnderecoJdbcTemplateDAO.procurarPorIdEvento(eventoExistente.getIdEvento())
-                .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + nomeEvento));
+                .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + idEvento));
 
         enderecoExistente.setRua(eventoRequestDTO.getRua());
         enderecoExistente.setNumero(eventoRequestDTO.getNumero());
@@ -288,7 +290,6 @@ public class EventoService {
 
         return mapearEvento(categoria, eventoAtualizado, enderecoAtualizado);
     }
-
 
     /**
      * Exclui um evento.

@@ -100,12 +100,12 @@ public class EventoController {
             @ApiResponse(responseCode = "400", description = "Erro ao atualizar evento!"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor ao atualizar evento!")
     })
-    @PutMapping("/evento/{nomeEvento}")
+    @PutMapping("/evento/{idEvento}")
     public ResponseEntity<?> atualizarEvento(
             @Parameter(description = "Nome do evento a ser atualizado.")
-            @Valid @PathVariable String nomeEvento, @RequestBody EventoRequestDTO eventoRequestDTO) {
+            @Valid @PathVariable Integer idEvento, @RequestBody EventoRequestDTO eventoRequestDTO) {
         long startTime = System.currentTimeMillis();
-        EventoResponseDTO response = eventoService.atualizarEvento(nomeEvento, eventoRequestDTO);
+        EventoResponseDTO response = eventoService.atualizarEvento(idEvento, eventoRequestDTO);
 
         LoggerUtils.logElapsedTime(LOGGER, "atualizarEvento", startTime);
         return ResponseEntity.status(HttpStatus.OK).body(new CustomExceptionResponseDTO(SuccessMessages.EVENTO_ATUALIZADO));
