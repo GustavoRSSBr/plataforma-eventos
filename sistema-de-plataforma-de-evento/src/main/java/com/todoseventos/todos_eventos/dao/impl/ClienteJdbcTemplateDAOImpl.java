@@ -22,8 +22,15 @@ class ClienteJdbcTemplateDAOImpl implements IClienteJdbcTemplateDAO {
     public Cliente procurarPorCpf(String cpf) {
         String sql = "SELECT * FROM procurar_cliente_por_cpf(?)";
 
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Cliente.class), cpf);
+        // Usa query para evitar EmptyResultDataAccessException
+        List<Cliente> results = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Cliente.class), cpf);
 
+        // Verifica se a lista está vazia e retorna null se não houver resultados
+        if (results.isEmpty()) {
+            return null;
+        } else {
+            return results.get(0);
+        }
     }
 
     @Override
