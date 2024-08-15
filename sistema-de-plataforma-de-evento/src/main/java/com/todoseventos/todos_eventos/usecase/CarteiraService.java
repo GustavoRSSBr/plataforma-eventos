@@ -16,11 +16,9 @@ public class CarteiraService {
 
     @Transactional
     public DepositoResponseDTO depositar(DepositoRequestDTO request){
-        iCarteiraJdbcTemplateDAO.depositar(request.getIdPessoa(), request.getValor());
+        Double saldoAtualizado = iCarteiraJdbcTemplateDAO.depositar(request.getIdPessoa(), request.getValor());
 
-        CarteiraModel carteiraAtualizada = iCarteiraJdbcTemplateDAO.buscarCarteiraPorIdPessoa(request.getIdPessoa());
-
-        return new DepositoResponseDTO("Depósito realizado com sucesso!", null);
+        return new DepositoResponseDTO("Depósito realizado com sucesso! Saldo atualizado: ", saldoAtualizado);
     }
 
     public void criarCarteiraParaNovoCliente(int idPessoa){

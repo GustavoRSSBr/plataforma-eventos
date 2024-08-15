@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.batch.BatchProperties;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -16,10 +17,11 @@ public class CarteiraJdbcTemplateDAOImpl implements ICarteiraJdbcTemplateDAO {
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public void depositar(int idPessoa, double valor){
+    public Double depositar(int idPessoa, double valor) {
         String sql = "SELECT depositar(?, ?)";
-        jdbcTemplate.update(sql, idPessoa, valor);
+        return jdbcTemplate.queryForObject(sql, new Object[]{idPessoa, valor}, Double.class);
     }
+
 
     @Override
     public void criarCarteira(CarteiraModel carteira) {
