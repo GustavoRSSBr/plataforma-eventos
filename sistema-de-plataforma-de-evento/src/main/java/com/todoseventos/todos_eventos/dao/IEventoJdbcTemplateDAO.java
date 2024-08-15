@@ -10,7 +10,7 @@ public interface IEventoJdbcTemplateDAO {
     Evento atualizarEvento(Evento evento);
     Optional<Evento> procurarPorNome(String nomeEvento);
     Optional<Evento> procurarPorId(Integer idEvento);
-    List<Evento> localizarEvento();
+    List<Evento> listarEvento();
     void deletarPorId(Integer idEvento);
 }
 

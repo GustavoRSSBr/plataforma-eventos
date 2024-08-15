@@ -59,26 +59,22 @@ public class EventoService {
         if (eventoRequestDTO.getCategoria() == null) {
             throw new CustomException(ExceptionMessages.TIPO_CATEGORIA_INVALIDO);
         }
-        // Verificar se a categoria é válida
         Categoria categoria = ICategoriaJdbcTemplateDAO.buscarNomeCategoria(eventoRequestDTO.getCategoria().name());
 
         if (Objects.isNull(categoria)) {
             throw new CustomException(ExceptionMessages.CATEGORIA_INVALIDA);
         }
 
-        // Validar o CEP
         if (!validacoes.validarCep(eventoRequestDTO.getCep())) {
             throw new CustomException(ExceptionMessages.CEP_INVALIDO);
         }
 
-        // Consultar e preencher dados do CEP
         CepResponseDTO cepResponseDTO = cepService.consultarCep(eventoRequestDTO.getCep());
         eventoRequestDTO.setRua(cepResponseDTO.getLogradouro());
         eventoRequestDTO.setBairro(cepResponseDTO.getBairro());
         eventoRequestDTO.setCidade(cepResponseDTO.getLocalidade());
         eventoRequestDTO.setUf(cepResponseDTO.getUf());
 
-        // Criar e salvar o evento
         Evento evento = Evento.builder()
                 .nome_evento(eventoRequestDTO.getNome_evento())
                 .dataHora_evento(eventoRequestDTO.getDataHora_evento())
@@ -86,11 +82,12 @@ public class EventoService {
                 .descricao(eventoRequestDTO.getDescricao())
                 .status("ATIVO")
                 .id_categoria(categoria.getIdCategoria())
+                .valorIngresso(eventoRequestDTO.getValorIngresso())
+                .limitePessoas(eventoRequestDTO.getLimitePessoas())
                 .build();
 
         Evento eventoSalvo = IEventoJdbcTemplateDAO.salvarEvento(evento);
 
-        // Criar e salvar o endereço
         Endereco endereco = Endereco.builder()
                 .idEvento(eventoSalvo.getIdEvento())
                 .rua(eventoRequestDTO.getRua())
@@ -176,21 +173,24 @@ public class EventoService {
                 .cidade(enderecoSalvo.getCidade())
                 .cep(enderecoSalvo.getCep())
                 .uf(enderecoSalvo.getUf())
+                .valorIngresso(eventoSalvo.getValorIngresso())
+                .limitePessoas(eventoSalvo.getLimitePessoas())
                 .build();
     }
+
 
     /**
      * Localiza todos os eventos cadastrados.
      *
      * @return Uma lista de objetos de resposta contendo os detalhes dos eventos localizados.
      */
-    public List<EventoResponseDTO> localizarEventos() {
+    public List<EventoResponseDTO> listarEventos() {
 
         List<Evento> eventoList;
         List<EventoResponseDTO> eventoResponseDTOList = new ArrayList<>();
 
         try {
-            eventoList = IEventoJdbcTemplateDAO.localizarEvento();
+            eventoList = IEventoJdbcTemplateDAO.listarEvento();
         } catch (Exception e) {
             throw new CustomException(ExceptionMessages.ERRO_BUSCAR_EVENTOS + e.getMessage());
         }
@@ -254,12 +254,10 @@ public class EventoService {
             throw new CustomException(ExceptionMessages.CATEGORIA_INVALIDA);
         }
 
-        // Validar o CEP
         if (!validacoes.validarCep(eventoRequestDTO.getCep())) {
             throw new CustomException(ExceptionMessages.CEP_INVALIDO);
         }
 
-        // Consultar e preencher dados do CEP
         CepResponseDTO cepResponseDTO = cepService.consultarCep(eventoRequestDTO.getCep());
         eventoRequestDTO.setRua(cepResponseDTO.getLogradouro());
         eventoRequestDTO.setBairro(cepResponseDTO.getBairro());
@@ -271,6 +269,8 @@ public class EventoService {
         eventoExistente.setDataHora_eventofinal(eventoRequestDTO.getDataHora_eventofinal());
         eventoExistente.setDescricao(eventoRequestDTO.getDescricao());
         eventoExistente.setId_categoria(categoria.getIdCategoria());
+//        eventoExistente.setValorIngresso(eventoRequestDTO.getValorIngresso());
+//        eventoExistente.setLimitePessoas(eventoRequestDTO.getLimitePessoas());
 
         Evento eventoAtualizado = IEventoJdbcTemplateDAO.atualizarEvento(eventoExistente);
 
@@ -288,6 +288,7 @@ public class EventoService {
 
         return mapearEvento(categoria, eventoAtualizado, enderecoAtualizado);
     }
+
 
     /**
      * Exclui um evento.

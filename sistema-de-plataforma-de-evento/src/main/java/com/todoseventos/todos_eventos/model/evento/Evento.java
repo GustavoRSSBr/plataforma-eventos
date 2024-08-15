@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
@@ -21,4 +22,6 @@ public class Evento implements Serializable {
     private String status;
     private Integer id_categoria;
     private Integer id_endereco;
+    private BigDecimal valorIngresso;
+    private Integer limitePessoas;
 }

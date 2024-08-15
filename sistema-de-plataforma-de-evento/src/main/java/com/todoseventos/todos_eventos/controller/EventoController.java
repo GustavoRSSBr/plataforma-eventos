@@ -73,7 +73,7 @@ public class EventoController {
     @GetMapping("/evento")
     public ResponseEntity<?> listarEventos() {
         long startTime = System.currentTimeMillis();
-        List<EventoResponseDTO> response = eventoService.localizarEventos();
+        List<EventoResponseDTO> response = eventoService.listarEventos();
         LoggerUtils.logElapsedTime(LOGGER, "listarEventos", startTime);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

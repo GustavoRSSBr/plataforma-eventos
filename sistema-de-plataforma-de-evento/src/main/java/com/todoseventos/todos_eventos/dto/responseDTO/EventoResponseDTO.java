@@ -3,6 +3,8 @@ package com.todoseventos.todos_eventos.dto.responseDTO;
 import com.todoseventos.todos_eventos.enuns.CategoriaEnum;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -23,4 +25,6 @@ public class EventoResponseDTO {
     private String cidade;
     private String cep;
     private String uf;
+    private BigDecimal valorIngresso;
+    private Integer limitePessoas;
 }

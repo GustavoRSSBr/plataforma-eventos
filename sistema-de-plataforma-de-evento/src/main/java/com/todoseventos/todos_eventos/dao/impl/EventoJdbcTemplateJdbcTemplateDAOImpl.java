@@ -27,7 +27,7 @@ class EventoJdbcTemplateJdbcTemplateDAOImpl implements IEventoJdbcTemplateDAO {
     @Override
     @Transactional
     public Evento salvarEvento(Evento evento) {
-        String sql = "SELECT inserir_evento(?, ?, ?, ?, ?, ?)";
+        String sql = "SELECT inserir_evento(?, ?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
             setPreparedStatementParameters(ps, evento);
             ps.execute();
@@ -36,13 +36,12 @@ class EventoJdbcTemplateJdbcTemplateDAOImpl implements IEventoJdbcTemplateDAO {
         Integer idEvento = jdbcTemplate.queryForObject("SELECT currval(pg_get_serial_sequence('evento','id_evento'))", Integer.class);
         evento.setIdEvento(idEvento);
         return evento;
-
     }
 
     @Override
     @Transactional
     public Evento atualizarEvento(Evento evento) {
-        String sql = "SELECT atualizar_evento(?, ?, ?, ?, ?, ?, ?)";
+        String sql = "SELECT atualizar_evento(?, ?, ?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
             ps.setInt(1, evento.getIdEvento());
             ps.setString(2, evento.getNome_evento().trim());
@@ -51,13 +50,13 @@ class EventoJdbcTemplateJdbcTemplateDAOImpl implements IEventoJdbcTemplateDAO {
             ps.setString(5, evento.getDescricao().trim());
             ps.setString(6, evento.getStatus().trim());
             ps.setInt(7, evento.getId_categoria());
+            ps.setBigDecimal(8, evento.getValorIngresso());
+            ps.setInt(9, evento.getLimitePessoas());
             ps.execute();
             return null;
         });
         return evento;
-
     }
-
 
     @Override
     @Transactional
@@ -78,7 +77,7 @@ class EventoJdbcTemplateJdbcTemplateDAOImpl implements IEventoJdbcTemplateDAO {
 
     @Override
     @Transactional
-    public List<Evento> localizarEvento() {
+    public List<Evento> listarEvento() {
         String sql = "SELECT * FROM localizar_evento()";
         logger.info("Executando SQL para buscar evento: {}", sql);
 
@@ -106,5 +105,7 @@ class EventoJdbcTemplateJdbcTemplateDAOImpl implements IEventoJdbcTemplateDAO {
         ps.setString(4, evento.getDescricao().trim());
         ps.setString(5, evento.getStatus().trim());
         ps.setInt(6, evento.getId_categoria());
+        ps.setBigDecimal(7, evento.getValorIngresso());
+        ps.setInt(8, evento.getLimitePessoas());
     }
 }
