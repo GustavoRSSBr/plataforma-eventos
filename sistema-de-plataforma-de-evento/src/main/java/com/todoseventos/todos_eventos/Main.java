@@ -7,6 +7,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
+@ComponentScan(basePackages = {"com.todoseventos.todos_eventos"})
 public class Main {
 
 	public static void main(String[] args) {

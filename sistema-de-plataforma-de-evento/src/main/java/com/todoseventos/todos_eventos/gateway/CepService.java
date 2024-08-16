@@ -1,7 +1,7 @@
 package com.todoseventos.todos_eventos.gateway;
 
 import com.google.gson.Gson;
-import com.todoseventos.todos_eventos.dto.responseDTO.CepResponse;
+import com.todoseventos.todos_eventos.dto.responseDTO.CepResponseDTO;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class CepService {
      * @return Um objeto CepResponse contendo os detalhes do endereço.
      * @throws CustomException se ocorrer um erro durante a consulta do CEP.
      */
-    public CepResponse consultarCep(String cep) {
+    public CepResponseDTO consultarCep(String cep) {
         try {
             // Cria a URL para a consulta do CEP
             URL url = new URL("https://viacep.com.br/ws/" + cep + "/json/");
@@ -39,7 +39,7 @@ public class CepService {
             }
 
             // Converte a resposta JSON para um objeto CepResponse usando Gson
-            return new Gson().fromJson(jsonCep.toString(), CepResponse.class);
+            return new Gson().fromJson(jsonCep.toString(), CepResponseDTO.class);
         } catch (Exception e) {
             // Lança uma exceção personalizada se ocorrer um erro
             throw new CustomException(ExceptionMessages.CEP_INVALIDO + e.getMessage());

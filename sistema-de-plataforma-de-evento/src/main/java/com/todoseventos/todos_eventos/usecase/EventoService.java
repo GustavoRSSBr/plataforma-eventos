@@ -1,10 +1,10 @@
 package com.todoseventos.todos_eventos.usecase;
 
 import com.todoseventos.todos_eventos.dao.*;
+import com.todoseventos.todos_eventos.dto.requestDTO.EventoRequestDTO;
+import com.todoseventos.todos_eventos.dto.responseDTO.CepResponseDTO;
+import com.todoseventos.todos_eventos.dto.responseDTO.EventoResponseDTO;
 import com.todoseventos.todos_eventos.enuns.CategoriaEnum;
-import com.todoseventos.todos_eventos.dto.responseDTO.CepResponse;
-import com.todoseventos.todos_eventos.dto.requestDTO.EventoRequest;
-import com.todoseventos.todos_eventos.dto.responseDTO.EventoResponse;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.gateway.CepService;
@@ -12,9 +12,6 @@ import com.todoseventos.todos_eventos.gateway.EmailService;
 import com.todoseventos.todos_eventos.model.evento.Categoria;
 import com.todoseventos.todos_eventos.model.evento.Endereco;
 import com.todoseventos.todos_eventos.model.evento.Evento;
-import com.todoseventos.todos_eventos.model.evento.Participacao;
-import com.todoseventos.todos_eventos.model.cliente.ClienteFisico;
-import com.todoseventos.todos_eventos.model.cliente.ClienteJuridico;
 import com.todoseventos.todos_eventos.utils.Validacoes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +25,7 @@ public class EventoService {
 
 
     @Autowired
-    private IEventoDao IEventoDao;
+    private IEventoJdbcTemplateDAO IEventoJdbcTemplateDAO;
 
     @Autowired
     private Validacoes validacoes;
@@ -40,121 +37,103 @@ public class EventoService {
     private CepService cepService;
 
     @Autowired
-    private IEnderecoDao IEnderecoDao;
+    private IEnderecoJdbcTemplateDAO IEnderecoJdbcTemplateDAO;
 
     @Autowired
-    private IParticipacaoDao IParticipacaoDao;
+    private IClienteFisicaJdbcTemplateDAO IClienteFisicaJdbcTemplateDAO;
 
     @Autowired
-    private IClienteFisicaDao IClienteFisicaDao;
+    private IClienteJuridicaJdbcTemplateDAO IClienteJuridicaJdbcTemplateDAO;
 
     @Autowired
-    private IClienteJuridicaDao IClienteJuridicaDao;
-
-    @Autowired
-    private ICategoriaDao ICategoriaDao;
+    private ICategoriaJdbcTemplateDAO ICategoriaJdbcTemplateDAO;
 
     /**
      * Cadastra um novo evento.
-     * @param eventoRequest Objeto contendo os detalhes do evento a ser cadastrado.
+     *
+     * @param eventoRequestDTO Objeto contendo os detalhes do evento a ser cadastrado.
      * @return Um objeto de resposta contendo os detalhes do evento cadastrado.
      */
-    public EventoResponse cadastrarNovoEvento(EventoRequest eventoRequest) {
+    public EventoResponseDTO cadastrarNovoEvento(EventoRequestDTO eventoRequestDTO) {
 
-        if (eventoRequest.getCategoria() == null) {
+        if (eventoRequestDTO.getCategoria() == null) {
             throw new CustomException(ExceptionMessages.TIPO_CATEGORIA_INVALIDO);
         }
-        // Verificar se a categoria é válida
-        Categoria categoria = ICategoriaDao.buscarNomeCategoria(eventoRequest.getCategoria().name());
+        Categoria categoria = ICategoriaJdbcTemplateDAO.buscarNomeCategoria(eventoRequestDTO.getCategoria().name());
 
         if (Objects.isNull(categoria)) {
             throw new CustomException(ExceptionMessages.CATEGORIA_INVALIDA);
         }
 
-        // Validar o CEP
-        if (!validacoes.validarCep(eventoRequest.getCep())) {
+        if (!validacoes.validarCep(eventoRequestDTO.getCep())) {
             throw new CustomException(ExceptionMessages.CEP_INVALIDO);
         }
 
-        // Consultar e preencher dados do CEP
-        CepResponse cepResponse = cepService.consultarCep(eventoRequest.getCep());
-        eventoRequest.setRua(cepResponse.getLogradouro());
-        eventoRequest.setBairro(cepResponse.getBairro());
-        eventoRequest.setCidade(cepResponse.getLocalidade());
-        eventoRequest.setUf(cepResponse.getUf());
+        CepResponseDTO cepResponseDTO = cepService.consultarCep(eventoRequestDTO.getCep());
+        eventoRequestDTO.setRua(cepResponseDTO.getLogradouro());
+        eventoRequestDTO.setBairro(cepResponseDTO.getBairro());
+        eventoRequestDTO.setCidade(cepResponseDTO.getLocalidade());
+        eventoRequestDTO.setUf(cepResponseDTO.getUf());
 
-        // Criar e salvar o evento
         Evento evento = Evento.builder()
-                .nome_evento(eventoRequest.getNome_evento())
-                .dataHora_evento(eventoRequest.getDataHora_evento())
-                .dataHora_eventofinal(eventoRequest.getDataHora_eventofinal())
-                .descricao(eventoRequest.getDescricao())
+                .nome_evento(eventoRequestDTO.getNome_evento())
+                .dataHora_evento(eventoRequestDTO.getDataHora_evento())
+                .dataHora_eventofinal(eventoRequestDTO.getDataHora_eventofinal())
+                .descricao(eventoRequestDTO.getDescricao())
                 .status("ATIVO")
                 .id_categoria(categoria.getIdCategoria())
+                .valorIngresso(eventoRequestDTO.getValorIngresso())
+                .limitePessoas(eventoRequestDTO.getLimitePessoas())
                 .build();
 
-        Evento eventoSalvo = IEventoDao.salvarEvento(evento);
+        Evento eventoSalvo = IEventoJdbcTemplateDAO.salvarEvento(evento);
 
-        // Criar e salvar o endereço
         Endereco endereco = Endereco.builder()
                 .idEvento(eventoSalvo.getIdEvento())
-                .rua(eventoRequest.getRua())
-                .numero(eventoRequest.getNumero())
-                .bairro(eventoRequest.getBairro())
-                .cidade(eventoRequest.getCidade())
-                .cep(eventoRequest.getCep())
-                .uf(eventoRequest.getUf())
+                .rua(eventoRequestDTO.getRua())
+                .numero(eventoRequestDTO.getNumero())
+                .bairro(eventoRequestDTO.getBairro())
+                .cidade(eventoRequestDTO.getCidade())
+                .cep(eventoRequestDTO.getCep())
+                .uf(eventoRequestDTO.getUf())
                 .build();
 
-        Endereco enderecoSalvo = IEnderecoDao.salverEndereco(endereco);
+        Endereco enderecoSalvo = IEnderecoJdbcTemplateDAO.salverEndereco(endereco);
 
         return mapearEvento(categoria, eventoSalvo, enderecoSalvo);
     }
 
     /**
      * Encerra um evento.
+     *
      * @param idEvento O ID do evento a ser encerrado.
      * @return Um objeto de resposta contendo os detalhes do evento encerrado.
      */
-    public EventoResponse encerrarEvento(Integer idEvento) {
+    public EventoResponseDTO encerrarEvento(Integer idEvento) {
 
-        Evento evento = IEventoDao.procurarPorId(idEvento)
+        Evento evento = IEventoJdbcTemplateDAO.procurarPorId(idEvento)
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
         evento.setStatus("CANCELADO");
-        Evento updatedEvento = IEventoDao.atualizarEvento(evento);
+        Evento updatedEvento = IEventoJdbcTemplateDAO.atualizarEvento(evento);
 
-        // Envia e-mails de cancelamento para todos os participantes do evento
-        List<Participacao> participacoes = IParticipacaoDao.localizarPorIdEvento(idEvento);
-        participacoes.forEach(participacao -> {
-            String email;
-            String nomePessoa;
-            if (participacao.getCpf() != null) {
-                ClienteFisico clienteFisica = IClienteFisicaDao.procurarCpf(participacao.getCpf());
-                email = clienteFisica.getEmail();
-                nomePessoa = clienteFisica.getNome();
-            } else {
-                ClienteJuridico clienteJuridica = IClienteJuridicaDao.procurarCnpj(participacao.getCnpj());
-                email = clienteJuridica.getEmail();
-                nomePessoa = clienteJuridica.getNome();
-            }
-            emailService.enviarEmailCancelamento(email, nomePessoa, evento.getNome_evento());
-        });
+        //todo recurso de reembolso
 
         return mapearEncerramentoEvento(evento);
     }
 
     /**
      * Mapeia os detalhes do encerramento de um evento para um objeto de resposta.
+     *
      * @param evento O objeto evento contendo os detalhes do evento.
      * @return Um objeto de resposta contendo os detalhes do evento encerrado.
      */
-    private EventoResponse mapearEncerramentoEvento(Evento evento) {
+    private EventoResponseDTO mapearEncerramentoEvento(Evento evento) {
 
-        Categoria categoria = ICategoriaDao.procurarId(evento.getId_categoria());
-        Endereco endereco = IEnderecoDao.procurarPorIdEvento(evento.getIdEvento())
+        Categoria categoria = ICategoriaJdbcTemplateDAO.procurarId(evento.getId_categoria());
+        Endereco endereco = IEnderecoJdbcTemplateDAO.procurarPorIdEvento(evento.getIdEvento())
                 .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + evento.getNome_evento()));
 
-        return EventoResponse.builder()
+        return EventoResponseDTO.builder()
                 .idEvento(evento.getIdEvento())
                 .nome_evento(evento.getNome_evento())
                 .dataHora_evento(evento.getDataHora_evento())
@@ -173,13 +152,14 @@ public class EventoService {
 
     /**
      * Mapeia os detalhes de um evento para um objeto de resposta.
-     * @param categoria O objeto categoria contendo os detalhes da categoria do evento.
-     * @param eventoSalvo O objeto evento contendo os detalhes do evento salvo.
+     *
+     * @param categoria     O objeto categoria contendo os detalhes da categoria do evento.
+     * @param eventoSalvo   O objeto evento contendo os detalhes do evento salvo.
      * @param enderecoSalvo O objeto endereço contendo os detalhes do endereço salvo.
      * @return Um objeto de resposta contendo os detalhes do evento.
      */
-    private EventoResponse mapearEvento(Categoria categoria, Evento eventoSalvo, Endereco enderecoSalvo) {
-        return EventoResponse.builder()
+    private EventoResponseDTO mapearEvento(Categoria categoria, Evento eventoSalvo, Endereco enderecoSalvo) {
+        return EventoResponseDTO.builder()
                 .idEvento(eventoSalvo.getIdEvento())
                 .nome_evento(eventoSalvo.getNome_evento())
                 .dataHora_evento(eventoSalvo.getDataHora_evento())
@@ -193,20 +173,24 @@ public class EventoService {
                 .cidade(enderecoSalvo.getCidade())
                 .cep(enderecoSalvo.getCep())
                 .uf(enderecoSalvo.getUf())
+                .valorIngresso(eventoSalvo.getValorIngresso())
+                .limitePessoas(eventoSalvo.getLimitePessoas())
                 .build();
     }
 
+
     /**
      * Localiza todos os eventos cadastrados.
+     *
      * @return Uma lista de objetos de resposta contendo os detalhes dos eventos localizados.
      */
-    public List<EventoResponse> localizarEventos() {
+    public List<EventoResponseDTO> listarEventos() {
 
         List<Evento> eventoList;
-        List<EventoResponse> eventoResponseList = new ArrayList<>();
+        List<EventoResponseDTO> eventoResponseDTOList = new ArrayList<>();
 
         try {
-            eventoList = IEventoDao.localizarEvento();
+            eventoList = IEventoJdbcTemplateDAO.listarEvento();
         } catch (Exception e) {
             throw new CustomException(ExceptionMessages.ERRO_BUSCAR_EVENTOS + e.getMessage());
         }
@@ -216,36 +200,37 @@ public class EventoService {
             Endereco endereco;
 
             try {
-                categoria = ICategoriaDao.procurarId(evento.getId_categoria());
+                categoria = ICategoriaJdbcTemplateDAO.procurarId(evento.getId_categoria());
             } catch (Exception e) {
                 throw new CustomException(ExceptionMessages.ERRO_BUSCAR_CATEGORIA_EVENTO + e.getMessage());
             }
 
             try {
-                endereco = IEnderecoDao.procurarPorIdEvento(evento.getIdEvento())
+                endereco = IEnderecoJdbcTemplateDAO.procurarPorIdEvento(evento.getIdEvento())
                         .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + evento.getNome_evento()));
             } catch (Exception e) {
                 throw new CustomException(ExceptionMessages.ERRO_BUSCAR_ENDERECO_EVENTO + e.getMessage());
             }
 
-            EventoResponse eventoResponse = mapearEvento(categoria, evento, endereco);
-            eventoResponseList.add(eventoResponse);
+            EventoResponseDTO eventoResponseDTO = mapearEvento(categoria, evento, endereco);
+            eventoResponseDTOList.add(eventoResponseDTO);
         }
-        return eventoResponseList;
+        return eventoResponseDTOList;
     }
 
     /**
      * Procura um evento pelo nome.
+     *
      * @param nomeEvento O nome do evento a ser procurado.
      * @return Um objeto de resposta contendo os detalhes do evento localizado.
      */
-    public EventoResponse procurarEventoPorNome(String nomeEvento) {
+    public EventoResponseDTO procurarEventoPorNome(String nomeEvento) {
 
-        Evento evento = IEventoDao.procurarPorNome(nomeEvento)
+        Evento evento = IEventoJdbcTemplateDAO.procurarPorNome(nomeEvento)
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
 
-        Categoria categoria = ICategoriaDao.procurarId(evento.getId_categoria());
-        Endereco endereco = IEnderecoDao.procurarPorIdEvento(evento.getIdEvento())
+        Categoria categoria = ICategoriaJdbcTemplateDAO.procurarId(evento.getId_categoria());
+        Endereco endereco = IEnderecoJdbcTemplateDAO.procurarPorIdEvento(evento.getIdEvento())
                 .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + nomeEvento));
 
         return mapearEvento(categoria, evento, endereco);
@@ -253,65 +238,69 @@ public class EventoService {
 
     /**
      * Atualiza um evento existente.
-     * @param nomeEvento O nome do evento a ser atualizado.
-     * @param eventoRequest Objeto contendo os novos detalhes do evento.
+     *
+     * @param idEvento       O nome do evento a ser atualizado.
+     * @param eventoRequestDTO Objeto contendo os novos detalhes do evento.
      * @return Um objeto de resposta contendo os detalhes do evento atualizado.
      */
-    public EventoResponse atualizarEvento(String nomeEvento, EventoRequest eventoRequest) {
+    public EventoResponseDTO atualizarEvento(Integer idEvento, EventoRequestDTO eventoRequestDTO) {
 
-        Evento eventoExistente = IEventoDao.procurarPorNome(nomeEvento)
+        Evento eventoExistente = IEventoJdbcTemplateDAO.procurarPorId(idEvento)
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
 
-        Categoria categoria = ICategoriaDao.buscarNomeCategoria(eventoRequest.getCategoria().name());
+
+//        Evento eventoExistente = IEventoJdbcTemplateDAO.procurarPorNome(nomeEvento)
+//                .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
+
+        Categoria categoria = ICategoriaJdbcTemplateDAO.buscarNomeCategoria(eventoRequestDTO.getCategoria().name());
 
         if (categoria == null) {
             throw new CustomException(ExceptionMessages.CATEGORIA_INVALIDA);
         }
 
-        // Validar o CEP
-        if (!validacoes.validarCep(eventoRequest.getCep())) {
+        if (!validacoes.validarCep(eventoRequestDTO.getCep())) {
             throw new CustomException(ExceptionMessages.CEP_INVALIDO);
         }
 
-        // Consultar e preencher dados do CEP
-        CepResponse cepResponse = cepService.consultarCep(eventoRequest.getCep());
-        eventoRequest.setRua(cepResponse.getLogradouro());
-        eventoRequest.setBairro(cepResponse.getBairro());
-        eventoRequest.setCidade(cepResponse.getLocalidade());
-        eventoRequest.setUf(cepResponse.getUf());
+        CepResponseDTO cepResponseDTO = cepService.consultarCep(eventoRequestDTO.getCep());
+        eventoRequestDTO.setRua(cepResponseDTO.getLogradouro());
+        eventoRequestDTO.setBairro(cepResponseDTO.getBairro());
+        eventoRequestDTO.setCidade(cepResponseDTO.getLocalidade());
+        eventoRequestDTO.setUf(cepResponseDTO.getUf());
 
-        eventoExistente.setNome_evento(eventoRequest.getNome_evento());
-        eventoExistente.setDataHora_evento(eventoRequest.getDataHora_evento());
-        eventoExistente.setDataHora_eventofinal(eventoRequest.getDataHora_eventofinal());
-        eventoExistente.setDescricao(eventoRequest.getDescricao());
+        eventoExistente.setNome_evento(eventoRequestDTO.getNome_evento());
+        eventoExistente.setDataHora_evento(eventoRequestDTO.getDataHora_evento());
+        eventoExistente.setDataHora_eventofinal(eventoRequestDTO.getDataHora_eventofinal());
+        eventoExistente.setDescricao(eventoRequestDTO.getDescricao());
         eventoExistente.setId_categoria(categoria.getIdCategoria());
 
-        Evento eventoAtualizado = IEventoDao.atualizarEvento(eventoExistente);
+        Evento eventoAtualizado = IEventoJdbcTemplateDAO.atualizarEvento(eventoExistente);
 
-        Endereco enderecoExistente = IEnderecoDao.procurarPorIdEvento(eventoExistente.getIdEvento())
-                .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + nomeEvento));
+        Endereco enderecoExistente = IEnderecoJdbcTemplateDAO.procurarPorIdEvento(eventoExistente.getIdEvento())
+                .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + idEvento));
 
-        enderecoExistente.setRua(eventoRequest.getRua());
-        enderecoExistente.setNumero(eventoRequest.getNumero());
-        enderecoExistente.setBairro(eventoRequest.getBairro());
-        enderecoExistente.setCidade(eventoRequest.getCidade());
-        enderecoExistente.setCep(eventoRequest.getCep());
-        enderecoExistente.setUf(eventoRequest.getUf());
+        enderecoExistente.setRua(eventoRequestDTO.getRua());
+        enderecoExistente.setNumero(eventoRequestDTO.getNumero());
+        enderecoExistente.setBairro(eventoRequestDTO.getBairro());
+        enderecoExistente.setCidade(eventoRequestDTO.getCidade());
+        enderecoExistente.setCep(eventoRequestDTO.getCep());
+        enderecoExistente.setUf(eventoRequestDTO.getUf());
 
-        Endereco enderecoAtualizado = IEnderecoDao.atualizarEndereco(enderecoExistente);
+        Endereco enderecoAtualizado = IEnderecoJdbcTemplateDAO.atualizarEndereco(enderecoExistente);
 
         return mapearEvento(categoria, eventoAtualizado, enderecoAtualizado);
     }
 
     /**
      * Exclui um evento.
+     *
      * @param idEvento O ID do evento a ser excluído.
      */
     public void excluirEvento(Integer idEvento) {
 
-        Evento eventoExistente = IEventoDao.procurarPorId(idEvento)
+        Evento eventoExistente = IEventoJdbcTemplateDAO.procurarPorId(idEvento)
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
-        IEnderecoDao.deletarPorIdEvento(idEvento);
-        IEventoDao.deletarPorId(idEvento);
+        IEnderecoJdbcTemplateDAO.deletarPorIdEvento(idEvento);
+        IEventoJdbcTemplateDAO.deletarPorId(idEvento);
     }
 }

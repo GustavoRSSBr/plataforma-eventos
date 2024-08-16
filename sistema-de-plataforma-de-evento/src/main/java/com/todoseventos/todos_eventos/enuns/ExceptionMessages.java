@@ -15,8 +15,6 @@ public class ExceptionMessages {
     public static final String ERRO_BUSCAR_CATEGORIA_EVENTO = "Erro ao buscar categoria do evento: ";
     public static final String ERRO_BUSCAR_ENDERECO_EVENTO = "Erro ao buscar endereço do evento: ";
     public static final String EMAIL_INVALIDO = "E-mail inválido!";
-
-    public static final String EMAIL_DUPLICIDADE = "E-mail já cadastrado na plataforma! Informe outro e-mail.";
     public static final String TELEFONE_INVALIDO = "Número de celular inválido!";
     public static final String DATA_NASCIMENTO_INVALIDA = "Data de nascimento inválida!";
     public static final String CPF_INVALIDO = "CPF inválido! Verifiquei o dado informado.";
@@ -25,32 +23,8 @@ public class ExceptionMessages {
     public static final String CNPJ_JA_CADASTRADO = "CNPJ já cadastrado!";
     public static final String IDENTIFICADOR_INVALIDO = "Identificador inválido!";
     public static final String CLIENTE_NAO_ENCONTRADO = "Cliente não encontrado!";
-    public static final String PARTICIPACAO_NAO_ENCONTRADO_POR_ID = "Erro ao buscar participações por ID:";
-    public static final String ERRO_SALVAR_PARTICIPACAO = "Erro ao salvar Participacao:";
-    public static final String ERRO_ATUALIZAR_PARTICIPACAO = "Erro ao atualizar participação:";
-
-    public static final String ERRO_BUSCAR_CLIENTE_CPF = "Erro ao buscar cliente por CPF:";
-
-    public static final String ERRO_BUSCAR_CLIENTE_CNPJ = "Erro ao buscar cliente por CNPJ:";
-
     public static final String ERRO_ATUALIZAR_CLIENTE = "Erro ao atualizar cliente:";
-
-    public static final String ERRO_BUSCAR_USUARIO_POR_EMAIL = "Erro ao buscar usuário por E-MAIL:";
-
-    public static final String ERRO_SALVAR_CLIENTE = "Erro ao salvar cliente:";
-
     public static final String ERRO_LISTAR_TODOS = "Erro ao listar todos:";
-
-    public static final String ERRO_SALVAR = "Erro ao salvar:";
-
-    public static final String ERRO_ATUALIZAR = "Erro ao atualizar:";
-
-    public static final String ERRO_EXCLUIR = "Erro ao excluir:";
-
-    public static final String ERRO_BUSCAR_POR_ID = "Erro ao buscar por id:";
-
-    public static final String ERRO_BUSCAR_POR_NOME = "Erro ao buscar por nome:";
-
     public static final String ERRO_ENVIAR_EMAIL = "Erro ao enviar e-mail:";
     public static final String ERRO_ENVIAR_EMAIL_CONFIRMACAO = "Erro ao enviar e-mail de confirmação:";
     public static final String ERRO_ENVIAR_EMAIL_CANCELAMENTO = "Erro ao enviar e-mail de cancelamento:";

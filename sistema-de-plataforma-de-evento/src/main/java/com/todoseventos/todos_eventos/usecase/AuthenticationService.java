@@ -1,12 +1,11 @@
 package com.todoseventos.todos_eventos.usecase;
 
 import com.todoseventos.todos_eventos.controller.AutenticacaoController;
-import com.todoseventos.todos_eventos.dto.responseDTO.AcessDTO;
-import com.todoseventos.todos_eventos.dto.requestDTO.AuthenticationDTO;
+import com.todoseventos.todos_eventos.dto.responseDTO.AcessResponseDTO;
+import com.todoseventos.todos_eventos.dto.requestDTO.AuthenticationRequestDTO;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.security.jwt.JwtUtils;
-import com.todoseventos.todos_eventos.utils.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,7 @@ public class AuthenticationService {
      * @return Um objeto AcessDTO contendo o token JWT gerado.
      * @throws CustomException se as credenciais forem inválidas ou ocorrer um erro interno.
      */
-    public AcessDTO login(AuthenticationDTO authDto) {
+    public AcessResponseDTO login(AuthenticationRequestDTO authDto) {
         try {
             // Cria um token de autenticação usando o e-mail e a senha fornecidos
             UsernamePasswordAuthenticationToken authenticationToken =
@@ -48,7 +47,7 @@ public class AuthenticationService {
             String jwt = jwtUtils.generateJwtToken(authentication);
 
             // Retorna o token JWT
-            return new AcessDTO(jwt);
+            return new AcessResponseDTO(jwt);
         } catch (BadCredentialsException e) {
             // Lança uma exceção personalizada se as credenciais forem inválidas
             throw new CustomException(ExceptionMessages.EMAIL_SENHA);
