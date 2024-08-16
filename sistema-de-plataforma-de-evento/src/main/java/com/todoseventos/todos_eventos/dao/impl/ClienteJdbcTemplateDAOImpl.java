@@ -22,14 +22,12 @@ class ClienteJdbcTemplateDAOImpl implements IClienteJdbcTemplateDAO {
     public Cliente procurarPorCpf(String cpf) {
         String sql = "SELECT * FROM procurar_cliente_por_cpf(?)";
 
-        // Usa query para evitar EmptyResultDataAccessException
-        List<Cliente> results = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Cliente.class), cpf);
+        List<Cliente> clientes = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Cliente.class), cpf);
 
-        // Verifica se a lista está vazia e retorna null se não houver resultados
-        if (results.isEmpty()) {
+        if (clientes.isEmpty()) {
             return null;
         } else {
-            return results.get(0);
+            return clientes.get(0);
         }
     }
 
@@ -38,7 +36,12 @@ class ClienteJdbcTemplateDAOImpl implements IClienteJdbcTemplateDAO {
     public Cliente procurarPorCnpj(String cnpj) {
         String sql = "SELECT * FROM procurar_cliente_por_cnpj(?)";
 
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Cliente.class), cnpj);
+        List<Cliente> clientes =jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Cliente.class), cnpj);
+        if (clientes.isEmpty()) {
+            return null;
+        } else {
+            return clientes.get(0);
+        }
 
     }
 
