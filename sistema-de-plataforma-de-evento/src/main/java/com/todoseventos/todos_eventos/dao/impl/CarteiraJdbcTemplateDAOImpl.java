@@ -30,8 +30,8 @@ public class CarteiraJdbcTemplateDAOImpl implements ICarteiraJdbcTemplateDAO {
     }
 
     @Override
-    public CarteiraModel buscarCarteiraPorIdPessoa(int idPessoa) {
-        String sql = "SELECT * FROM CARTEIRA WHERE id_pessoa = ?";
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(CarteiraModel.class), idPessoa);
+    public Double consultarSaldo(int idPessoa){
+        String sql = "SELECT saldo FROM CARTEIRA WHERE id_pessoa = ?";
+        return jdbcTemplate.queryForObject(sql, Double.class, idPessoa);
     }
 }

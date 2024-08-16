@@ -25,4 +25,9 @@ public class CarteiraService {
         CarteiraModel novaCarteira = CarteiraModel.builder().idPessoa(idPessoa).saldo(0.0).build();
         iCarteiraJdbcTemplateDAO.criarCarteira(novaCarteira);
     }
+
+    @Transactional(readOnly = true)
+    public Double consultarSaldo(int idPessoa) {
+        return iCarteiraJdbcTemplateDAO.consultarSaldo(idPessoa);
+    }
 }

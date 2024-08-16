@@ -7,5 +7,5 @@ public interface ICarteiraJdbcTemplateDAO {
 
     void criarCarteira(CarteiraModel carteira);
 
-    CarteiraModel buscarCarteiraPorIdPessoa(int idPessoa);
+    Double consultarSaldo(int idPessoa);
 }

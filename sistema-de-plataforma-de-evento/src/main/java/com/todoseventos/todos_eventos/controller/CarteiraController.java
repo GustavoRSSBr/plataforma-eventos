@@ -32,4 +32,10 @@ public class CarteiraController {
         LoggerUtils.logElapsedTime(LOGGER, "depositar", startTime);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/carteira/saldo/{idPessoa}")
+    public ResponseEntity<Double> consultarSaldo(@PathVariable int idPessoa) {
+        Double saldo = carteiraService.consultarSaldo(idPessoa);
+        return ResponseEntity.ok(saldo);
+    }
 }
