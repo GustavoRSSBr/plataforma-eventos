@@ -1,5 +1,6 @@
 package com.todoseventos.todos_eventos.gateway;
 
+import com.todoseventos.todos_eventos.enuns.EmailEnum;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.model.evento.Endereco;
@@ -49,16 +50,13 @@ public class EmailService {
      * @return O corpo do e-mail em formato HTML.
      */
     private String gerarCorpoEmail(String nomePessoa, String nomeEvento, String dataEvento, String localEvento, String linkConfirmacao) {
-        return "<html>" +
-                "<body>" +
-                "<h1>Inscrição Garantida!</h1>" +
-                "<p>Olá, " + nomePessoa + ",</p>" +
-                "<p>Sua inscrição no evento, " + nomeEvento + ", foi garantida! Não esqueça de confirmar a sua presença no botão abaixo.</p>" +
-                "<h3>INFORMAÇÕES DO EVENTO</h3>" +
-                "<p><strong>Data:</strong> " + dataEvento + "</p>" +
-                "<p><strong>Local:</strong> " + localEvento + "</p>" +
-                "</body>" +
-                "</html>";
+        String modelo = EmailEnum.INSCRICAO_GARANTIDA.getModelo();
+        return modelo
+                .replace("{nomePessoa}", nomePessoa)
+                .replace("{nomeEvento}", nomeEvento)
+                .replace("{dataEvento}", dataEvento)
+                .replace("{localEvento}", localEvento)
+                .replace("{linkConfirmacao}", linkConfirmacao);
     }
 
     /**
@@ -94,16 +92,17 @@ public class EmailService {
      * @return O corpo do e-mail em formato HTML.
      */
     private String gerarCorpoEmailConfirmacao(String nomePessoa, String nomeEvento, String dataEvento, Endereco endereco) {
-        return "<html>" +
-                "<body>" +
-                "<h1>Confirmação de Participação</h1>" +
-                "<p>Olá, " + nomePessoa + ",</p>" +
-                "<p>Agradecemos a confirmação no evento " + nomeEvento + ". Aguardamos a sua presença!</p>" +
-                "<h3>INFORMAÇÕES DO EVENTO</h3>" +
-                "<p><strong>Data:</strong> " + dataEvento + "</p>" +
-                "<p><strong>Local:</strong> " + endereco.getRua() + ", " + endereco.getNumero() + ", " + endereco.getBairro() + ", " + endereco.getCidade() + ", " + endereco.getUf() + "</p>" +
-                "</body>" +
-                "</html>";
+        String modelo = EmailEnum.CONFIRMACAO_DE_PARTICIPACAO.getModelo();
+        return modelo
+                .replace("{nomePessoa}", nomePessoa)
+                .replace("{nomeEvento}", nomeEvento)
+                .replace("{dataEvento}", dataEvento)
+                .replace("{rua}", endereco.getRua())
+                .replace("{numero}", endereco.getNumero())
+                .replace("{bairro}", endereco.getBairro())
+                .replace("{cidade}", endereco.getCidade())
+                .replace("{uf}", endereco.getUf());
+
     }
 
     /**
@@ -134,13 +133,9 @@ public class EmailService {
      * @return O corpo do e-mail em formato HTML.
      */
     private String gerarCorpoEmailCancelamento(String nomePessoa, String nomeEvento) {
-        return "<html>" +
-                "<body>" +
-                "<h1>Evento Cancelado</h1>" +
-                "<p>Olá, " + nomePessoa + ",</p>" +
-                "<p>Informamos que o evento, " + nomeEvento + ", foi cancelado pelo produtor.</p>" +
-                "<p>Pedimos desculpas pelo inconveniente.</p>" +
-                "</body>" +
-                "</html>";
+        String template = EmailEnum.EVENTO_CANCELADO.getModelo();
+        return template
+                .replace("{nomePessoa}", nomePessoa)
+                .replace("{nomeEvento}", nomeEvento);
     }
 }

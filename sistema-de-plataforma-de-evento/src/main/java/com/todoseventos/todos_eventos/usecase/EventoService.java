@@ -239,7 +239,7 @@ public class EventoService {
     /**
      * Atualiza um evento existente.
      *
-     * @param idEvento       O nome do evento a ser atualizado.
+     * @param idEvento O nome do evento a ser atualizado.
      * @param eventoRequestDTO Objeto contendo os novos detalhes do evento.
      * @return Um objeto de resposta contendo os detalhes do evento atualizado.
      */
@@ -247,11 +247,7 @@ public class EventoService {
 
         Evento eventoExistente = IEventoJdbcTemplateDAO.procurarPorId(idEvento)
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
-
-
-//        Evento eventoExistente = IEventoJdbcTemplateDAO.procurarPorNome(nomeEvento)
-//                .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
-
+        
         Categoria categoria = ICategoriaJdbcTemplateDAO.buscarNomeCategoria(eventoRequestDTO.getCategoria().name());
 
         if (categoria == null) {
