@@ -1,18 +1,20 @@
 package com.todoseventos.todos_eventos.usecase;
 
 import com.todoseventos.todos_eventos.dao.*;
-import com.todoseventos.todos_eventos.dao.impl.CarteiraJdbcTemplateDAOImpl;
 import com.todoseventos.todos_eventos.dto.requestDTO.ClienteRequestDTO;
 import com.todoseventos.todos_eventos.dto.responseDTO.ClienteResponseDTO;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.enuns.TipoClienteEnum;
 import com.todoseventos.todos_eventos.exception.CustomException;
-import com.todoseventos.todos_eventos.model.carteira.CarteiraModel;
+import com.todoseventos.todos_eventos.model.cliente.Cliente;
 import com.todoseventos.todos_eventos.model.cliente.ClienteFisico;
 import com.todoseventos.todos_eventos.model.cliente.ClienteJuridico;
-import com.todoseventos.todos_eventos.model.cliente.Cliente;
 import com.todoseventos.todos_eventos.model.cliente.TipoCliente;
-import com.todoseventos.todos_eventos.utils.Validacoes;
+import com.todoseventos.todos_eventos.validador.Validacoes;
+import com.todoseventos.todos_eventos.validador.Validador;
+import com.todoseventos.todos_eventos.validador.validadoresAtributo.ValidadorCnpj;
+import com.todoseventos.todos_eventos.validador.validadoresAtributo.ValidadorCpf;
+import com.todoseventos.todos_eventos.validador.validadoresAtributo.ValidadorDataNascimento;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -49,26 +51,34 @@ public class ClienteService {
     @Autowired
     private ICarteiraJdbcTemplateDAO ICarteiraJdbcTemplateDAO;
 
+    @Autowired
+    private  Validador validador;
+
     /**
      * Cadastra uma nova pessoa (física ou jurídica).
+     *
      * @param clienteRequest Objeto contendo os detalhes da pessoa a ser cadastrada.
      * @return Um objeto de resposta contendo os detalhes da pessoa cadastrada.
      */
     public ClienteResponseDTO cadastrarNovaPessoa(ClienteRequestDTO clienteRequest) {
 
-        if (clienteRequest.getTipo_pessoa() == null) {
-            throw new CustomException(ExceptionMessages.CATEGORIA_INVALIDA);
+        if (clienteRequest.getTipo_pessoa() == TipoClienteEnum.FISICA) {
+            Cliente pessoaExistente = IClienteJdbcTemplateDAO.procurarPorCpf(clienteRequest.getCpf());
+            if (pessoaExistente != null) {
+                throw new CustomException(ExceptionMessages.CPF_JA_CADASTRADO);
+            }
+        } else if (clienteRequest.getTipo_pessoa() == TipoClienteEnum.JURIDICA) {
+            Cliente pessoaExistente = IClienteJdbcTemplateDAO.procurarPorCnpj(clienteRequest.getCnpj());
+            if (pessoaExistente != null) {
+                throw new CustomException(ExceptionMessages.CNPJ_JA_CADASTRADO);
+
+            }
         }
+
+        validador.validar(clienteRequest);
 
         TipoCliente tipoCliente = ITipoClienteJdbcTemplateDAO.buscarPorNomeTipoPessoa(clienteRequest.getTipo_pessoa().name());
 
-        if (Objects.isNull(tipoCliente)) {
-            throw new CustomException(ExceptionMessages.CATEGORIA_INVALIDA);
-        }
-
-        validarDados(clienteRequest);
-
-        clienteRequest.setTelefone(validacoes.formatarNumeroTelefone(clienteRequest.getTelefone()));
         String encodedPassword = passwordEncoder.encode(clienteRequest.getSenha());
 
         Cliente pessoa = Cliente.builder()
@@ -90,7 +100,6 @@ public class ClienteService {
                     .idPessoa(pessoaSalva.getIdPessoa())
                     .build();
             IClienteFisicaJdbcTemplateDAO.salvarCliFisico(pessoaFisica);
-
         } else if (clienteRequest.getTipo_pessoa() == TipoClienteEnum.JURIDICA) {
             ClienteJuridico pessoaJuridica = ClienteJuridico.builder()
                     .cnpj(clienteRequest.getCnpj())
@@ -103,47 +112,8 @@ public class ClienteService {
     }
 
     /**
-     * Valida os dados do cliente.
-     * @param clienteRequest Objeto contendo os detalhes do cliente a ser validado.
-     */
-    private void validarDados(ClienteRequestDTO clienteRequest) {
-        if (!validacoes.validarEmail(clienteRequest.getEmail())) {
-            throw new CustomException(ExceptionMessages.EMAIL_INVALIDO);
-        }
-
-        if (!validacoes.validarNumeroTelefone(clienteRequest.getTelefone())) {
-            throw new CustomException(ExceptionMessages.TELEFONE_INVALIDO);
-        }
-
-        if (clienteRequest.getTipo_pessoa() == TipoClienteEnum.FISICA &&
-                !validacoes.validarDataNascimento(clienteRequest.getDataNascimento())) {
-            throw new CustomException(ExceptionMessages.DATA_NASCIMENTO_INVALIDA);
-        }
-
-        if (clienteRequest.getTipo_pessoa() == TipoClienteEnum.FISICA) {
-            if (!validacoes.isCpfValid(clienteRequest.getCpf())) {
-                throw new CustomException(ExceptionMessages.CPF_INVALIDO);
-            }
-
-            Cliente pessoaExistente = IClienteJdbcTemplateDAO.procurarPorCpf(clienteRequest.getCpf());
-            if (pessoaExistente != null) {
-                throw new CustomException(ExceptionMessages.CPF_JA_CADASTRADO);
-            }
-
-        } else if (clienteRequest.getTipo_pessoa() == TipoClienteEnum.JURIDICA) {
-            if (!validacoes.isCnpjValid(clienteRequest.getCnpj())) {
-                throw new CustomException(ExceptionMessages.CNPJ_INVALIDO);
-            }
-
-            Cliente pessoaExistente = IClienteJdbcTemplateDAO.procurarPorCnpj(clienteRequest.getCnpj());
-            if (pessoaExistente != null) {
-                throw new CustomException(ExceptionMessages.CNPJ_JA_CADASTRADO);
-            }
-        }
-    }
-
-    /**
      * Mapeia os detalhes de uma pessoa (física ou jurídica) para um objeto de resposta.
+     *
      * @param tipo_pessoa O tipo da pessoa (física ou jurídica).
      * @param pessoaSalva O objeto pessoa contendo os detalhes da pessoa salva.
      * @return Um objeto de resposta contendo os detalhes da pessoa.
@@ -168,6 +138,7 @@ public class ClienteService {
 
     /**
      * Procura uma pessoa física pelo CPF.
+     *
      * @param cpf O CPF da pessoa física.
      * @return Um objeto de resposta contendo os detalhes da pessoa encontrada.
      */
@@ -193,6 +164,7 @@ public class ClienteService {
 
     /**
      * Procura uma pessoa jurídica pelo CNPJ.
+     *
      * @param cnpj O CNPJ da pessoa jurídica.
      * @return Um objeto de resposta contendo os detalhes da pessoa encontrada.
      */
@@ -207,6 +179,7 @@ public class ClienteService {
 
     /**
      * Lista todas as pessoas cadastradas.
+     *
      * @return Uma lista de objetos de resposta contendo os detalhes das pessoas cadastradas.
      */
     public List<ClienteResponseDTO> listarPessoas() {
@@ -222,7 +195,8 @@ public class ClienteService {
 
     /**
      * Atualiza os detalhes de uma pessoa (física ou jurídica).
-     * @param identificador O CPF ou CNPJ da pessoa a ser atualizada.
+     *
+     * @param identificador  O CPF ou CNPJ da pessoa a ser atualizada.
      * @param clienteRequest Objeto contendo os novos detalhes da pessoa.
      * @return Um objeto de resposta contendo os detalhes da pessoa atualizada.
      */

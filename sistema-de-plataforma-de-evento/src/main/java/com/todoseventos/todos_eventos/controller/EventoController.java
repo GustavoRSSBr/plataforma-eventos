@@ -102,7 +102,7 @@ public class EventoController {
     })
     @PutMapping("/evento/{idEvento}")
     public ResponseEntity<?> atualizarEvento(
-            @Parameter(description = "Nome do evento a ser atualizado.")
+            @Parameter(description = "Id do evento a ser atualizado.")
             @Valid @PathVariable Integer idEvento, @RequestBody EventoRequestDTO eventoRequestDTO) {
         long startTime = System.currentTimeMillis();
         EventoResponseDTO response = eventoService.atualizarEvento(idEvento, eventoRequestDTO);
