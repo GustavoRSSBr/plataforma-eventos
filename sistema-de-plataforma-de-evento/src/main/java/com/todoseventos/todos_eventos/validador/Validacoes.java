@@ -1,11 +1,10 @@
-package com.todoseventos.todos_eventos.utils;
+package com.todoseventos.todos_eventos.validador;
 
 import org.springframework.stereotype.Component;
 
 import java.text.MessageFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 @Component
 public class Validacoes {
 
@@ -168,4 +167,6 @@ public class Validacoes {
         String regex = "^[0-9]{5}-[0-9]{3}$";
         return cep.matches(regex);
     }
+
+
 }

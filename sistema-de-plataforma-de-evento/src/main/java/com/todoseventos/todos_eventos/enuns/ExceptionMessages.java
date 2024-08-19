@@ -4,10 +4,10 @@ public class ExceptionMessages {
 
     public static final String EVENTO_NAO_ENCONTRADO = "Evento não encontrado!";
     public static final String ENDERECO_NAO_ENCONTRADO = "Endereço não encontrado: ";
-    public static final String PESSOA_FISICA_NAO_ENCONTRADA = "Pessoa Física não encontrada!";
-    public static final String PESSOA_JURIDICA_NAO_ENCONTRADA = "Pessoa Jurídica não encontrada!";
-    public static final String CPF_OU_CNPJ_NAO_INFORMADOS = "CPF ou CNPJ devem ser informados!";
-    public static final String PARTICIPACAO_NAO_ENCONTRADA = "Participação não encontrada!";
+    public static final String ID_PESSOA_NAO_INFORMADO = "O ID da Pessoa não foi informado";
+    public static final String VALOR_DEPOSITO_INVALIDO = "O valor do depósito é inválido, digite um valor positivo";
+    public static final String ESTRATEGIA_NAO_ENCONTRADA = "Nenhuma estratégia de validação encontrada para ";
+    public static final String ESTRATEGIA_DUPLICADA = "Já existe uma estratégia registrada para a classe: ";
     public static final String TIPO_CATEGORIA_INVALIDO = "Tipo de categoria inválido!";
     public static final String CATEGORIA_INVALIDA = "Categoria Inválida!";
     public static final String CEP_INVALIDO = "CEP inválido!";
@@ -23,8 +23,8 @@ public class ExceptionMessages {
     public static final String CNPJ_JA_CADASTRADO = "CNPJ já cadastrado!";
     public static final String IDENTIFICADOR_INVALIDO = "Identificador inválido!";
     public static final String CLIENTE_NAO_ENCONTRADO = "Cliente não encontrado!";
-    public static final String ERRO_ATUALIZAR_CLIENTE = "Erro ao atualizar cliente:";
-    public static final String ERRO_LISTAR_TODOS = "Erro ao listar todos:";
+    public static final String CEP_EM_BRANCO = "CEP não pode estar em branco:";
+    public static final String SENHA_INVALIDA = "Senha inválida: a senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.";
     public static final String ERRO_ENVIAR_EMAIL = "Erro ao enviar e-mail:";
     public static final String ERRO_ENVIAR_EMAIL_CONFIRMACAO = "Erro ao enviar e-mail de confirmação:";
     public static final String ERRO_ENVIAR_EMAIL_CANCELAMENTO = "Erro ao enviar e-mail de cancelamento:";

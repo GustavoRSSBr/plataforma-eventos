@@ -12,7 +12,8 @@ import com.todoseventos.todos_eventos.gateway.EmailService;
 import com.todoseventos.todos_eventos.model.evento.Categoria;
 import com.todoseventos.todos_eventos.model.evento.Endereco;
 import com.todoseventos.todos_eventos.model.evento.Evento;
-import com.todoseventos.todos_eventos.utils.Validacoes;
+import com.todoseventos.todos_eventos.validador.Validacoes;
+import com.todoseventos.todos_eventos.validador.Validador;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +49,9 @@ public class EventoService {
     @Autowired
     private ICategoriaJdbcTemplateDAO ICategoriaJdbcTemplateDAO;
 
+    @Autowired
+    Validador validador;
+
     /**
      * Cadastra um novo evento.
      *
@@ -55,6 +59,8 @@ public class EventoService {
      * @return Um objeto de resposta contendo os detalhes do evento cadastrado.
      */
     public EventoResponseDTO cadastrarNovoEvento(EventoRequestDTO eventoRequestDTO) {
+
+        validador.validar(eventoRequestDTO);
 
         if (eventoRequestDTO.getCategoria() == null) {
             throw new CustomException(ExceptionMessages.TIPO_CATEGORIA_INVALIDO);

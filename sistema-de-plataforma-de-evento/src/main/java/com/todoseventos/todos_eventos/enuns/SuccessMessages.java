@@ -4,7 +4,7 @@ public class SuccessMessages {
 
     public static final String INSCRICAO = "Inscrição realizada com sucesso!";
 
-    public static final String CONFIRMACAO_INSCRICAO = "Participação no evento confirmada com sucesso!";
+    public static final String DEPOSITO_REALIZADO = "Depósito realizado com sucesso! Saldo atualizado: ";
 
     public static final String CADASTRO_EVENTO = "Cadastro realizado com sucesso. Seu evento já está em divulgação!";
     public static final String EVENTO_ENCERRADO = "Evento encerrado com sucesso!";
