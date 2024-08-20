@@ -145,7 +145,7 @@ public class ClienteService {
     public ClienteResponseDTO procurarPessoaPorCpf(String cpf) {
         Cliente pessoaFisicaEncontrada = IClienteJdbcTemplateDAO.procurarPorCpf(cpf);
         if (Objects.isNull(pessoaFisicaEncontrada)) {
-            throw new CustomException(ExceptionMessages.CPF_INVALIDO);
+            throw new CustomException(ExceptionMessages.CPF_NAO_ENCONTRADO);
         }
         return mapearPessoa(TipoClienteEnum.FISICA, pessoaFisicaEncontrada);
     }
@@ -172,7 +172,7 @@ public class ClienteService {
         Cliente pessoaJuridicaEncontrada = IClienteJdbcTemplateDAO.procurarPorCnpj(cnpj);
 
         if (Objects.isNull(pessoaJuridicaEncontrada)) {
-            throw new CustomException(ExceptionMessages.CNPJ_JA_CADASTRADO);
+            throw new CustomException(ExceptionMessages.CNPJ_NAO_ENCONTRADO);
         }
         return mapearPessoa(TipoClienteEnum.JURIDICA, pessoaJuridicaEncontrada);
     }

@@ -18,9 +18,11 @@ public class ExceptionMessages {
     public static final String TELEFONE_INVALIDO = "Número de celular inválido!";
     public static final String DATA_NASCIMENTO_INVALIDA = "Data de nascimento inválida!";
     public static final String CPF_INVALIDO = "CPF inválido! Verifiquei o dado informado.";
+    public static final String CPF_NAO_ENCONTRADO = "CPF não encontrado!";
     public static final String CPF_JA_CADASTRADO = "CPF já cadastrado!";
     public static final String CNPJ_INVALIDO = "CNPJ inválido! Verifiquei o dado informado.";
     public static final String CNPJ_JA_CADASTRADO = "CNPJ já cadastrado!";
+    public static final String CNPJ_NAO_ENCONTRADO = "CNPJ não encontrado";
     public static final String IDENTIFICADOR_INVALIDO = "Identificador inválido!";
     public static final String CLIENTE_NAO_ENCONTRADO = "Cliente não encontrado!";
     public static final String CEP_EM_BRANCO = "CEP não pode estar em branco:";
