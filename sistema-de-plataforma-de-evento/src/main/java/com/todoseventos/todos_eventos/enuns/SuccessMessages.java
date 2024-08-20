@@ -21,6 +21,8 @@ public class SuccessMessages {
     public static final String TOKEN_EMAIL = "Usuário não encontrado com e-mail: ";
     public static final String COMPRA_REALIZADA = "Compra realizada com sucesso!";
 
+    public static final String CADASTRO_ADMINISTRADOR = "Administrador cadastrado com sucesso!";
+
     private SuccessMessages(){
     }
 }
