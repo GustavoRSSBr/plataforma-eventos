@@ -12,5 +12,6 @@ public interface IEventoJdbcTemplateDAO {
     Optional<Evento> procurarPorId(Integer idEvento);
     List<Evento> listarEvento();
     void deletarPorId(Integer idEvento);
+    Evento encerrarEvento(Integer idEvento);
 }
 

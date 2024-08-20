@@ -98,6 +98,20 @@ class EventoJdbcTemplateDAOImpl implements IEventoJdbcTemplateDAO {
 
     }
 
+    @Override
+    @Transactional
+    public Evento encerrarEvento(Integer idEvento) {
+        String sql = "SELECT cancelar_evento(?)";
+
+        jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
+            ps.setInt(1, idEvento);
+            ps.execute();
+            return null;
+        });
+        return null;
+    }
+
+
     private void setPreparedStatementParameters(PreparedStatement ps, Evento evento) throws SQLException {
         ps.setString(1, evento.getNome_evento().trim());
         ps.setString(2, evento.getDataHora_evento());

@@ -1,5 +1,6 @@
 package com.todoseventos.todos_eventos.controller;
 
+import com.todoseventos.todos_eventos.dto.requestDTO.ClienteRequestDTO;
 import com.todoseventos.todos_eventos.dto.responseDTO.CustomExceptionResponseDTO;
 import com.todoseventos.todos_eventos.dto.requestDTO.EventoRequestDTO;
 import com.todoseventos.todos_eventos.dto.responseDTO.EventoResponseDTO;
@@ -19,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping(value = "/api")
@@ -127,4 +129,6 @@ public class EventoController {
         LoggerUtils.logElapsedTime(LOGGER, "excluirEvento", startTime);
         return ResponseEntity.status(HttpStatus.OK).body(new CustomExceptionResponseDTO(SuccessMessages.EXCLUIR_EVENTO));
     }
+
+
 }

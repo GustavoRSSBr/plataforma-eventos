@@ -8,8 +8,10 @@ import com.todoseventos.todos_eventos.enuns.CategoriaEnum;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.gateway.CepService;
-import com.todoseventos.todos_eventos.gateway.EmailService;
+import com.todoseventos.todos_eventos.model.cliente.ClienteFisico;
+import com.todoseventos.todos_eventos.model.cliente.ClienteJuridico;
 import com.todoseventos.todos_eventos.model.evento.Categoria;
+import com.todoseventos.todos_eventos.model.evento.Email;
 import com.todoseventos.todos_eventos.model.evento.Endereco;
 import com.todoseventos.todos_eventos.model.evento.Evento;
 import com.todoseventos.todos_eventos.validador.Validacoes;
@@ -20,7 +22,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
 @Service
 public class EventoService {
 
@@ -51,6 +52,9 @@ public class EventoService {
 
     @Autowired
     Validador validador;
+
+    @Autowired
+    IEmailJdbcTemplateDAO iEmailJdbcTemplateDAO;
 
     /**
      * Cadastra um novo evento.
@@ -119,10 +123,24 @@ public class EventoService {
 
         Evento evento = IEventoJdbcTemplateDAO.procurarPorId(idEvento)
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
-        evento.setStatus("CANCELADO");
         Evento updatedEvento = IEventoJdbcTemplateDAO.atualizarEvento(evento);
+        Evento cancelarEvento = IEventoJdbcTemplateDAO.encerrarEvento(idEvento);
 
-        //todo recurso de reembolso
+        List<Email> envioEmail = iEmailJdbcTemplateDAO.localizarPorIdEvento(idEvento);
+        envioEmail.forEach(participacao -> {
+            String email;
+            String nomePessoa;
+            if (participacao.getCpf() != null) {
+                ClienteFisico clienteFisica = IClienteFisicaJdbcTemplateDAO.procurarCpf(participacao.getCpf());
+                email = clienteFisica.getEmail();
+                nomePessoa = clienteFisica.getNome();
+            } else {
+                ClienteJuridico clienteJuridica = IClienteJuridicaJdbcTemplateDAO.procurarCnpj(participacao.getCnpj());
+                email = clienteJuridica.getEmail();
+                nomePessoa = clienteJuridica.getNome();
+            }
+            emailService.enviarEmailCancelamento(email, nomePessoa, evento.getNome_evento());
+        });
 
         return mapearEncerramentoEvento(evento);
     }
@@ -245,7 +263,7 @@ public class EventoService {
     /**
      * Atualiza um evento existente.
      *
-     * @param idEvento O nome do evento a ser atualizado.
+     * @param idEvento         O nome do evento a ser atualizado.
      * @param eventoRequestDTO Objeto contendo os novos detalhes do evento.
      * @return Um objeto de resposta contendo os detalhes do evento atualizado.
      */
@@ -253,7 +271,7 @@ public class EventoService {
 
         Evento eventoExistente = IEventoJdbcTemplateDAO.procurarPorId(idEvento)
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
-        
+
         Categoria categoria = ICategoriaJdbcTemplateDAO.buscarNomeCategoria(eventoRequestDTO.getCategoria().name());
 
         if (categoria == null) {

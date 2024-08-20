@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
-public class Participacao {
+public class Email {
     private Integer idParticipacao;
     private String cpf;
     private String cnpj;

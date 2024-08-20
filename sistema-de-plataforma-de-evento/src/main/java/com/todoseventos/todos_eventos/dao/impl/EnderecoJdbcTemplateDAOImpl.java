@@ -51,7 +51,6 @@ class EnderecoJdbcTemplateDAOImpl implements IEnderecoJdbcTemplateDAO {
     public Optional<Endereco> procurarPorIdEvento(Integer id) {
         String sql = "SELECT * FROM procurar_endereco_por_id_evento(?)";
         return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Endereco.class), id));
-
     }
 
     @Override

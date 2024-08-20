@@ -1,4 +1,4 @@
-package com.todoseventos.todos_eventos.gateway;
+package com.todoseventos.todos_eventos.usecase;
 
 import com.todoseventos.todos_eventos.enuns.EmailEnum;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.mail.javamail.JavaMailSender;
+
 
 @Service
 public class EmailService {
