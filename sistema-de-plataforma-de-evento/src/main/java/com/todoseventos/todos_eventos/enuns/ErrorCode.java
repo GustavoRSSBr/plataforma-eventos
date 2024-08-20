@@ -13,6 +13,7 @@ public enum ErrorCode {
     TIPO_INGRESSO_INVALIDO("Tipo de ingresso inválido", "Tipos disponiveis: inteira, meia e vip"),
     SALDO_INSUFICIENTE("Saldo insuficiente" , "Saldo insuficiente"),
     NENHUM_DADO_ENCONTRADO("Incorrect result size: expected 1, actual 0", "Nenhum dado foi encontrado"),
+    EVENTO_JA_CANCELADO("Evento já está cancelado", "Evento já está cancelado"),
     OUTRO_ERRO("Outro erro", "Erro desconhecido");
 
     private final String message;
