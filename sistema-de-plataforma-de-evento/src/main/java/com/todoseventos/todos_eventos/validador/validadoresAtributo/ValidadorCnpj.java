@@ -4,17 +4,15 @@ import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
 
 public class ValidadorCnpj{
-    public static void validarCnpj(String campo) {
-        if(!isCnpjValid(campo)){
-            throw new CustomException(ExceptionMessages.CNPJ_INVALIDO);
-        }
+    public static String validarCnpj(String campo) {
+        return isCnpjValid(campo);
     }
 
-    public static boolean isCnpjValid(String cnpj) {
+    public static String isCnpjValid(String cnpj) {
         cnpj = cnpj.replaceAll("[^\\d]", "");
 
         if (cnpj.length() != 14 || cnpj.matches("(\\d)\\1{13}"))
-            return false;
+            throw new CustomException(ExceptionMessages.CNPJ_INVALIDO);
 
         char dig13, dig14;
         int sm, i, r, num, peso;
@@ -42,7 +40,10 @@ public class ValidadorCnpj{
             }
             r = sm % 11;
             dig14 = (r == 0 || r == 1) ? '0' : (char) ((11 - r) + 48);
+        if(!(dig13 == cnpj.charAt(12)) && (dig14 == cnpj.charAt(13))){
+            throw new CustomException(ExceptionMessages.CNPJ_INVALIDO);
+        }
 
-            return (dig13 == cnpj.charAt(12)) && (dig14 == cnpj.charAt(13));
+            return cnpj;
     }
 }

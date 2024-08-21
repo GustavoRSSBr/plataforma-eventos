@@ -14,6 +14,7 @@ public enum ErrorCode {
     SALDO_INSUFICIENTE("Saldo insuficiente" , "Saldo insuficiente"),
     NENHUM_DADO_ENCONTRADO("Incorrect result size: expected 1, actual 0", "Nenhum dado foi encontrado"),
     EVENTO_JA_CANCELADO("Evento já está cancelado", "Evento já está cancelado"),
+    CPF_JA_CADASTRADO("unicidade \"pessoa_fisica_pkey\"", "CPF já cadastrado"),
     OUTRO_ERRO("Outro erro", "Erro desconhecido");
 
     private final String message;

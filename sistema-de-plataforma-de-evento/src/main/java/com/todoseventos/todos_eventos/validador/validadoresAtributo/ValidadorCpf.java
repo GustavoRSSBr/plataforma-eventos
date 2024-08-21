@@ -5,18 +5,14 @@ import com.todoseventos.todos_eventos.exception.CustomException;
 
 public class ValidadorCpf {
 
-    public static void validarCpf(String campo) {
-
-        if(!isCpfValid(campo)){
-            throw new CustomException(ExceptionMessages.CPF_INVALIDO);
-        }
-
+    public static String validarCpf(String campo) {
+        return isCpfValid(campo);
     }
 
-    public static boolean isCpfValid(String cpf) {
+    public static String isCpfValid(String cpf) {
         cpf = cpf.replaceAll("[^\\d]", ""); // Remove todos os caracteres não numéricos
         if (cpf.length() != 11 || cpf.matches("(\\d)\\1{10}"))
-            return false;
+            throw new CustomException(ExceptionMessages.CPF_INVALIDO);
         char dig10, dig11;
         int sm, i, r, num, peso;
 
@@ -41,7 +37,11 @@ public class ValidadorCpf {
             r = 11 - (sm % 11);
             dig11 = (r == 10 || r == 11) ? '0' : (char) (r + 48);
 
-            return (dig10 == cpf.charAt(9)) && (dig11 == cpf.charAt(10));
+           if(!((dig10 == cpf.charAt(9)) && (dig11 == cpf.charAt(10)))){
+               throw new CustomException(ExceptionMessages.CPF_INVALIDO);
+           }
+
+            return cpf;
 
     }
 

@@ -21,9 +21,9 @@ public class ValidadorClienteRequestDto implements IEstrategiaValidacao<ClienteR
 
         if (objeto.getTipo_pessoa() == TipoClienteEnum.FISICA) {
             ValidadorDataNascimento.validarDataNascimento(objeto.getDataNascimento());
-            ValidadorCpf.validarCpf(objeto.getCpf());
+            objeto.setCpf(ValidadorCpf.validarCpf(objeto.getCpf()));
         } else if (objeto.getTipo_pessoa() == TipoClienteEnum.JURIDICA) {
-            ValidadorCnpj.validarCnpj(objeto.getCnpj());
+            objeto.setCnpj(ValidadorCnpj.validarCnpj(objeto.getCnpj()));
         }
 
         return true;
