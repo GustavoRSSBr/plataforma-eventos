@@ -3,6 +3,7 @@ package com.todoseventos.todos_eventos.usecase;
 import com.todoseventos.todos_eventos.dao.*;
 import com.todoseventos.todos_eventos.dto.requestDTO.EventoRequestDTO;
 import com.todoseventos.todos_eventos.dto.responseDTO.CepResponseDTO;
+import com.todoseventos.todos_eventos.dto.responseDTO.EstatisticaResponseDTO;
 import com.todoseventos.todos_eventos.dto.responseDTO.EventoResponseDTO;
 import com.todoseventos.todos_eventos.enuns.CategoriaEnum;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
@@ -322,5 +323,9 @@ public class EventoService {
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
         IEnderecoJdbcTemplateDAO.deletarPorIdEvento(idEvento);
         IEventoJdbcTemplateDAO.deletarPorId(idEvento);
+    }
+
+    public EstatisticaResponseDTO coletarEstatisca(Integer idEvento) {
+        return IEventoJdbcTemplateDAO.coletarEstatistica(idEvento);
     }
 }

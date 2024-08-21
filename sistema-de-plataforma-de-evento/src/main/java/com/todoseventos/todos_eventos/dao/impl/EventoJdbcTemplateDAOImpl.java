@@ -1,6 +1,8 @@
 package com.todoseventos.todos_eventos.dao.impl;
 
 import com.todoseventos.todos_eventos.dao.IEventoJdbcTemplateDAO;
+import com.todoseventos.todos_eventos.dto.responseDTO.EstatisticaResponseDTO;
+import com.todoseventos.todos_eventos.model.cliente.ClienteFisico;
 import com.todoseventos.todos_eventos.model.evento.Evento;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,6 +111,12 @@ class EventoJdbcTemplateDAOImpl implements IEventoJdbcTemplateDAO {
             return null;
         });
         return null;
+    }
+
+    @Override
+    public EstatisticaResponseDTO coletarEstatistica(Integer idEvento) {
+        String sql = "SELECT * FROM coletarEstatisticaEvento(?)";
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(EstatisticaResponseDTO.class), idEvento);
     }
 
 
