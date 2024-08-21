@@ -80,6 +80,11 @@ public class EventoService {
         }
 
         CepResponseDTO cepResponseDTO = cepService.consultarCep(eventoRequestDTO.getCep());
+
+        if(cepResponseDTO.getLogradouro() == null || cepResponseDTO.getBairro() == null || cepResponseDTO.getLocalidade() == null || cepResponseDTO.getUf() == null){
+            throw new CustomException(ExceptionMessages.CEP_INEXISTENTE);
+        }
+
         eventoRequestDTO.setRua(cepResponseDTO.getLogradouro());
         eventoRequestDTO.setBairro(cepResponseDTO.getBairro());
         eventoRequestDTO.setCidade(cepResponseDTO.getLocalidade());
