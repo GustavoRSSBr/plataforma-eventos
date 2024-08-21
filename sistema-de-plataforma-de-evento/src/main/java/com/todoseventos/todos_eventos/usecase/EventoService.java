@@ -7,10 +7,9 @@ import com.todoseventos.todos_eventos.dto.responseDTO.EstatisticaResponseDTO;
 import com.todoseventos.todos_eventos.dto.responseDTO.EventoResponseDTO;
 import com.todoseventos.todos_eventos.enuns.CategoriaEnum;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
+import com.todoseventos.todos_eventos.enuns.StatusEventoEnum;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.gateway.CepService;
-import com.todoseventos.todos_eventos.model.cliente.ClienteFisico;
-import com.todoseventos.todos_eventos.model.cliente.ClienteJuridico;
 import com.todoseventos.todos_eventos.model.evento.Categoria;
 import com.todoseventos.todos_eventos.model.evento.Email;
 import com.todoseventos.todos_eventos.model.evento.Endereco;
@@ -91,7 +90,7 @@ public class EventoService {
                 .dataHora_evento(eventoRequestDTO.getDataHora_evento())
                 .dataHora_eventofinal(eventoRequestDTO.getDataHora_eventofinal())
                 .descricao(eventoRequestDTO.getDescricao())
-                .status("ATIVO")
+                .status(StatusEventoEnum.ATIVO)
                 .id_categoria(categoria.getIdCategoria())
                 .valorIngresso(eventoRequestDTO.getValorIngresso())
                 .limitePessoas(eventoRequestDTO.getLimitePessoas())
@@ -116,6 +115,7 @@ public class EventoService {
 
     /**
      * Encerra um evento.
+     * Busca os participantes primeiro manda o email de encerramento em seguida encerra o evento e atualiza.
      *
      * @param idEvento O ID do evento a ser encerrado.
      * @return Um objeto de resposta contendo os detalhes do evento encerrado.
@@ -124,28 +124,21 @@ public class EventoService {
 
         Evento evento = IEventoJdbcTemplateDAO.procurarPorId(idEvento)
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
-        Evento updatedEvento = IEventoJdbcTemplateDAO.atualizarEvento(evento);
-        Evento cancelarEvento = IEventoJdbcTemplateDAO.encerrarEvento(idEvento);
 
         List<Email> envioEmail = iEmailJdbcTemplateDAO.localizarPorIdEvento(idEvento);
         envioEmail.forEach(participacao -> {
-            String email;
-            String nomePessoa;
-            if (participacao.getCpf() != null) {
-                ClienteFisico clienteFisica = IClienteFisicaJdbcTemplateDAO.procurarCpf(participacao.getCpf());
-                email = clienteFisica.getEmail();
-                nomePessoa = clienteFisica.getNome();
-            } else {
-                ClienteJuridico clienteJuridica = IClienteJuridicaJdbcTemplateDAO.procurarCnpj(participacao.getCnpj());
-                email = clienteJuridica.getEmail();
-                nomePessoa = clienteJuridica.getNome();
-            }
+            String email = participacao.getEmail();
+            String nomePessoa = participacao.getNome();
             emailService.enviarEmailCancelamento(email, nomePessoa, evento.getNome_evento());
         });
 
-        return mapearEncerramentoEvento(evento);
-    }
+        evento.setStatus(StatusEventoEnum.CANCELADO);
+        Evento cancelarEvento = IEventoJdbcTemplateDAO.encerrarEvento(idEvento);
+        Evento updatedEvento = IEventoJdbcTemplateDAO.atualizarEvento(evento);
 
+        return mapearEncerramentoEvento(updatedEvento);
+    }
+    
     /**
      * Mapeia os detalhes do encerramento de um evento para um objeto de resposta.
      *
@@ -164,7 +157,7 @@ public class EventoService {
                 .dataHora_evento(evento.getDataHora_evento())
                 .dataHora_eventofinal(evento.getDataHora_eventofinal())
                 .descricao(evento.getDescricao())
-                .status(evento.getStatus())
+                .status(String.valueOf(evento.getStatus()))
                 .categoria(CategoriaEnum.valueOf(categoria.getNomeCategoria()))
                 .rua(endereco.getRua())
                 .numero(endereco.getNumero())
@@ -190,7 +183,7 @@ public class EventoService {
                 .dataHora_evento(eventoSalvo.getDataHora_evento())
                 .dataHora_eventofinal(eventoSalvo.getDataHora_eventofinal())
                 .descricao(eventoSalvo.getDescricao())
-                .status(eventoSalvo.getStatus())
+                .status(String.valueOf(eventoSalvo.getStatus()))
                 .categoria(CategoriaEnum.valueOf(categoria.getNomeCategoria()))
                 .rua(enderecoSalvo.getRua())
                 .numero(enderecoSalvo.getNumero())
@@ -202,7 +195,6 @@ public class EventoService {
                 .limitePessoas(eventoSalvo.getLimitePessoas())
                 .build();
     }
-
 
     /**
      * Localiza todos os eventos cadastrados.

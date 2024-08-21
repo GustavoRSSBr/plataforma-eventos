@@ -10,12 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder(toBuilder = true)
 public class Email {
-    private Integer idParticipacao;
-    private String cpf;
-    private String cnpj;
-    private Integer idEvento;
-    private String status;
-
+    private String nome;
+    private String email;
 }
-
-

@@ -1,7 +1,6 @@
 package com.todoseventos.todos_eventos.dao.impl;
 
 import com.todoseventos.todos_eventos.dao.IEmailJdbcTemplateDAO;
-import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.model.evento.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -20,8 +19,8 @@ public class EmailJdbcTemplateDAOImpl implements IEmailJdbcTemplateDAO {
 
     @Transactional
     public List<Email> localizarPorIdEvento(Integer idEvento) {
-        String sql = "SELECT get_pessoas_por_evento(?)";
-            return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Email.class), idEvento);
+        String sql = "SELECT * FROM buscar_pessoas_por_evento(?)";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Email.class), idEvento);
     }
 
 

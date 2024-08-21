@@ -50,7 +50,7 @@ class EventoJdbcTemplateDAOImpl implements IEventoJdbcTemplateDAO {
             ps.setString(3, evento.getDataHora_evento());
             ps.setString(4, evento.getDataHora_eventofinal());
             ps.setString(5, evento.getDescricao().trim());
-            ps.setString(6, evento.getStatus().trim());
+            ps.setString(6, String.valueOf(evento.getStatus()));
             ps.setInt(7, evento.getId_categoria());
             ps.setBigDecimal(8, evento.getValorIngresso());
             ps.setInt(9, evento.getLimitePessoas());
@@ -125,7 +125,7 @@ class EventoJdbcTemplateDAOImpl implements IEventoJdbcTemplateDAO {
         ps.setString(2, evento.getDataHora_evento());
         ps.setString(3, evento.getDataHora_eventofinal());
         ps.setString(4, evento.getDescricao().trim());
-        ps.setString(5, evento.getStatus().trim());
+        ps.setString(5, String.valueOf(evento.getStatus()));
         ps.setInt(6, evento.getId_categoria());
         ps.setBigDecimal(7, evento.getValorIngresso());
         ps.setInt(8, evento.getLimitePessoas());
