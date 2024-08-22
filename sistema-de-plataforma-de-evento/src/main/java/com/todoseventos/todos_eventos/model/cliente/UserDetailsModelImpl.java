@@ -1,15 +1,19 @@
 package com.todoseventos.todos_eventos.model.cliente;
 
+import com.todoseventos.todos_eventos.enuns.TipoClienteEnum;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class UserDetailsModelImpl implements UserDetails {
     private Integer id;
     private String email;
     private String password;
+    private Integer role;
     private Collection<? extends GrantedAuthority> authorities;
 
     /**
@@ -20,11 +24,12 @@ public class UserDetailsModelImpl implements UserDetails {
      * @param authorities As autoridades (roles) do usuário.
      */
 
-    public UserDetailsModelImpl(Integer id, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsModelImpl(Integer id, String email, String password, Integer role, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.email = email;
         this.password = password;
-        this.authorities = authorities;
+        this.role = role;
+        this.authorities = getAuthorities();
     }
 
     /**
@@ -37,6 +42,7 @@ public class UserDetailsModelImpl implements UserDetails {
                 usuario.getIdPessoa(),
                 usuario.getEmail(),
                 usuario.getSenha(),
+                usuario.getTipo_pessoa(),
                 new ArrayList<>());
     }
 
@@ -46,7 +52,8 @@ public class UserDetailsModelImpl implements UserDetails {
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        if(this.role == 3) return  List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     /**
