@@ -32,7 +32,6 @@ public class EmailService {
         try {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setTo(email);
-            //helper.setSubject(assunto);
             helper.setText(gerarCorpoEmail(nomePessoa, nomeEvento, dataEvento, localEvento), true);
 
             emailSender.send(mimeMessage);
@@ -91,50 +90,4 @@ public class EmailService {
                 .replace("{nomePessoa}", nomePessoa)
                 .replace("{nomeEvento}", nomeEvento);
     }
-
-//    /**
-//     * Envia um e-mail de confirmação de participação.
-//     * @param destinatario O endereço de e-mail do destinatário.
-//     * @param assunto O assunto do e-mail.
-//     * @param nomePessoa O nome do destinatário.
-//     * @param nomeEvento O nome do evento.
-//     * @param dataEvento A data do evento.
-//     * @param endereco O endereço do evento.
-//     */
-//    public void enviarEmailConfirmacao(String destinatario, String assunto, String nomePessoa, String nomeEvento, String dataEvento, Endereco endereco) {
-//        MimeMessage mimeMessage = emailSender.createMimeMessage();
-//
-//        try {
-//            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-//            helper.setTo(destinatario);
-//            helper.setSubject(assunto);
-//            helper.setText(gerarCorpoEmailConfirmacao(nomePessoa, nomeEvento, dataEvento, endereco), true);
-//
-//            emailSender.send(mimeMessage);
-//        } catch (MessagingException e) {
-//            throw new CustomException(ExceptionMessages.ERRO_ENVIAR_EMAIL_CONFIRMACAO);
-//        }
-//    }
-
-//    /**
-//     * Gera o corpo do e-mail de confirmação de participação.
-//     * @param nomePessoa O nome do destinatário.
-//     * @param nomeEvento O nome do evento.
-//     * @param dataEvento A data do evento.
-//     * @param endereco O endereço do evento.
-//     * @return O corpo do e-mail em formato HTML.
-//     */
-//    private String gerarCorpoEmailConfirmacao(String nomePessoa, String nomeEvento, String dataEvento, Endereco endereco) {
-//        String modelo = EmailEnum.CONFIRMACAO_DE_PARTICIPACAO.getModelo();
-//        return modelo
-//                .replace("{nomePessoa}", nomePessoa)
-//                .replace("{nomeEvento}", nomeEvento)
-//                .replace("{dataEvento}", dataEvento)
-//                .replace("{rua}", endereco.getRua())
-//                .replace("{numero}", endereco.getNumero())
-//                .replace("{bairro}", endereco.getBairro())
-//                .replace("{cidade}", endereco.getCidade())
-//                .replace("{uf}", endereco.getUf());
-//
-//    }
 }

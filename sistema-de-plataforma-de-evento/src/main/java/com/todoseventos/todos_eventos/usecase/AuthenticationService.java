@@ -49,10 +49,8 @@ public class AuthenticationService {
             // Retorna o token JWT
             return new AcessResponseDTO(jwt);
         } catch (BadCredentialsException e) {
-            // Lança uma exceção personalizada se as credenciais forem inválidas
             throw new CustomException(ExceptionMessages.EMAIL_SENHA);
         } catch (Exception e) {
-            // Lança uma exceção personalizada se ocorrer um erro interno
             throw new CustomException(ExceptionMessages.ERRO_INTERNO);
         }
     }

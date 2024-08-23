@@ -20,19 +20,19 @@ import java.util.List;
 public class NegociacaoService {
 
     @Autowired
-    INegociacaoJdbcTemplateDAO iNegociacaoJdbcTemplateDAO;
+    private INegociacaoJdbcTemplateDAO iNegociacaoJdbcTemplateDAO;
 
     @Autowired
-    IEmailJdbcTemplateDAO iEmailJdbcTemplateDAO;
+    private IEmailJdbcTemplateDAO iEmailJdbcTemplateDAO;
 
     @Autowired
-    EmailService emailService;
+    private EmailService emailService;
 
     @Autowired
-    IEventoJdbcTemplateDAO iEventoJdbcTemplateDAO;
+    private IEventoJdbcTemplateDAO iEventoJdbcTemplateDAO;
 
     @Autowired
-    IEnderecoJdbcTemplateDAO iEnderecoJdbcTemplateDAO;
+    private IEnderecoJdbcTemplateDAO iEnderecoJdbcTemplateDAO;
 
     /**
      * Mpaeia o id do evento procurando o id da pessoa e efetua a compra de um ingrsso.

@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
         ErrorCode errorCode = ErrorCode.fromMessage(errorMessage);
 
         if (errorCode == ErrorCode.OUTRO_ERRO) {
-            ErrorResponseDto errorResponse = new ErrorResponseDto(errorMessage);
+            ErrorResponseDto errorResponse = new ErrorResponseDto(errorCode.getCustomMessage());
             return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         } else {
             ErrorResponseDto errorResponse = new ErrorResponseDto(errorCode.getCustomMessage());

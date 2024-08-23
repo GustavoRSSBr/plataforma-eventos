@@ -27,7 +27,7 @@ public class EventoService {
 
 
     @Autowired
-    private IEventoJdbcTemplateDAO IEventoJdbcTemplateDAO;
+    private IEventoJdbcTemplateDAO iEventoJdbcTemplateDAO;
 
     @Autowired
     private Validacoes validacoes;
@@ -39,22 +39,16 @@ public class EventoService {
     private CepService cepService;
 
     @Autowired
-    private IEnderecoJdbcTemplateDAO IEnderecoJdbcTemplateDAO;
+    private IEnderecoJdbcTemplateDAO iEnderecoJdbcTemplateDAO;
 
     @Autowired
-    private IClienteFisicaJdbcTemplateDAO IClienteFisicaJdbcTemplateDAO;
+    private ICategoriaJdbcTemplateDAO iCategoriaJdbcTemplateDAO;
 
     @Autowired
-    private IClienteJuridicaJdbcTemplateDAO IClienteJuridicaJdbcTemplateDAO;
+    private Validador validador;
 
     @Autowired
-    private ICategoriaJdbcTemplateDAO ICategoriaJdbcTemplateDAO;
-
-    @Autowired
-    Validador validador;
-
-    @Autowired
-    IEmailJdbcTemplateDAO iEmailJdbcTemplateDAO;
+    private IEmailJdbcTemplateDAO iEmailJdbcTemplateDAO;
 
     /**
      * Cadastra um novo evento.
@@ -69,7 +63,7 @@ public class EventoService {
         if (eventoRequestDTO.getCategoria() == null) {
             throw new CustomException(ExceptionMessages.TIPO_CATEGORIA_INVALIDO);
         }
-        Categoria categoria = ICategoriaJdbcTemplateDAO.buscarNomeCategoria(eventoRequestDTO.getCategoria().name());
+        Categoria categoria = iCategoriaJdbcTemplateDAO.buscarNomeCategoria(eventoRequestDTO.getCategoria().name());
 
         if (Objects.isNull(categoria)) {
             throw new CustomException(ExceptionMessages.CATEGORIA_INVALIDA);
@@ -101,7 +95,7 @@ public class EventoService {
                 .limitePessoas(eventoRequestDTO.getLimitePessoas())
                 .build();
 
-        Evento eventoSalvo = IEventoJdbcTemplateDAO.salvarEvento(evento);
+        Evento eventoSalvo = iEventoJdbcTemplateDAO.salvarEvento(evento);
 
         Endereco endereco = Endereco.builder()
                 .idEvento(eventoSalvo.getIdEvento())
@@ -113,7 +107,7 @@ public class EventoService {
                 .uf(eventoRequestDTO.getUf())
                 .build();
 
-        Endereco enderecoSalvo = IEnderecoJdbcTemplateDAO.salverEndereco(endereco);
+        Endereco enderecoSalvo = iEnderecoJdbcTemplateDAO.salverEndereco(endereco);
 
         return mapearEvento(categoria, eventoSalvo, enderecoSalvo);
     }
@@ -127,7 +121,7 @@ public class EventoService {
      */
     public EventoResponseDTO encerrarEvento(Integer idEvento) {
 
-        Evento evento = IEventoJdbcTemplateDAO.procurarPorId(idEvento)
+        Evento evento = iEventoJdbcTemplateDAO.procurarPorId(idEvento)
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
 
         List<Email> envioEmail = iEmailJdbcTemplateDAO.localizarPorIdEvento(idEvento);
@@ -138,8 +132,8 @@ public class EventoService {
         });
 
         evento.setStatus(StatusEventoEnum.CANCELADO);
-        Evento cancelarEvento = IEventoJdbcTemplateDAO.encerrarEvento(idEvento);
-        Evento updatedEvento = IEventoJdbcTemplateDAO.atualizarEvento(evento);
+        Evento cancelarEvento = iEventoJdbcTemplateDAO.encerrarEvento(idEvento);
+        Evento updatedEvento = iEventoJdbcTemplateDAO.atualizarEvento(evento);
 
         return mapearEncerramentoEvento(updatedEvento);
     }
@@ -152,8 +146,8 @@ public class EventoService {
      */
     private EventoResponseDTO mapearEncerramentoEvento(Evento evento) {
 
-        Categoria categoria = ICategoriaJdbcTemplateDAO.procurarId(evento.getId_categoria());
-        Endereco endereco = IEnderecoJdbcTemplateDAO.procurarPorIdEvento(evento.getIdEvento())
+        Categoria categoria = iCategoriaJdbcTemplateDAO.procurarId(evento.getId_categoria());
+        Endereco endereco = iEnderecoJdbcTemplateDAO.procurarPorIdEvento(evento.getIdEvento())
                 .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + evento.getNome_evento()));
 
         return EventoResponseDTO.builder()
@@ -212,7 +206,7 @@ public class EventoService {
         List<EventoResponseDTO> eventoResponseDTOList = new ArrayList<>();
 
         try {
-            eventoList = IEventoJdbcTemplateDAO.listarEvento();
+            eventoList = iEventoJdbcTemplateDAO.listarEvento();
         } catch (Exception e) {
             throw new CustomException(ExceptionMessages.ERRO_BUSCAR_EVENTOS + e.getMessage());
         }
@@ -222,13 +216,13 @@ public class EventoService {
             Endereco endereco;
 
             try {
-                categoria = ICategoriaJdbcTemplateDAO.procurarId(evento.getId_categoria());
+                categoria = iCategoriaJdbcTemplateDAO.procurarId(evento.getId_categoria());
             } catch (Exception e) {
                 throw new CustomException(ExceptionMessages.ERRO_BUSCAR_CATEGORIA_EVENTO + e.getMessage());
             }
 
             try {
-                endereco = IEnderecoJdbcTemplateDAO.procurarPorIdEvento(evento.getIdEvento())
+                endereco = iEnderecoJdbcTemplateDAO.procurarPorIdEvento(evento.getIdEvento())
                         .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + evento.getNome_evento()));
             } catch (Exception e) {
                 throw new CustomException(ExceptionMessages.ERRO_BUSCAR_ENDERECO_EVENTO + e.getMessage());
@@ -248,11 +242,11 @@ public class EventoService {
      */
     public EventoResponseDTO procurarEventoPorNome(String nomeEvento) {
 
-        Evento evento = IEventoJdbcTemplateDAO.procurarPorNome(nomeEvento)
+        Evento evento = iEventoJdbcTemplateDAO.procurarPorNome(nomeEvento)
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
 
-        Categoria categoria = ICategoriaJdbcTemplateDAO.procurarId(evento.getId_categoria());
-        Endereco endereco = IEnderecoJdbcTemplateDAO.procurarPorIdEvento(evento.getIdEvento())
+        Categoria categoria = iCategoriaJdbcTemplateDAO.procurarId(evento.getId_categoria());
+        Endereco endereco = iEnderecoJdbcTemplateDAO.procurarPorIdEvento(evento.getIdEvento())
                 .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + nomeEvento));
 
         return mapearEvento(categoria, evento, endereco);
@@ -267,10 +261,10 @@ public class EventoService {
      */
     public EventoResponseDTO atualizarEvento(Integer idEvento, EventoRequestDTO eventoRequestDTO) {
 
-        Evento eventoExistente = IEventoJdbcTemplateDAO.procurarPorId(idEvento)
+        Evento eventoExistente = iEventoJdbcTemplateDAO.procurarPorId(idEvento)
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
 
-        Categoria categoria = ICategoriaJdbcTemplateDAO.buscarNomeCategoria(eventoRequestDTO.getCategoria().name());
+        Categoria categoria = iCategoriaJdbcTemplateDAO.buscarNomeCategoria(eventoRequestDTO.getCategoria().name());
 
         if (categoria == null) {
             throw new CustomException(ExceptionMessages.CATEGORIA_INVALIDA);
@@ -292,9 +286,9 @@ public class EventoService {
         eventoExistente.setDescricao(eventoRequestDTO.getDescricao());
         eventoExistente.setId_categoria(categoria.getIdCategoria());
 
-        Evento eventoAtualizado = IEventoJdbcTemplateDAO.atualizarEvento(eventoExistente);
+        Evento eventoAtualizado = iEventoJdbcTemplateDAO.atualizarEvento(eventoExistente);
 
-        Endereco enderecoExistente = IEnderecoJdbcTemplateDAO.procurarPorIdEvento(eventoExistente.getIdEvento())
+        Endereco enderecoExistente = iEnderecoJdbcTemplateDAO.procurarPorIdEvento(eventoExistente.getIdEvento())
                 .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + idEvento));
 
         enderecoExistente.setRua(eventoRequestDTO.getRua());
@@ -304,7 +298,7 @@ public class EventoService {
         enderecoExistente.setCep(eventoRequestDTO.getCep());
         enderecoExistente.setUf(eventoRequestDTO.getUf());
 
-        Endereco enderecoAtualizado = IEnderecoJdbcTemplateDAO.atualizarEndereco(enderecoExistente);
+        Endereco enderecoAtualizado = iEnderecoJdbcTemplateDAO.atualizarEndereco(enderecoExistente);
 
         return mapearEvento(categoria, eventoAtualizado, enderecoAtualizado);
     }
@@ -316,13 +310,13 @@ public class EventoService {
      */
     public void excluirEvento(Integer idEvento) {
 
-        Evento eventoExistente = IEventoJdbcTemplateDAO.procurarPorId(idEvento)
+        Evento eventoExistente = iEventoJdbcTemplateDAO.procurarPorId(idEvento)
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
-        IEnderecoJdbcTemplateDAO.deletarPorIdEvento(idEvento);
-        IEventoJdbcTemplateDAO.deletarPorId(idEvento);
+        iEnderecoJdbcTemplateDAO.deletarPorIdEvento(idEvento);
+        iEventoJdbcTemplateDAO.deletarPorId(idEvento);
     }
 
     public EstatisticaResponseDTO coletarEstatisca(Integer idEvento) {
-        return IEventoJdbcTemplateDAO.coletarEstatistica(idEvento);
+        return iEventoJdbcTemplateDAO.coletarEstatistica(idEvento);
     }
 }
