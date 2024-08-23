@@ -1,5 +1,6 @@
 package com.todoseventos.todos_eventos.usecase;
 
+import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.enuns.SuccessMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.model.cliente.UserDetailsModelImpl;
@@ -21,7 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional
 
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email){
         Cliente user = jdbcTemplate.queryForObject(
                 "SELECT * FROM buscar_pessoa_por_email(?)",
                 new Object[]{email},
@@ -37,7 +38,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         );
 
         if (user == null) {
-            throw new CustomException(SuccessMessages.TOKEN_EMAIL + email);
+            throw new CustomException(ExceptionMessages.TOKEN_EMAIL + email);
         }
 
         return UserDetailsModelImpl.build(user);

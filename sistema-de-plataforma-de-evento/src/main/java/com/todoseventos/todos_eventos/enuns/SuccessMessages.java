@@ -17,7 +17,7 @@ public class SuccessMessages {
     public static final String LISTA_CLIENTE = "Lista de clientes recuperada com sucesso!";
     public static final String CLIENTE_ATUALIZADO = "Cliente atualizado com sucesso!";
     public static final String TOKEN = "Não é possível definir a autenticação do usuário: {}!";
-    public static final String TOKEN_EMAIL = "Usuário não encontrado com e-mail: ";
+
     public static final String COMPRA_REALIZADA = "Compra realizada com sucesso!";
 
     public static final String CADASTRO_ADMINISTRADOR = "Administrador cadastrado com sucesso!";

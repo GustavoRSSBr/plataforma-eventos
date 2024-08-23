@@ -11,6 +11,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -54,9 +56,30 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public ResponseEntity<CustomExceptionResponseDTO> handleHttpMessageNotReadableException (HttpMessageNotReadableException e){
         logger.error("HttpMessageNotReadableException: {}", e.getMessage(), e);
-        String errorMessage = "Dados inválidos. Revise e informe os dados novamente.";
+        String errorMessage = ExceptionMessages.DADO_INVALIDO;
         CustomExceptionResponseDTO response = new CustomExceptionResponseDTO(errorMessage);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(InternalAuthenticationServiceException.class)
+    @ResponseBody
+    public ResponseEntity<CustomExceptionResponseDTO> handleInternalAuthenticationServiceException (InternalAuthenticationServiceException e){
+        logger.error("InternalAuthenticationServiceException: {}", e.getMessage(), e);
+        String errorMessage = ExceptionMessages.CREDENCIAIS_INVALIDAS;
+        CustomExceptionResponseDTO response = new CustomExceptionResponseDTO(errorMessage);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+    
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseBody
+    public ResponseEntity<CustomExceptionResponseDTO> handleBadCredentialsException (BadCredentialsException e){
+        logger.error("BadCredentialsException: {}", e.getMessage(), e);
+        String errorMessage = ExceptionMessages.CREDENCIAIS_INVALIDAS;
+        CustomExceptionResponseDTO response = new CustomExceptionResponseDTO(errorMessage);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+
+
 
 }
