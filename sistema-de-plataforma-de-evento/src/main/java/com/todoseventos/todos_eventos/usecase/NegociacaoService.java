@@ -34,7 +34,14 @@ public class NegociacaoService {
     @Autowired
     IEnderecoJdbcTemplateDAO iEnderecoJdbcTemplateDAO;
 
-
+    /**
+     * Mpaeia o id do evento procurando o id da pessoa e efetua a compra de um ingrsso.
+     *
+     * @param idEvento para buscar o evento.
+     * @param idPessoa para buscar a pessoa.
+     * @param tipoIngresso para buscar o tipo do ingresso: inteira, meia ou vip.
+     * @return retorna o resultado da negociação.
+     */
     public NegociacaoResponseDTO comprarIngresso(Integer idEvento, Integer idPessoa, String tipoIngresso) {
         String resultado = iNegociacaoJdbcTemplateDAO.comprarIngresso(idEvento, idPessoa, tipoIngresso);
 

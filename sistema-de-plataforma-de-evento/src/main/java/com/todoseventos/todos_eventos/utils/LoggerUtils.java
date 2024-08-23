@@ -28,9 +28,4 @@ public class LoggerUtils {
         long elapsedTime = endTime - startTime;
         logger.info("Tempo decorrido no método {}: {} milissegundos", nomeMetodo, elapsedTime);
     }
-
-    //Talvez não use esse:
-    public static void logError(org.slf4j.Logger logger, String methodName, Object request, Exception e) {
-        logger.error("Erro ao executar o método {}: request: {}", methodName, request, e);
-    }
 }

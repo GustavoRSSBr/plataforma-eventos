@@ -5,6 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
+/**
+ * Classe que representa uma negociação de ingresso.
+ */
 @Data
 @Builder
 @AllArgsConstructor

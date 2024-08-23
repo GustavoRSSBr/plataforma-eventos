@@ -62,6 +62,8 @@ public class ClienteService {
      */
     public ClienteResponseDTO cadastrarNovaPessoa(ClienteRequestDTO clienteRequest) {
 
+        validador.validar(clienteRequest);
+
         if (clienteRequest.getTipo_pessoa() == TipoClienteEnum.FISICA) {
             Cliente pessoaExistente = IClienteJdbcTemplateDAO.procurarPorCpf(clienteRequest.getCpf());
             if (pessoaExistente != null) {
@@ -74,8 +76,6 @@ public class ClienteService {
 
             }
         }
-
-        validador.validar(clienteRequest);
 
         TipoCliente tipoCliente = ITipoClienteJdbcTemplateDAO.buscarPorNomeTipoPessoa(clienteRequest.getTipo_pessoa().name());
 
@@ -100,6 +100,7 @@ public class ClienteService {
                     .idPessoa(pessoaSalva.getIdPessoa())
                     .build();
             IClienteFisicaJdbcTemplateDAO.salvarCliFisico(pessoaFisica);
+
         } else if (clienteRequest.getTipo_pessoa() == TipoClienteEnum.JURIDICA) {
             ClienteJuridico pessoaJuridica = ClienteJuridico.builder()
                     .cnpj(clienteRequest.getCnpj())

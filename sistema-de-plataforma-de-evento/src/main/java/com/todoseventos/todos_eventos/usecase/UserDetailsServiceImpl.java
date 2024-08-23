@@ -30,6 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                     u.setEmail(rs.getString("email"));
                     u.setSenha(rs.getString("senha"));
                     u.setTipo_pessoa(rs.getInt("id_tipo_pessoa"));
+
                     return u;
                 });
 

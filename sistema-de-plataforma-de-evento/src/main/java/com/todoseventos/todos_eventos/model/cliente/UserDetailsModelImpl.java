@@ -1,6 +1,9 @@
 package com.todoseventos.todos_eventos.model.cliente;
 
-import com.todoseventos.todos_eventos.enuns.TipoClienteEnum;
+
+import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,7 +12,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@Table("tipo_pessoa")
+@Data
+@Builder
+@NoArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class UserDetailsModelImpl implements UserDetails {
+
+    @Id
     private Integer id;
     private String email;
     private String password;
@@ -75,13 +85,13 @@ public class UserDetailsModelImpl implements UserDetails {
         return email;
     }
 
-    /**
-     * Retorna o ID do usuário.
-     * @return O ID do usuário.
-     */
-    public Integer getId() {
-        return id;
-    }
+//    /**
+//     * Retorna o ID do usuário.
+//     * @return O ID do usuário.
+//     */
+//    public Integer getId() {
+//        return id;
+//    }
 
     /**
      * Indica se a conta do usuário está expirada.

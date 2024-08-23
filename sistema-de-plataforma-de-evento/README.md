@@ -1,4 +1,4 @@
-# Todos Eventos
+# Evento livre
 
 ## Descrição
 O projeto **Todos Eventos** é um sistema de gerenciamento de eventos que permite aos usuários cadastrar, consultar, atualizar e excluir eventos. Além disso, o sistema permite a participação em eventos e envia email os usuários sobre eventos que escolheu participar, passando as informações do evento.
