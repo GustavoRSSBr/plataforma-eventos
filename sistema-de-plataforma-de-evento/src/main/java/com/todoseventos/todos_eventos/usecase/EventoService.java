@@ -264,6 +264,8 @@ public class EventoService {
         Evento eventoExistente = iEventoJdbcTemplateDAO.procurarPorId(idEvento)
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
 
+        validador.validar(eventoRequestDTO);
+
         Categoria categoria = iCategoriaJdbcTemplateDAO.buscarNomeCategoria(eventoRequestDTO.getCategoria().name());
 
         if (categoria == null) {
@@ -285,6 +287,8 @@ public class EventoService {
         eventoExistente.setDataHora_eventofinal(eventoRequestDTO.getDataHora_eventofinal());
         eventoExistente.setDescricao(eventoRequestDTO.getDescricao());
         eventoExistente.setId_categoria(categoria.getIdCategoria());
+        eventoExistente.setValorIngresso(eventoRequestDTO.getValorIngresso());
+        eventoExistente.setLimitePessoas(eventoRequestDTO.getLimitePessoas());
 
         Evento eventoAtualizado = iEventoJdbcTemplateDAO.atualizarEvento(eventoExistente);
 

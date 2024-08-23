@@ -54,7 +54,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public ResponseEntity<CustomExceptionResponseDTO> handleHttpMessageNotReadableException (HttpMessageNotReadableException e){
         logger.error("HttpMessageNotReadableException: {}", e.getMessage(), e);
-        String errorMessage = "Categoria inválida";
+        String errorMessage = "Dados inválidos. Revise e informe os dados novamente.";
         CustomExceptionResponseDTO response = new CustomExceptionResponseDTO(errorMessage);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }

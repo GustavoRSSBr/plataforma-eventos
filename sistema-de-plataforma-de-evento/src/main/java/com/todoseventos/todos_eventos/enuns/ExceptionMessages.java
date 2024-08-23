@@ -5,7 +5,7 @@ public class ExceptionMessages {
     public static final String EVENTO_NAO_ENCONTRADO = "Evento não encontrado!";
     public static final String ENDERECO_NAO_ENCONTRADO = "Endereço não encontrado: ";
     public static final String ID_PESSOA_NAO_INFORMADO = "O ID da Pessoa não foi informado";
-    public static final String VALOR_DEPOSITO_INVALIDO = "O valor do depósito é inválido, digite um valor positivo";
+    public static final String VALOR_DEPOSITO_INVALIDO = "Valor de depósito inválido. Digite novamente o valor do depósito.";
     public static final String ESTRATEGIA_NAO_ENCONTRADA = "Nenhuma estratégia de validação encontrada para ";
     public static final String ESTRATEGIA_DUPLICADA = "Já existe uma estratégia registrada para a classe: ";
     public static final String TIPO_CATEGORIA_INVALIDO = "Tipo de categoria inválido!";
@@ -13,7 +13,7 @@ public class ExceptionMessages {
     public static final String VALOR_INVALIDO = "O valor do ingresso deve ser positivo e o valor máximo aceito é 10.000";
     public static final String CEP_INVALIDO = "CEP inválido!";
     public static final String CEP_INEXISTENTE = "CEP inexistente!";
-    public static final String NUMERO_INVALIDO = "Esse campo aceita apenas números";
+    public static final String NUMERO_INVALIDO = "O campo número aceita apenas caracteres numéricos.";
     public static final String LIMITE_INVALIDO = "O limite de ocupação deve ser positivo e a ocupação máxima é de 200.000";
     public static final String ERRO_BUSCAR_EVENTOS = "Erro ao buscar eventos: ";
     public static final String ERRO_BUSCAR_CATEGORIA_EVENTO = "Erro ao buscar categoria do evento: ";
