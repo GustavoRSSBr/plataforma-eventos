@@ -1,5 +1,6 @@
 package com.todoseventos.todos_eventos.security.jwt;
 
+import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.usecase.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -44,6 +45,7 @@ public class AuthFilterToken extends OncePerRequestFilter {
             }
         } catch (Exception e) {
             logger.error("Não foi possível autenticar o usuário: {}", e.getMessage());
+            throw new CustomException("Dados incorretos, verifique suas credenciais.");
         }
 
         filterChain.doFilter(request, response);

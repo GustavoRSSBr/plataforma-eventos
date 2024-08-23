@@ -9,9 +9,9 @@ import java.time.format.DateTimeParseException;
 
 public class ValidadorDataNascimento{
 
-    public static void validarData(String campo) {
+    public static void validarData(String dataNascimento) {
 
-        if(!validarDataNascimento(campo)){
+        if(!validarDataNascimento(dataNascimento)){
             throw new CustomException(ExceptionMessages.DATA_NASCIMENTO_INVALIDA);
         }
 

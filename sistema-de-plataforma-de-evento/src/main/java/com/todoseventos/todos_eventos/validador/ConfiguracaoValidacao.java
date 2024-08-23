@@ -1,8 +1,10 @@
 package com.todoseventos.todos_eventos.validador;
 
+import com.todoseventos.todos_eventos.dto.requestDTO.ClienteAtualizarRequestDTO;
 import com.todoseventos.todos_eventos.dto.requestDTO.ClienteRequestDTO;
 import com.todoseventos.todos_eventos.dto.requestDTO.DepositoRequestDTO;
 import com.todoseventos.todos_eventos.dto.requestDTO.EventoRequestDTO;
+import com.todoseventos.todos_eventos.validador.validadoresObjeto.ValidadorClienteAtualizarRequestDTO;
 import com.todoseventos.todos_eventos.validador.validadoresObjeto.ValidadorClienteRequestDto;
 import com.todoseventos.todos_eventos.validador.validadoresObjeto.ValidadorDepositoRequestDto;
 import com.todoseventos.todos_eventos.validador.validadoresObjeto.ValidadorEventoRequestDto;
@@ -24,6 +26,7 @@ public class ConfiguracaoValidacao {
         registro.registrar(ClienteRequestDTO.class, new ValidadorClienteRequestDto());
         registro.registrar(EventoRequestDTO.class, new ValidadorEventoRequestDto());
         registro.registrar(DepositoRequestDTO.class, new ValidadorDepositoRequestDto());
+        registro.registrar(ClienteAtualizarRequestDTO.class, new ValidadorClienteAtualizarRequestDTO());
         //outros registros
     }
 }

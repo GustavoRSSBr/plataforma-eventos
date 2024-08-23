@@ -1,5 +1,6 @@
 package com.todoseventos.todos_eventos.controller;
 
+import com.todoseventos.todos_eventos.dto.requestDTO.ClienteAtualizarRequestDTO;
 import com.todoseventos.todos_eventos.dto.responseDTO.CustomExceptionResponseDTO;
 import com.todoseventos.todos_eventos.dto.requestDTO.ClienteRequestDTO;
 import com.todoseventos.todos_eventos.dto.responseDTO.ClienteResponseDTO;
@@ -83,7 +84,7 @@ public class ClienteController {
     @PutMapping("/pessoa/{identificador}")
     public ResponseEntity<?> atualizaPessoaPorCpfouCnpj(
             @Parameter(description = "Atualiza os dados da pessoa.")
-            @Valid @PathVariable("identificador") String identificador, @RequestBody ClienteRequestDTO clienteRequest) {
+            @Valid @PathVariable("identificador") String identificador, @RequestBody ClienteAtualizarRequestDTO clienteRequest) {
         long startTime = System.currentTimeMillis();
         ClienteResponseDTO response = clienteService.atualizarPessoa(identificador, clienteRequest);
 

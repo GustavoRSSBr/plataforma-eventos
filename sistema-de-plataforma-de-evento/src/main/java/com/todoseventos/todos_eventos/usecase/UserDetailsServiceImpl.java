@@ -21,7 +21,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email){
         Cliente user = jdbcTemplate.queryForObject("SELECT * FROM pessoa WHERE email = ?",
                 new Object[]{email},
                 (rs, rowNum) -> {

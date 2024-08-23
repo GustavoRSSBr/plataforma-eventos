@@ -1,6 +1,7 @@
 package com.todoseventos.todos_eventos.usecase;
 
 import com.todoseventos.todos_eventos.dao.*;
+import com.todoseventos.todos_eventos.dto.requestDTO.ClienteAtualizarRequestDTO;
 import com.todoseventos.todos_eventos.dto.requestDTO.ClienteRequestDTO;
 import com.todoseventos.todos_eventos.dto.responseDTO.ClienteResponseDTO;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
@@ -12,9 +13,8 @@ import com.todoseventos.todos_eventos.model.cliente.ClienteJuridico;
 import com.todoseventos.todos_eventos.model.cliente.TipoCliente;
 import com.todoseventos.todos_eventos.validador.Validacoes;
 import com.todoseventos.todos_eventos.validador.Validador;
-import com.todoseventos.todos_eventos.validador.validadoresAtributo.ValidadorCnpj;
-import com.todoseventos.todos_eventos.validador.validadoresAtributo.ValidadorCpf;
-import com.todoseventos.todos_eventos.validador.validadoresAtributo.ValidadorDataNascimento;
+import com.todoseventos.todos_eventos.validador.validadoresAtributo.*;
+import com.todoseventos.todos_eventos.validador.validadoresObjeto.ValidadorClienteAtualizarRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -201,7 +201,7 @@ public class ClienteService {
      * @param clienteRequest Objeto contendo os novos detalhes da pessoa.
      * @return Um objeto de resposta contendo os detalhes da pessoa atualizada.
      */
-    public ClienteResponseDTO atualizarPessoa(String identificador, ClienteRequestDTO clienteRequest) {
+    public ClienteResponseDTO atualizarPessoa(String identificador, ClienteAtualizarRequestDTO clienteRequest) {
         Cliente pessoaExistente;
 
 
@@ -212,38 +212,27 @@ public class ClienteService {
         } else {
             throw new CustomException(ExceptionMessages.IDENTIFICADOR_INVALIDO);
         }
-
         if (Objects.isNull(pessoaExistente)) {
             throw new CustomException(ExceptionMessages.CLIENTE_NAO_ENCONTRADO);
         }
 
-        TipoCliente tipoCliente = ITipoClienteJdbcTemplateDAO.buscarPorNomeTipoPessoa(clienteRequest.getTipo_pessoa().name());
+        if (pessoaExistente.getTipo_pessoa() == null) {
+            TipoCliente tipoCliente = ITipoClienteJdbcTemplateDAO.buscarPorNomeTipoPessoa(
+                    identificador.length() == 11 ? TipoClienteEnum.FISICA.name() : TipoClienteEnum.JURIDICA.name());
+            pessoaExistente.setTipo_pessoa(tipoCliente.getIdTipoPessoa());
+        }
+
+        validador.validar(clienteRequest);
+
         String encodedPassword = passwordEncoder.encode(clienteRequest.getSenha());
 
         pessoaExistente.setNome(clienteRequest.getNome());
         pessoaExistente.setEmail(clienteRequest.getEmail());
         pessoaExistente.setSenha(encodedPassword);
         pessoaExistente.setTelefone(clienteRequest.getTelefone());
-        pessoaExistente.setTipo_pessoa(tipoCliente.getIdTipoPessoa());
 
         Cliente clienteAtualizado = IClienteJdbcTemplateDAO.atualizarCliente(pessoaExistente);
 
-        if (clienteRequest.getTipo_pessoa() == TipoClienteEnum.FISICA) {
-            ClienteFisico pessoaFisica = IClienteFisicaJdbcTemplateDAO.procurarCpf(identificador);
-            if (pessoaFisica != null) {
-                pessoaFisica.setIdPessoa(clienteAtualizado.getIdPessoa());
-                pessoaFisica.setCpf(clienteRequest.getCpf());
-                pessoaFisica.setDataNascimento(clienteRequest.getDataNascimento());
-                IClienteFisicaJdbcTemplateDAO.atualizarCliFisico(pessoaFisica);
-            }
-        } else if (clienteRequest.getTipo_pessoa() == TipoClienteEnum.JURIDICA) {
-            ClienteJuridico pessoaJuridica = IClienteJuridicaJdbcTemplateDAO.procurarCnpj(identificador);
-            if (pessoaJuridica != null) {
-                pessoaJuridica.setIdPessoa(clienteAtualizado.getIdPessoa());
-                pessoaJuridica.setCnpj(clienteRequest.getCnpj());
-                IClienteJuridicaJdbcTemplateDAO.atualizarJuridico(pessoaJuridica);
-            }
-        }
-        return mapearPessoa(clienteRequest.getTipo_pessoa(), clienteAtualizado);
+        return mapearPessoa(clienteAtualizado.getTipo_pessoa() == 1 ? TipoClienteEnum.FISICA : TipoClienteEnum.JURIDICA, clienteAtualizado);
     }
 }

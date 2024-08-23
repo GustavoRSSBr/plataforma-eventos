@@ -19,6 +19,7 @@ public class ExceptionMessages {
     public static final String ERRO_BUSCAR_CATEGORIA_EVENTO = "Erro ao buscar categoria do evento: ";
     public static final String ERRO_BUSCAR_ENDERECO_EVENTO = "Erro ao buscar endereço do evento: ";
     public static final String EMAIL_INVALIDO = "E-mail inválido!";
+    public static final String CAMPO_FIXO = "Todos os campos devem ser preenchidos";
     public static final String NOME_INVALIDO = "O nome deve possuir, no mínimo, 10 caracteres.";
     public static final String DATA_INICIO_INVALIDA = "A data do seu evento não pode ser anterior à data atual.";
     public static final String DATA_FINAL_INVALIDA = "A data do seu evento não pode ser superior a 3 anos da data atual.";
@@ -37,7 +38,6 @@ public class ExceptionMessages {
     public static final String CEP_EM_BRANCO = "CEP não pode estar em branco:";
     public static final String SENHA_INVALIDA = "Senha inválida: a senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.";
     public static final String ERRO_ENVIAR_EMAIL = "Erro ao enviar e-mail:";
-    public static final String ERRO_ENVIAR_EMAIL_CONFIRMACAO = "Erro ao enviar e-mail de confirmação:";
     public static final String ERRO_ENVIAR_EMAIL_CANCELAMENTO = "Erro ao enviar e-mail de cancelamento:";
     public static final String EMAIL_SENHA = "Email ou senha inválidos!";
     public static final String ERRO_INTERNO = "Ocorreu um erro interno. Por favor, tente novamente mais tarde.";
