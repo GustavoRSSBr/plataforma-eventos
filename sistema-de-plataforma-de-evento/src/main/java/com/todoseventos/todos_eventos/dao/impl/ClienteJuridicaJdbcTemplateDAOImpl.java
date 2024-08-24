@@ -49,6 +49,5 @@ class ClienteJuridicaJdbcTemplateDAOImpl implements IClienteJuridicaJdbcTemplate
         String sql = "SELECT * FROM procurar_cliente_juridico_por_cnpj(?)";
 
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ClienteJuridico.class), cnpj);
-
     }
 }

@@ -7,9 +7,10 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class ClienteFisicoResponseDto {
+@AllArgsConstructor
+public class ClienteFisicoResponseDTO {
+
         private Integer idPessoa;
         private String nome;
         private String cpf;

@@ -39,13 +39,9 @@ public class ExceptionMessages {
     public static final String SENHA_INVALIDA = "Senha inválida: a senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.";
     public static final String ERRO_ENVIAR_EMAIL = "Erro ao enviar e-mail:";
     public static final String ERRO_ENVIAR_EMAIL_CANCELAMENTO = "Erro ao enviar e-mail de cancelamento:";
-    public static final String EMAIL_SENHA = "Email ou senha inválidos!";
     public static final String ERRO_INTERNO = "Ocorreu um erro interno. Por favor, tente novamente mais tarde.";
-
     public static final String TOKEN_EMAIL = "Usuário não encontrado com e-mail: ";
-
     public static final String DADO_INVALIDO = "Dados inválidos. Revise e informe os dados novamente.";
-
     public static final String CREDENCIAIS_INVALIDAS = "Credenciais inválidas. Revise e informe os dados novamente.";
 
     private ExceptionMessages(){

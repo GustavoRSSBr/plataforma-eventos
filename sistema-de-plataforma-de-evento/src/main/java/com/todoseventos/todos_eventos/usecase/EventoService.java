@@ -1,6 +1,9 @@
 package com.todoseventos.todos_eventos.usecase;
 
-import com.todoseventos.todos_eventos.dao.*;
+import com.todoseventos.todos_eventos.dao.ICategoriaJdbcTemplateDAO;
+import com.todoseventos.todos_eventos.dao.IEmailJdbcTemplateDAO;
+import com.todoseventos.todos_eventos.dao.IEnderecoJdbcTemplateDAO;
+import com.todoseventos.todos_eventos.dao.IEventoJdbcTemplateDAO;
 import com.todoseventos.todos_eventos.dto.requestDTO.EventoRequestDTO;
 import com.todoseventos.todos_eventos.dto.responseDTO.CepResponseDTO;
 import com.todoseventos.todos_eventos.dto.responseDTO.EstatisticaResponseDTO;
@@ -14,23 +17,18 @@ import com.todoseventos.todos_eventos.model.evento.Categoria;
 import com.todoseventos.todos_eventos.model.evento.Email;
 import com.todoseventos.todos_eventos.model.evento.Endereco;
 import com.todoseventos.todos_eventos.model.evento.Evento;
-import com.todoseventos.todos_eventos.validador.Validacoes;
 import com.todoseventos.todos_eventos.validador.Validador;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+
 @Service
 public class EventoService {
 
-
     @Autowired
     private IEventoJdbcTemplateDAO iEventoJdbcTemplateDAO;
-
-    @Autowired
-    private Validacoes validacoes;
 
     @Autowired
     private EmailService emailService;
@@ -60,22 +58,11 @@ public class EventoService {
 
         validador.validar(eventoRequestDTO);
 
-        if (eventoRequestDTO.getCategoria() == null) {
-            throw new CustomException(ExceptionMessages.TIPO_CATEGORIA_INVALIDO);
-        }
         Categoria categoria = iCategoriaJdbcTemplateDAO.buscarNomeCategoria(eventoRequestDTO.getCategoria().name());
-
-        if (Objects.isNull(categoria)) {
-            throw new CustomException(ExceptionMessages.CATEGORIA_INVALIDA);
-        }
-
-        if (!validacoes.validarCep(eventoRequestDTO.getCep())) {
-            throw new CustomException(ExceptionMessages.CEP_INVALIDO);
-        }
 
         CepResponseDTO cepResponseDTO = cepService.consultarCep(eventoRequestDTO.getCep());
 
-        if(cepResponseDTO.getLogradouro() == null || cepResponseDTO.getBairro() == null || cepResponseDTO.getLocalidade() == null || cepResponseDTO.getUf() == null){
+        if (cepResponseDTO.getLogradouro() == null || cepResponseDTO.getBairro() == null || cepResponseDTO.getLocalidade() == null || cepResponseDTO.getUf() == null) {
             throw new CustomException(ExceptionMessages.CEP_INEXISTENTE);
         }
 
@@ -132,12 +119,12 @@ public class EventoService {
         });
 
         evento.setStatus(StatusEventoEnum.CANCELADO);
-        Evento cancelarEvento = iEventoJdbcTemplateDAO.encerrarEvento(idEvento);
+        iEventoJdbcTemplateDAO.encerrarEvento(idEvento);
         Evento updatedEvento = iEventoJdbcTemplateDAO.atualizarEvento(evento);
 
         return mapearEncerramentoEvento(updatedEvento);
     }
-    
+
     /**
      * Mapeia os detalhes do encerramento de um evento para um objeto de resposta.
      *
@@ -268,14 +255,6 @@ public class EventoService {
 
         Categoria categoria = iCategoriaJdbcTemplateDAO.buscarNomeCategoria(eventoRequestDTO.getCategoria().name());
 
-        if (categoria == null) {
-            throw new CustomException(ExceptionMessages.CATEGORIA_INVALIDA);
-        }
-
-        if (!validacoes.validarCep(eventoRequestDTO.getCep())) {
-            throw new CustomException(ExceptionMessages.CEP_INVALIDO);
-        }
-
         CepResponseDTO cepResponseDTO = cepService.consultarCep(eventoRequestDTO.getCep());
         eventoRequestDTO.setRua(cepResponseDTO.getLogradouro());
         eventoRequestDTO.setBairro(cepResponseDTO.getBairro());
@@ -313,8 +292,7 @@ public class EventoService {
      * @param idEvento O ID do evento a ser excluído.
      */
     public void excluirEvento(Integer idEvento) {
-
-        Evento eventoExistente = iEventoJdbcTemplateDAO.procurarPorId(idEvento)
+        iEventoJdbcTemplateDAO.procurarPorId(idEvento)
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
         iEnderecoJdbcTemplateDAO.deletarPorIdEvento(idEvento);
         iEventoJdbcTemplateDAO.deletarPorId(idEvento);

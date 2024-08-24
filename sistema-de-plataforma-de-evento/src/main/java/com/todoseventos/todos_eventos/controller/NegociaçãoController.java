@@ -2,14 +2,12 @@ package com.todoseventos.todos_eventos.controller;
 
 import com.todoseventos.todos_eventos.dto.requestDTO.NegociacaoRequestDTO;
 import com.todoseventos.todos_eventos.dto.responseDTO.NegociacaoResponseDTO;
-import com.todoseventos.todos_eventos.model.cliente.Cliente;
 import com.todoseventos.todos_eventos.usecase.NegociacaoService;
 import com.todoseventos.todos_eventos.utils.LoggerUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +39,7 @@ public class NegociaçãoController {
     @PostMapping("/comprar-ingresso")
     public ResponseEntity<?> comprarIngresso(
             @Parameter(description = "Dados necessários para comprar um ingresso.")
-            @Valid @RequestBody NegociacaoRequestDTO requestDTO) {
+            @RequestBody NegociacaoRequestDTO requestDTO) {
         long startTime = System.currentTimeMillis();
         NegociacaoResponseDTO response = negociacaoService.comprarIngresso(requestDTO.getIdEvento(), requestDTO.getIdPessoa(), requestDTO.getTipoIngresso());
         LoggerUtils.logElapsedTime(LOGGER, "comprarIngresso", startTime);

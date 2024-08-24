@@ -32,7 +32,6 @@ class EnderecoJdbcTemplateDAOImpl implements IEnderecoJdbcTemplateDAO {
 
     }
 
-
     @Override
     @Transactional
     public Endereco atualizarEndereco(Endereco endereco) {
@@ -43,7 +42,6 @@ class EnderecoJdbcTemplateDAOImpl implements IEnderecoJdbcTemplateDAO {
             return null;
         });
         return endereco;
-
     }
 
     @Override

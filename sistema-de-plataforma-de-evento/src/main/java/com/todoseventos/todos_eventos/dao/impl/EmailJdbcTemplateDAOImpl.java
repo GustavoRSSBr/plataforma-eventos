@@ -16,7 +16,6 @@ public class EmailJdbcTemplateDAOImpl implements IEmailJdbcTemplateDAO {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-
     @Transactional
     public List<Email> localizarPorIdEvento(Integer idEvento) {
         String sql = "SELECT * FROM buscar_pessoas_por_evento(?)";

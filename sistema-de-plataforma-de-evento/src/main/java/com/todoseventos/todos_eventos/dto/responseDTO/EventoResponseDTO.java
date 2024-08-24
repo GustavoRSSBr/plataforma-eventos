@@ -7,11 +7,12 @@ import lombok.*;
 import java.math.BigDecimal;
 
 @Data
-@AllArgsConstructor
+@Builder
 @NoArgsConstructor
-@Builder(toBuilder = true)
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EventoResponseDTO {
+
     private Integer idEvento;
     private String nome_evento;
     private String dataHora_evento;

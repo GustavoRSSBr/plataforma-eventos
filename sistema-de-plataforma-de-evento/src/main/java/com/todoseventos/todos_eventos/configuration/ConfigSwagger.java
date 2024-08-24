@@ -7,9 +7,8 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ConfigSwagger {
-
     @Bean
-    public OpenAPI configOpenApi(){
+    public OpenAPI configOpenApi() {
         return new OpenAPI()
                 .info(new Info()
                         .version("1.0.0")
@@ -19,5 +18,3 @@ public class ConfigSwagger {
                                 "registre participantes, emita ingressos e envie notificações automáticas."));
     }
 }
-
-   //http://localhost:27031/swagger-ui/index.html#/

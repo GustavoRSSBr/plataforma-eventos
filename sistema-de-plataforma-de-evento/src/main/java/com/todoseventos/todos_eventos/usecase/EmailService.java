@@ -3,13 +3,12 @@ package com.todoseventos.todos_eventos.usecase;
 import com.todoseventos.todos_eventos.enuns.EmailEnum;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
-import com.todoseventos.todos_eventos.model.evento.Endereco;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.mail.javamail.JavaMailSender;
 
 
 @Service
@@ -20,10 +19,11 @@ public class EmailService {
 
     /**
      * Envia um e-mail de confirmação de inscrição.
-     * @param email O endereço de e-mail do destinatário.
-     * @param nomePessoa O nome do destinatário.
-     * @param nomeEvento O nome do evento.
-     * @param dataEvento A data do evento.
+     *
+     * @param email       O endereço de e-mail do destinatário.
+     * @param nomePessoa  O nome do destinatário.
+     * @param nomeEvento  O nome do evento.
+     * @param dataEvento  A data do evento.
      * @param localEvento O local do evento.
      */
     public void enviarEmail(String email, String nomePessoa, String nomeEvento, String dataEvento, String localEvento) {
@@ -42,9 +42,10 @@ public class EmailService {
 
     /**
      * Gera o corpo do e-mail de confirmação de inscrição.
-     * @param nomePessoa O nome do destinatário.
-     * @param nomeEvento O nome do evento.
-     * @param dataEvento A data do evento.
+     *
+     * @param nomePessoa  O nome do destinatário.
+     * @param nomeEvento  O nome do evento.
+     * @param dataEvento  A data do evento.
      * @param localEvento O local do evento.
      * @return O corpo do e-mail em formato HTML.
      */
@@ -59,7 +60,8 @@ public class EmailService {
 
     /**
      * Envia um e-mail de cancelamento de evento.
-     * @param email O endereço de e-mail do destinatário.
+     *
+     * @param email      O endereço de e-mail do destinatário.
      * @param nomePessoa O nome do destinatário.
      * @param nomeEvento O nome do evento.
      */
@@ -80,6 +82,7 @@ public class EmailService {
 
     /**
      * Gera o corpo do e-mail de cancelamento de evento.
+     *
      * @param nomePessoa O nome do destinatário.
      * @param nomeEvento O nome do evento.
      * @return O corpo do e-mail em formato HTML.

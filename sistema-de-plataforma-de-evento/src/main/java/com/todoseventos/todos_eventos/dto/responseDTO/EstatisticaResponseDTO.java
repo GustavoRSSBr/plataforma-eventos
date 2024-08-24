@@ -9,9 +9,10 @@ import java.math.BigDecimal;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class EstatisticaResponseDTO {
+
     Integer quatidadeIngressoComprada;
     Integer quatidadeIngressoDisponivel;
     Integer quantidadeMeia;

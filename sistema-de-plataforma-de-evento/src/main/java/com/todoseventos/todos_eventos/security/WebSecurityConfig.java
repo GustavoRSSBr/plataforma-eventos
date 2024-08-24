@@ -2,7 +2,6 @@ package com.todoseventos.todos_eventos.security;
 
 import com.todoseventos.todos_eventos.security.jwt.AuthEntryPointJwt;
 import com.todoseventos.todos_eventos.security.jwt.AuthFilterToken;
-import com.todoseventos.todos_eventos.usecase.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

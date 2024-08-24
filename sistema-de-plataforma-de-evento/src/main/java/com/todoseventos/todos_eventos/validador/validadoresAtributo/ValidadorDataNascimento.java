@@ -7,11 +7,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public class ValidadorDataNascimento{
+public class ValidadorDataNascimento {
 
     public static void validarData(String dataNascimento) {
 
-        if(!validarDataNascimento(dataNascimento)){
+        if (!validarDataNascimento(dataNascimento)) {
             throw new CustomException(ExceptionMessages.DATA_NASCIMENTO_INVALIDA);
         }
 

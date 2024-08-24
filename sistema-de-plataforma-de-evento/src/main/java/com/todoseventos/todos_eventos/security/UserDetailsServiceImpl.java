@@ -1,15 +1,12 @@
-package com.todoseventos.todos_eventos.usecase;
+package com.todoseventos.todos_eventos.security;
 
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
-import com.todoseventos.todos_eventos.enuns.SuccessMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
-import com.todoseventos.todos_eventos.model.cliente.UserDetailsModelImpl;
 import com.todoseventos.todos_eventos.model.cliente.Cliente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +19,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional
 
-    public UserDetails loadUserByUsername(String email){
+    public UserDetails loadUserByUsername(String email) {
         Cliente user = jdbcTemplate.queryForObject(
                 "SELECT * FROM buscar_pessoa_por_email(?)",
                 new Object[]{email},

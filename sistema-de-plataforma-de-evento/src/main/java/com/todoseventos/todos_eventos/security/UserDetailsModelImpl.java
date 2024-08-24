@@ -1,7 +1,11 @@
-package com.todoseventos.todos_eventos.model.cliente;
+package com.todoseventos.todos_eventos.security;
 
 
-import lombok.*;
+import com.todoseventos.todos_eventos.model.cliente.Cliente;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,9 +32,10 @@ public class UserDetailsModelImpl implements UserDetails {
 
     /**
      * Construtor da classe UserDetailsImpl.
-     * @param id O ID do usuário.
-     * @param email O e-mail do usuário.
-     * @param password A senha do usuário.
+     *
+     * @param id          O ID do usuário.
+     * @param email       O e-mail do usuário.
+     * @param password    A senha do usuário.
      * @param authorities As autoridades (roles) do usuário.
      */
 
@@ -44,6 +49,7 @@ public class UserDetailsModelImpl implements UserDetails {
 
     /**
      * Cria uma instância de UserDetailsImpl a partir de um objeto ClienteModel.
+     *
      * @param usuario O objeto ClienteModel contendo os detalhes do usuário.
      * @return Uma instância de UserDetailsImpl.
      */
@@ -58,16 +64,19 @@ public class UserDetailsModelImpl implements UserDetails {
 
     /**
      * Retorna as autoridades (roles) do usuário.
+     *
      * @return Uma coleção de GrantedAuthority representando as autoridades do usuário.
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(this.role == 3) return  List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        if (this.role == 3)
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
         else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     /**
      * Retorna a senha do usuário.
+     *
      * @return A senha do usuário.
      */
 
@@ -78,6 +87,7 @@ public class UserDetailsModelImpl implements UserDetails {
 
     /**
      * Retorna o nome de usuário (e-mail).
+     *
      * @return O e-mail do usuário.
      */
     @Override
@@ -95,6 +105,7 @@ public class UserDetailsModelImpl implements UserDetails {
 
     /**
      * Indica se a conta do usuário está expirada.
+     *
      * @return true, se a conta não estiver expirada; false, caso contrário.
      */
     @Override
@@ -104,6 +115,7 @@ public class UserDetailsModelImpl implements UserDetails {
 
     /**
      * Indica se a conta do usuário está bloqueada.
+     *
      * @return true, se a conta não estiver bloqueada; false, caso contrário.
      */
     @Override
@@ -113,6 +125,7 @@ public class UserDetailsModelImpl implements UserDetails {
 
     /**
      * Indica se as credenciais do usuário estão expiradas.
+     *
      * @return true, se as credenciais não estiverem expiradas; false, caso contrário.
      */
     @Override
@@ -122,6 +135,7 @@ public class UserDetailsModelImpl implements UserDetails {
 
     /**
      * Indica se a conta do usuário está habilitada.
+     *
      * @return true, se a conta estiver habilitada; false, caso contrário.
      */
     @Override

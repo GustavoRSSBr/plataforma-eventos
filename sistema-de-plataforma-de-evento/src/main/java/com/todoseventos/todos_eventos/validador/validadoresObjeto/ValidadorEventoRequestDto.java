@@ -4,10 +4,10 @@ import com.todoseventos.todos_eventos.dto.requestDTO.EventoRequestDTO;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.validador.validadoresAtributo.*;
 
-public class ValidadorEventoRequestDto implements IEstrategiaValidacao<EventoRequestDTO>{
+public class ValidadorEventoRequestDto implements IEstrategiaValidacao<EventoRequestDTO> {
     @Override
-    public boolean validar(EventoRequestDTO objeto){
-        if(objeto == null){
+    public boolean validar(EventoRequestDTO objeto) {
+        if (objeto == null) {
             throw new CustomException("DADOS NÃO PODEM SER NULOS.");
         }
 

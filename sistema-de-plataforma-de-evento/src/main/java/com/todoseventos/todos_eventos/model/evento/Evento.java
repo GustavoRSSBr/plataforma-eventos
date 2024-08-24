@@ -10,9 +10,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Evento implements Serializable {
 
     private Integer idEvento;

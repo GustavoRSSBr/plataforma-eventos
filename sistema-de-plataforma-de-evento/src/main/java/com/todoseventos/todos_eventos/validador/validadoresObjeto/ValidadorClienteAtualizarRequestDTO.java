@@ -11,7 +11,7 @@ import com.todoseventos.todos_eventos.validador.validadoresAtributo.ValidadorTel
 public class ValidadorClienteAtualizarRequestDTO implements IEstrategiaValidacao<ClienteAtualizarRequestDTO> {
 
     @Override
-    public boolean validar(ClienteAtualizarRequestDTO objeto){
+    public boolean validar(ClienteAtualizarRequestDTO objeto) {
 
         if (objeto.getNome() == null || objeto.getNome().isEmpty()) {
             throw new CustomException(ExceptionMessages.CAMPO_FIXO);

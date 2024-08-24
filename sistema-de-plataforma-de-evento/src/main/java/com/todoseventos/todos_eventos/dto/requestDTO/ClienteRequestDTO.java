@@ -3,11 +3,10 @@ package com.todoseventos.todos_eventos.dto.requestDTO;
 import com.todoseventos.todos_eventos.enuns.TipoClienteEnum;
 import lombok.*;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
+@Builder
 @NoArgsConstructor
-@Builder(toBuilder = true)
+@AllArgsConstructor
 public class ClienteRequestDTO {
 
     private Long idPessoa;

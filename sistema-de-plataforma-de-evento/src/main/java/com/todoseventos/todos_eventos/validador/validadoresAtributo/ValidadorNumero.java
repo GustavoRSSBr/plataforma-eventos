@@ -5,8 +5,8 @@ import com.todoseventos.todos_eventos.exception.CustomException;
 
 public class ValidadorNumero {
 
-    public static void validarNumero(String numero){
-        if (numero == null || numero.trim().isEmpty() || !numero.matches("\\d+")){
+    public static void validarNumero(String numero) {
+        if (numero == null || numero.trim().isEmpty() || !numero.matches("\\d+")) {
             throw new CustomException(ExceptionMessages.NUMERO_INVALIDO);
         }
     }

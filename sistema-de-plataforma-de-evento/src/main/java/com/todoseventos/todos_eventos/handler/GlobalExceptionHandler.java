@@ -1,6 +1,6 @@
 package com.todoseventos.todos_eventos.handler;
 
-import com.todoseventos.todos_eventos.dto.responseDTO.ErrorResponseDto;
+import com.todoseventos.todos_eventos.dto.responseDTO.ErrorResponseDTO;
 import com.todoseventos.todos_eventos.enuns.ErrorCode;
 import com.todoseventos.todos_eventos.dto.responseDTO.CustomExceptionResponseDTO;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
@@ -38,16 +38,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataAccessException.class)
     @ResponseBody
-    public ResponseEntity<ErrorResponseDto> handleDataAccessException(DataAccessException e) {
+    public ResponseEntity<ErrorResponseDTO> handleDataAccessException(DataAccessException e) {
         logger.error("DataAccessException: {}", e.getMessage(), e);
         String errorMessage = e.getMostSpecificCause().getMessage();
         ErrorCode errorCode = ErrorCode.fromMessage(errorMessage);
 
         if (errorCode == ErrorCode.OUTRO_ERRO) {
-            ErrorResponseDto errorResponse = new ErrorResponseDto(errorCode.getCustomMessage());
+            ErrorResponseDTO errorResponse = new ErrorResponseDTO(errorCode.getCustomMessage());
             return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         } else {
-            ErrorResponseDto errorResponse = new ErrorResponseDto(errorCode.getCustomMessage());
+            ErrorResponseDTO errorResponse = new ErrorResponseDTO(errorCode.getCustomMessage());
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
     }

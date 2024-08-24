@@ -8,10 +8,8 @@ import java.util.regex.Pattern;
 
 public class ValidadorEmail {
 
-
-
     public static void validarEmail(String campo) {
-        if(!isEmailValid(campo)){
+        if (!isEmailValid(campo)) {
             throw new CustomException(ExceptionMessages.EMAIL_INVALIDO);
         }
     }

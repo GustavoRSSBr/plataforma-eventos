@@ -1,8 +1,7 @@
 package com.todoseventos.todos_eventos.controller;
 
-import com.todoseventos.todos_eventos.dto.requestDTO.ClienteRequestDTO;
-import com.todoseventos.todos_eventos.dto.responseDTO.CustomExceptionResponseDTO;
 import com.todoseventos.todos_eventos.dto.requestDTO.EventoRequestDTO;
+import com.todoseventos.todos_eventos.dto.responseDTO.CustomExceptionResponseDTO;
 import com.todoseventos.todos_eventos.dto.responseDTO.EstatisticaResponseDTO;
 import com.todoseventos.todos_eventos.dto.responseDTO.EventoResponseDTO;
 import com.todoseventos.todos_eventos.enuns.SuccessMessages;
@@ -61,7 +60,7 @@ public class EventoController {
             @Parameter(description = "Id do evento a ser encerrado.")
             @Valid @PathVariable Integer idEvento) {
         long startTime = System.currentTimeMillis();
-        EventoResponseDTO response = eventoService.encerrarEvento(idEvento);
+        eventoService.encerrarEvento(idEvento);
 
         LoggerUtils.logElapsedTime(LOGGER, "encerrarEvento", startTime);
         return ResponseEntity.status(HttpStatus.OK).body(new CustomExceptionResponseDTO(SuccessMessages.EVENTO_ENCERRADO));
@@ -149,6 +148,4 @@ public class EventoController {
         LoggerUtils.logElapsedTime(LOGGER, "coletarEstatiscaEvento", startTime);
         return ResponseEntity.status(HttpStatus.OK).body(estatistica);
     }
-
-
 }

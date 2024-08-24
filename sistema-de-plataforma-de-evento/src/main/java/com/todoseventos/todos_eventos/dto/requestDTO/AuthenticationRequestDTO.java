@@ -10,5 +10,4 @@ public class AuthenticationRequestDTO {
 
     private String email;
     private String senha;
-
 }

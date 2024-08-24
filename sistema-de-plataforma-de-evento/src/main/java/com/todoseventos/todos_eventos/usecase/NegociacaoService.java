@@ -12,7 +12,6 @@ import com.todoseventos.todos_eventos.model.evento.Endereco;
 import com.todoseventos.todos_eventos.model.evento.Evento;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -37,8 +36,8 @@ public class NegociacaoService {
     /**
      * Mpaeia o id do evento procurando o id da pessoa e efetua a compra de um ingrsso.
      *
-     * @param idEvento para buscar o evento.
-     * @param idPessoa para buscar a pessoa.
+     * @param idEvento     para buscar o evento.
+     * @param idPessoa     para buscar a pessoa.
      * @param tipoIngresso para buscar o tipo do ingresso: inteira, meia ou vip.
      * @return retorna o resultado da negociação.
      */
@@ -61,6 +60,6 @@ public class NegociacaoService {
 
         });
 
-            return new NegociacaoResponseDTO(resultado);
+        return new NegociacaoResponseDTO(resultado);
     }
 }
