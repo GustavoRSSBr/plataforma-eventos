@@ -1,6 +1,5 @@
 package com.todoseventos.todos_eventos.usecase;
 
-
 import com.todoseventos.todos_eventos.dao.IClienteFisicaJdbcTemplateDAO;
 import com.todoseventos.todos_eventos.dao.IClienteJdbcTemplateDAO;
 import com.todoseventos.todos_eventos.dao.IClienteJuridicaJdbcTemplateDAO;
@@ -20,14 +19,12 @@ import com.todoseventos.todos_eventos.validador.Validador;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Service
 public class ClienteService {
-
 
     @Autowired
     private Validacoes validacoes;
@@ -75,7 +72,6 @@ public class ClienteService {
 
             }
         }
-
 
         validador.validar(clienteRequest);
 
@@ -205,7 +201,6 @@ public class ClienteService {
      */
     public ClienteResponseDTO atualizarPessoa(String identificador, ClienteAtualizarRequestDTO clienteRequest) {
         Cliente pessoaExistente;
-
 
         if (identificador.length() == 11) { // CPF
             pessoaExistente = iClienteJdbcTemplateDAO.procurarPorCpf(identificador);
