@@ -6,6 +6,7 @@ import com.todoseventos.todos_eventos.dao.IEventoJdbcTemplateDAO;
 import com.todoseventos.todos_eventos.dao.INegociacaoJdbcTemplateDAO;
 import com.todoseventos.todos_eventos.dto.responseDTO.NegociacaoResponseDTO;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
+import com.todoseventos.todos_eventos.enuns.SuccessMessages;
 import com.todoseventos.todos_eventos.exception.CustomException;
 import com.todoseventos.todos_eventos.model.evento.Email;
 import com.todoseventos.todos_eventos.model.evento.Endereco;
@@ -41,6 +42,7 @@ public class NegociacaoService {
      * @param tipoIngresso para buscar o tipo do ingresso: inteira, meia ou vip.
      * @return retorna o resultado da negociação.
      */
+
     public NegociacaoResponseDTO comprarIngresso(Integer idEvento, Integer idPessoa, String tipoIngresso) {
         String resultado = iNegociacaoJdbcTemplateDAO.comprarIngresso(idEvento, idPessoa, tipoIngresso);
 
@@ -59,7 +61,6 @@ public class NegociacaoService {
             emailService.enviarEmail(email, nomePessoa, evento.getNome_evento(), evento.getDataHora_evento(), localEvento);
 
         });
-
-        return new NegociacaoResponseDTO(resultado);
+            return new NegociacaoResponseDTO(SuccessMessages.COMPRA_REALIZADA);
     }
 }

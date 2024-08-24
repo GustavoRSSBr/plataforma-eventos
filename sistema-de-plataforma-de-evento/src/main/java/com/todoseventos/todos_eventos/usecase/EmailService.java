@@ -8,6 +8,7 @@ import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 
@@ -26,6 +27,7 @@ public class EmailService {
      * @param dataEvento  A data do evento.
      * @param localEvento O local do evento.
      */
+    @Async
     public void enviarEmail(String email, String nomePessoa, String nomeEvento, String dataEvento, String localEvento) {
         MimeMessage mimeMessage = emailSender.createMimeMessage();
 
@@ -65,6 +67,7 @@ public class EmailService {
      * @param nomePessoa O nome do destinatário.
      * @param nomeEvento O nome do evento.
      */
+    @Async
     public void enviarEmailCancelamento(String email, String nomePessoa, String nomeEvento) {
         MimeMessage mimeMessage = emailSender.createMimeMessage();
 
