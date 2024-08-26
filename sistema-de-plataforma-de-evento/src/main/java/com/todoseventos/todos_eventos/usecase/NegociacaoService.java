@@ -42,7 +42,6 @@ public class NegociacaoService {
      * @param tipoIngresso para buscar o tipo do ingresso: inteira, meia ou vip.
      * @return retorna o resultado da negociação.
      */
-
     public NegociacaoResponseDTO comprarIngresso(Integer idEvento, Integer idPessoa, String tipoIngresso) {
         String resultado = iNegociacaoJdbcTemplateDAO.comprarIngresso(idEvento, idPessoa, tipoIngresso);
 
@@ -53,9 +52,9 @@ public class NegociacaoService {
                 .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + evento.getNome_evento()));
 
         List<Email> envioEmail = iEmailJdbcTemplateDAO.localizarPorIdEvento(idEvento);
-        envioEmail.forEach(participacao -> {
-            String email = participacao.getEmail();
-            String nomePessoa = participacao.getNome();
+        envioEmail.forEach(pessoa -> {
+            String email = pessoa.getEmail();
+            String nomePessoa = pessoa.getNome();
             String localEvento = endereco.getRua() + ", " + endereco.getNumero() + ", " + endereco.getBairro() + ", " + endereco.getCidade() + ", " + endereco.getUf();
 
             emailService.enviarEmail(email, nomePessoa, evento.getNome_evento(), evento.getDataHora_evento(), localEvento);

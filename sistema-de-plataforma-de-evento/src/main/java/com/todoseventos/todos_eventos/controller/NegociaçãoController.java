@@ -28,7 +28,7 @@ public class NegociaçãoController {
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(CarteiraController.class);
 
     @Autowired
-    NegociacaoService negociacaoService;
+    private NegociacaoService negociacaoService;
 
     @Operation(description = "Operação para comprar um ingresso")
     @ApiResponses(value = {

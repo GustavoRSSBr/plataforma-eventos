@@ -88,19 +88,6 @@ class EventoJdbcTemplateDAOImpl implements IEventoJdbcTemplateDAO {
 
     @Override
     @Transactional
-    public void deletarPorId(Integer idEvento) {
-        String sql = "SELECT deletar_evento(?)";
-
-        jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
-            ps.setInt(1, idEvento);
-            ps.execute();
-            return null;
-        });
-
-    }
-
-    @Override
-    @Transactional
     public Evento encerrarEvento(Integer idEvento) {
         String sql = "SELECT cancelar_evento(?)";
 

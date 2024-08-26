@@ -51,19 +51,6 @@ class EnderecoJdbcTemplateDAOImpl implements IEnderecoJdbcTemplateDAO {
         return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Endereco.class), id));
     }
 
-    @Override
-    @Transactional
-    public void deletarPorIdEvento(Integer idEvento) {
-        String sql = "SELECT deletar_endereco(?)";
-
-        jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
-            ps.setInt(1, idEvento);
-            ps.execute();
-            return null;
-        });
-
-    }
-
     private void setPreparedStatementParameters(PreparedStatement ps, Endereco endereco) throws SQLException {
         ps.setString(1, endereco.getRua());
         ps.setString(2, endereco.getNumero());

@@ -8,6 +8,5 @@ public interface IEnderecoJdbcTemplateDAO {
     Endereco salverEndereco(Endereco endereco);
     Endereco atualizarEndereco(Endereco endereco);
     Optional<Endereco> procurarPorIdEvento(Integer id);
-    void deletarPorIdEvento(Integer idEvento);
 }
 

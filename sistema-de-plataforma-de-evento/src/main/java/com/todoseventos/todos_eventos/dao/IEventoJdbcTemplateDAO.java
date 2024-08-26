@@ -12,9 +12,7 @@ public interface IEventoJdbcTemplateDAO {
     Optional<Evento> procurarPorNome(String nomeEvento);
     Optional<Evento> procurarPorId(Integer idEvento);
     List<Evento> listarEvento();
-    void deletarPorId(Integer idEvento);
     Evento encerrarEvento(Integer idEvento);
-
     EstatisticaResponseDTO coletarEstatistica(Integer idEvento);
 }
 

@@ -55,8 +55,8 @@ public class EventoController {
             @ApiResponse(responseCode = "400", description = "Erro ao encerrar evento!"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor ao encerrar evento!")
     })
-    @PutMapping("/encerrar/{idEvento}")
-    public ResponseEntity<?> encerrarEvento(
+    @PutMapping("/cancelar-evento/{idEvento}")
+    public ResponseEntity<?> cancelarEvento(
             @Parameter(description = "Id do evento a ser encerrado.")
             @Valid @PathVariable Integer idEvento) {
         long startTime = System.currentTimeMillis();
@@ -111,23 +111,6 @@ public class EventoController {
 
         LoggerUtils.logElapsedTime(LOGGER, "atualizarEvento", startTime);
         return ResponseEntity.status(HttpStatus.OK).body(new CustomExceptionResponseDTO(SuccessMessages.EVENTO_ATUALIZADO));
-    }
-
-    @Operation(description = "Operação para excluir evento")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Evento excluído com sucesso!"),
-            @ApiResponse(responseCode = "400", description = "Erro ao excluir evento!"),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor ao excluir evento!")
-    })
-    @DeleteMapping("/evento/{idEvento}")
-    public ResponseEntity<?> excluirEvento(
-            @Parameter(description = "Id do evento a ser excluído.")
-            @Valid @PathVariable Integer idEvento) {
-        long startTime = System.currentTimeMillis();
-        eventoService.excluirEvento(idEvento);
-
-        LoggerUtils.logElapsedTime(LOGGER, "excluirEvento", startTime);
-        return ResponseEntity.status(HttpStatus.OK).body(new CustomExceptionResponseDTO(SuccessMessages.EXCLUIR_EVENTO));
     }
 
     @Operation(description = "Operação para coletar as estatisticas do evento")

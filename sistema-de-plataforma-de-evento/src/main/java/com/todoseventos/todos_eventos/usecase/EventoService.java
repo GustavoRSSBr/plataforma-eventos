@@ -287,18 +287,6 @@ public class EventoService {
         return mapearEvento(categoria, eventoAtualizado, enderecoAtualizado);
     }
 
-    /**
-     * Exclui um evento.
-     *
-     * @param idEvento O ID do evento a ser excluído.
-     */
-    public void excluirEvento(Integer idEvento) {
-        iEventoJdbcTemplateDAO.procurarPorId(idEvento)
-                .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
-        iEnderecoJdbcTemplateDAO.deletarPorIdEvento(idEvento);
-        iEventoJdbcTemplateDAO.deletarPorId(idEvento);
-    }
-
     public EstatisticaResponseDTO coletarEstatisca(Integer idEvento) {
         return iEventoJdbcTemplateDAO.coletarEstatistica(idEvento);
     }
