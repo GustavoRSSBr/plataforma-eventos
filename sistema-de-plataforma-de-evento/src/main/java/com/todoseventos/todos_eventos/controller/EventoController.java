@@ -1,7 +1,8 @@
 package com.todoseventos.todos_eventos.controller;
 
-import com.todoseventos.todos_eventos.dto.responseDTO.CustomExceptionResponseDTO;
 import com.todoseventos.todos_eventos.dto.requestDTO.EventoRequestDTO;
+import com.todoseventos.todos_eventos.dto.responseDTO.CustomExceptionResponseDTO;
+import com.todoseventos.todos_eventos.dto.responseDTO.EstatisticaResponseDTO;
 import com.todoseventos.todos_eventos.dto.responseDTO.EventoResponseDTO;
 import com.todoseventos.todos_eventos.enuns.SuccessMessages;
 import com.todoseventos.todos_eventos.usecase.EventoService;
@@ -19,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping(value = "/api")
@@ -58,7 +60,7 @@ public class EventoController {
             @Parameter(description = "Id do evento a ser encerrado.")
             @Valid @PathVariable Integer idEvento) {
         long startTime = System.currentTimeMillis();
-        EventoResponseDTO response = eventoService.encerrarEvento(idEvento);
+        eventoService.encerrarEvento(idEvento);
 
         LoggerUtils.logElapsedTime(LOGGER, "encerrarEvento", startTime);
         return ResponseEntity.status(HttpStatus.OK).body(new CustomExceptionResponseDTO(SuccessMessages.EVENTO_ENCERRADO));
@@ -127,5 +129,24 @@ public class EventoController {
         LoggerUtils.logElapsedTime(LOGGER, "excluirEvento", startTime);
 
         return ResponseEntity.status(HttpStatus.OK).body(new CustomExceptionResponseDTO(SuccessMessages.EXCLUIR_EVENTO));
+    }
+
+    @Operation(description = "Operação para coletar as estatisticas do evento")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Estatisticas coletadas com sucesso!"),
+            @ApiResponse(responseCode = "400", description = "Erro ao coletar estatistica!"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor ao coletar estatistica!")
+    })
+    @GetMapping("/evento/coletar-estatistica/{idEvento}")
+    public ResponseEntity<?> coletarEstatiscaEvento(
+            @Parameter(description = "Id do evento a ser analisado.")
+            @Valid @PathVariable Integer idEvento) {
+        long startTime = System.currentTimeMillis();
+        EstatisticaResponseDTO estatistica = eventoService.coletarEstatisca(idEvento);
+
+        System.out.println(estatistica);
+
+        LoggerUtils.logElapsedTime(LOGGER, "coletarEstatiscaEvento", startTime);
+        return ResponseEntity.status(HttpStatus.OK).body(estatistica);
     }
 }

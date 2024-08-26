@@ -2,7 +2,6 @@ package com.todoseventos.todos_eventos.security;
 
 import com.todoseventos.todos_eventos.security.jwt.AuthEntryPointJwt;
 import com.todoseventos.todos_eventos.security.jwt.AuthFilterToken;
-import com.todoseventos.todos_eventos.usecase.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -57,6 +56,7 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/api/admin").hasRole("ADMIN")
                                 .requestMatchers("/api/cliente").permitAll()
                                 .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui/index.html**").permitAll()
                                 .anyRequest().authenticated()

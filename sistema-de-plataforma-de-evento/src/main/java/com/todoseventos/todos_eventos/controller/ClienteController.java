@@ -1,8 +1,9 @@
 package com.todoseventos.todos_eventos.controller;
 
-import com.todoseventos.todos_eventos.dto.responseDTO.CustomExceptionResponseDTO;
+import com.todoseventos.todos_eventos.dto.requestDTO.ClienteAtualizarRequestDTO;
 import com.todoseventos.todos_eventos.dto.requestDTO.ClienteRequestDTO;
 import com.todoseventos.todos_eventos.dto.responseDTO.ClienteResponseDTO;
+import com.todoseventos.todos_eventos.dto.responseDTO.CustomExceptionResponseDTO;
 import com.todoseventos.todos_eventos.enuns.SuccessMessages;
 import com.todoseventos.todos_eventos.usecase.ClienteService;
 import com.todoseventos.todos_eventos.utils.LoggerUtils;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping(value = "/api")
@@ -25,6 +27,7 @@ import java.util.List;
 public class ClienteController {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ClienteController.class);
+
     @Autowired
     private ClienteService clienteService;
 
@@ -39,7 +42,7 @@ public class ClienteController {
             @Parameter(description = "Dados do cliente a ser cadastrado")
             @Valid @RequestBody ClienteRequestDTO clienteRequest) {
         long startTime = System.currentTimeMillis();
-        ClienteResponseDTO response = clienteService.cadastrarNovaPessoa(clienteRequest);
+        clienteService.cadastrarNovaPessoa(clienteRequest);
 
         LoggerUtils.logElapsedTime(LOGGER, "cadastraPessoa", startTime);
         return ResponseEntity.ok(new CustomExceptionResponseDTO(SuccessMessages.CADASTRO_CLIENTE));
@@ -83,7 +86,7 @@ public class ClienteController {
     @PutMapping("/pessoa/{identificador}")
     public ResponseEntity<?> atualizaPessoaPorCpfouCnpj(
             @Parameter(description = "Atualiza os dados da pessoa.")
-            @Valid @PathVariable("identificador") String identificador, @RequestBody ClienteRequestDTO clienteRequest) {
+            @Valid @PathVariable("identificador") String identificador, @RequestBody ClienteAtualizarRequestDTO clienteRequest) {
         long startTime = System.currentTimeMillis();
         ClienteResponseDTO response = clienteService.atualizarPessoa(identificador, clienteRequest);
 

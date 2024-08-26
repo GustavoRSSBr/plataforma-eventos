@@ -1,8 +1,8 @@
 package com.todoseventos.todos_eventos.security.jwt;
 
-import com.todoseventos.todos_eventos.exception.CustomException;
-import com.todoseventos.todos_eventos.model.cliente.UserDetailsModelImpl;
-import io.jsonwebtoken.*;
+import com.todoseventos.todos_eventos.security.UserDetailsModelImpl;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,18 +36,8 @@ public class JwtUtils {
     }
 
     public boolean validateJwtToken(String authToken) {
-        try {
-            Jwts.parser().setSigningKey(getSigninKey()).build().parseClaimsJws(authToken);
-            return true;
-        } catch (MalformedJwtException e) {
-            throw new CustomException("Token inválido: " + e.getMessage());
-        } catch (ExpiredJwtException e) {
-            throw new CustomException("Token expirado: " + e.getMessage());
-        } catch (UnsupportedJwtException e) {
-            throw new CustomException("Token não suportado: " + e.getMessage());
-        } catch (IllegalArgumentException e) {
-            throw new CustomException("Token Argumento inválido: " + e.getMessage());
-        }
+        Jwts.parser().setSigningKey(getSigninKey()).build().parseClaimsJws(authToken);
+        return true;
     }
 
     private Key getSigninKey() {

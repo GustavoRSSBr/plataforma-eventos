@@ -36,7 +36,7 @@ class ClienteJdbcTemplateDAOImpl implements IClienteJdbcTemplateDAO {
     public Cliente procurarPorCnpj(String cnpj) {
         String sql = "SELECT * FROM procurar_cliente_por_cnpj(?)";
 
-        List<Cliente> clientes =jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Cliente.class), cnpj);
+        List<Cliente> clientes = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Cliente.class), cnpj);
         if (clientes.isEmpty()) {
             return null;
         } else {

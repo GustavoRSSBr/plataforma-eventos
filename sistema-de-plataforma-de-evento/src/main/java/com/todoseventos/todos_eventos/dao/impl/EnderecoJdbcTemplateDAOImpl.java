@@ -32,7 +32,6 @@ class EnderecoJdbcTemplateDAOImpl implements IEnderecoJdbcTemplateDAO {
 
     }
 
-
     @Override
     @Transactional
     public Endereco atualizarEndereco(Endereco endereco) {
@@ -43,7 +42,6 @@ class EnderecoJdbcTemplateDAOImpl implements IEnderecoJdbcTemplateDAO {
             return null;
         });
         return endereco;
-
     }
 
     @Override
@@ -51,7 +49,6 @@ class EnderecoJdbcTemplateDAOImpl implements IEnderecoJdbcTemplateDAO {
     public Optional<Endereco> procurarPorIdEvento(Integer id) {
         String sql = "SELECT * FROM procurar_endereco_por_id_evento(?)";
         return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Endereco.class), id));
-
     }
 
     @Override

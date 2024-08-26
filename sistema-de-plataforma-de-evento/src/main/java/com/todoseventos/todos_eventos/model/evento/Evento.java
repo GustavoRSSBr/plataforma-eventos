@@ -1,5 +1,6 @@
 package com.todoseventos.todos_eventos.model.evento;
 
+import com.todoseventos.todos_eventos.enuns.StatusEventoEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,9 +10,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Data
-@AllArgsConstructor
+@Builder
 @NoArgsConstructor
-@Builder(toBuilder = true)
+@AllArgsConstructor
 public class Evento implements Serializable {
 
     private Integer idEvento;
@@ -19,7 +20,7 @@ public class Evento implements Serializable {
     private String dataHora_evento;
     private String dataHora_eventofinal;
     private String descricao;
-    private String status;
+    private StatusEventoEnum status;
     private Integer id_categoria;
     private Integer id_endereco;
     private BigDecimal valorIngresso;

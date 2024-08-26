@@ -1,24 +1,15 @@
 package com.todoseventos.todos_eventos.dto.responseDTO;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class JwtResponseDTO {
+
     private String token;
-
-    // Constructor, getters, and setters
-    public JwtResponseDTO(String token) {
-        this.token = token;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
 }

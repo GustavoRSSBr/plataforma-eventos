@@ -1,6 +1,6 @@
 package com.todoseventos.todos_eventos.security.jwt;
 
-import com.todoseventos.todos_eventos.usecase.UserDetailsServiceImpl;
+import com.todoseventos.todos_eventos.security.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,7 +30,6 @@ public class AuthFilterToken extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        try {
             String jwt = parseJwt(request);
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
                 String email = jwtUtils.getUserNameFromJwtToken(jwt);
@@ -42,9 +41,6 @@ public class AuthFilterToken extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-        } catch (Exception e) {
-            logger.error("Não foi possível autenticar o usuário: {}", e.getMessage());
-        }
 
         filterChain.doFilter(request, response);
     }

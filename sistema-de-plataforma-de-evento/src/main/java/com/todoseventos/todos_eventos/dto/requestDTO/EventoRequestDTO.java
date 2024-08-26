@@ -1,15 +1,17 @@
 package com.todoseventos.todos_eventos.dto.requestDTO;
 
 import com.todoseventos.todos_eventos.enuns.CategoriaEnum;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
+@Builder
 @NoArgsConstructor
-@Builder(toBuilder = true)
+@AllArgsConstructor
 public class EventoRequestDTO {
 
     private Integer idEvento;

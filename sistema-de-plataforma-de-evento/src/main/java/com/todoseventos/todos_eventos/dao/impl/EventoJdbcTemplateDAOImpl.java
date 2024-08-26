@@ -1,6 +1,7 @@
 package com.todoseventos.todos_eventos.dao.impl;
 
 import com.todoseventos.todos_eventos.dao.IEventoJdbcTemplateDAO;
+import com.todoseventos.todos_eventos.dto.responseDTO.EstatisticaResponseDTO;
 import com.todoseventos.todos_eventos.model.evento.Evento;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +49,7 @@ class EventoJdbcTemplateDAOImpl implements IEventoJdbcTemplateDAO {
             ps.setString(3, evento.getDataHora_evento());
             ps.setString(4, evento.getDataHora_eventofinal());
             ps.setString(5, evento.getDescricao().trim());
-            ps.setString(6, evento.getStatus().trim());
+            ps.setString(6, String.valueOf(evento.getStatus()));
             ps.setInt(7, evento.getId_categoria());
             ps.setBigDecimal(8, evento.getValorIngresso());
             ps.setInt(9, evento.getLimitePessoas());
@@ -98,12 +99,32 @@ class EventoJdbcTemplateDAOImpl implements IEventoJdbcTemplateDAO {
 
     }
 
+    @Override
+    @Transactional
+    public Evento encerrarEvento(Integer idEvento) {
+        String sql = "SELECT cancelar_evento(?)";
+
+        jdbcTemplate.execute(sql, (PreparedStatementCallback<Void>) ps -> {
+            ps.setInt(1, idEvento);
+            ps.execute();
+            return null;
+        });
+        return null;
+    }
+
+    @Override
+    public EstatisticaResponseDTO coletarEstatistica(Integer idEvento) {
+        String sql = "SELECT * FROM coletarEstatisticaEvento(?)";
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(EstatisticaResponseDTO.class), idEvento);
+    }
+
+
     private void setPreparedStatementParameters(PreparedStatement ps, Evento evento) throws SQLException {
         ps.setString(1, evento.getNome_evento().trim());
         ps.setString(2, evento.getDataHora_evento());
         ps.setString(3, evento.getDataHora_eventofinal());
         ps.setString(4, evento.getDescricao().trim());
-        ps.setString(5, evento.getStatus().trim());
+        ps.setString(5, String.valueOf(evento.getStatus()));
         ps.setInt(6, evento.getId_categoria());
         ps.setBigDecimal(7, evento.getValorIngresso());
         ps.setInt(8, evento.getLimitePessoas());

@@ -1,11 +1,13 @@
 package com.todoseventos.todos_eventos.dto.responseDTO;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CepResponseDTO {
+
     private String cep;
     private String logradouro;
     private String bairro;

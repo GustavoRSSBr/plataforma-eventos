@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 @Data
-@AllArgsConstructor
+@Builder
 @NoArgsConstructor
-@Builder(toBuilder = true)
+@AllArgsConstructor
 public class Endereco implements Serializable {
 
     private Long idEndereco;

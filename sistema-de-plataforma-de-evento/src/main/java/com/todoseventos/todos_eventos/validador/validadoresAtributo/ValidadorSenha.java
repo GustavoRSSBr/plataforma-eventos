@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 public class ValidadorSenha {
     private static final Pattern PASSWORD_PATTERN = Pattern.compile(
-            "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).{8,}$"
+            "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&*!?+_/*-=]).{8,}$"
     );
 
     public static void validarSenha(String senha) {

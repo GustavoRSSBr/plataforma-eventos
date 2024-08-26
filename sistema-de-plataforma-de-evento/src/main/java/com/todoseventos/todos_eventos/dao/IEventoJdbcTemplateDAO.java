@@ -1,5 +1,6 @@
 package com.todoseventos.todos_eventos.dao;
 
+import com.todoseventos.todos_eventos.dto.responseDTO.EstatisticaResponseDTO;
 import com.todoseventos.todos_eventos.model.evento.Evento;
 
 import java.util.List;
@@ -12,5 +13,8 @@ public interface IEventoJdbcTemplateDAO {
     Optional<Evento> procurarPorId(Integer idEvento);
     List<Evento> listarEvento();
     void deletarPorId(Integer idEvento);
+    Evento encerrarEvento(Integer idEvento);
+
+    EstatisticaResponseDTO coletarEstatistica(Integer idEvento);
 }
 
