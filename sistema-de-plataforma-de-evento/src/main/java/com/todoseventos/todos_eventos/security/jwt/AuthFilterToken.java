@@ -30,17 +30,27 @@ public class AuthFilterToken extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-            String jwt = parseJwt(request);
-            if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
-                String email = jwtUtils.getUserNameFromJwtToken(jwt);
 
-                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        String requestURI = request.getRequestURI();
 
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
+        if (requestURI.startsWith("/api/cliente")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String jwt = parseJwt(request);
+
+
+        if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
+            String email = jwtUtils.getUserNameFromJwtToken(jwt);
+
+            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
 
         filterChain.doFilter(request, response);
     }
