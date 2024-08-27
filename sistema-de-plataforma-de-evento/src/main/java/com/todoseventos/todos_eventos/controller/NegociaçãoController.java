@@ -39,9 +39,9 @@ public class NegociaçãoController {
     @PostMapping("/comprar-ingresso")
     public ResponseEntity<?> comprarIngresso(
             @Parameter(description = "Dados necessários para comprar um ingresso.")
-            @RequestBody NegociacaoRequestDTO requestDTO) {
+            @RequestBody NegociacaoRequestDTO request) {
         long startTime = System.currentTimeMillis();
-        NegociacaoResponseDTO response = negociacaoService.comprarIngresso(requestDTO.getIdEvento(), requestDTO.getIdPessoa(), requestDTO.getTipoIngresso());
+        NegociacaoResponseDTO response = negociacaoService.comprarIngresso(request);
         LoggerUtils.logElapsedTime(LOGGER, "comprarIngresso", startTime);
         return ResponseEntity.ok(response);
     }

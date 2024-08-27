@@ -1,6 +1,7 @@
 package com.todoseventos.todos_eventos.dao.impl;
 
 import com.todoseventos.todos_eventos.dao.INegociacaoJdbcTemplateDAO;
+import com.todoseventos.todos_eventos.dto.requestDTO.NegociacaoRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -15,16 +16,12 @@ public class NegociacaoJdbcTemplateDAOImpl implements INegociacaoJdbcTemplateDAO
     private JdbcTemplate jdbcTemplate;
 
     /**
-     * Método para comprar um ingresso.
-     *
-     * @param idEvento     Identificador único do evento.
-     * @param idPessoa     Identificador único da pessoa.
-     * @param tipoIngresso Tipo de ingresso para o evento.
+     * Método para comprar um ingresso..
      * @return String Resultado da compra do ingresso.
      */
     @Override
-    public String comprarIngresso(int idEvento, int idPessoa, String tipoIngresso) {
+    public String comprarIngresso(NegociacaoRequestDTO request) {
         String sql = "SELECT comprar_ingresso(?, ?, ?)";
-        return jdbcTemplate.queryForObject(sql, new Object[]{idEvento, idPessoa, tipoIngresso}, String.class);
+        return jdbcTemplate.queryForObject(sql, new Object[]{request}, String.class);
     }
 }

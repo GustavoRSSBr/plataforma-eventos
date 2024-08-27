@@ -4,6 +4,7 @@ import com.todoseventos.todos_eventos.dao.IEmailJdbcTemplateDAO;
 import com.todoseventos.todos_eventos.dao.IEnderecoJdbcTemplateDAO;
 import com.todoseventos.todos_eventos.dao.IEventoJdbcTemplateDAO;
 import com.todoseventos.todos_eventos.dao.INegociacaoJdbcTemplateDAO;
+import com.todoseventos.todos_eventos.dto.requestDTO.NegociacaoRequestDTO;
 import com.todoseventos.todos_eventos.dto.responseDTO.NegociacaoResponseDTO;
 import com.todoseventos.todos_eventos.enuns.ExceptionMessages;
 import com.todoseventos.todos_eventos.enuns.SuccessMessages;
@@ -36,22 +37,18 @@ public class NegociacaoService {
 
     /**
      * Mpaeia o id do evento procurando o id da pessoa e efetua a compra de um ingrsso.
-     *
-     * @param idEvento     para buscar o evento.
-     * @param idPessoa     para buscar a pessoa.
-     * @param tipoIngresso para buscar o tipo do ingresso: inteira, meia ou vip.
      * @return retorna o resultado da negociação.
      */
-    public NegociacaoResponseDTO comprarIngresso(Integer idEvento, Integer idPessoa, String tipoIngresso) {
-        String resultado = iNegociacaoJdbcTemplateDAO.comprarIngresso(idEvento, idPessoa, tipoIngresso);
+    public NegociacaoResponseDTO comprarIngresso(NegociacaoRequestDTO request) {
+        iNegociacaoJdbcTemplateDAO.comprarIngresso(request);
 
-        Evento evento = iEventoJdbcTemplateDAO.procurarPorId(idEvento)
+        Evento evento = iEventoJdbcTemplateDAO.procurarPorId(request.getIdEvento())
                 .orElseThrow(() -> new CustomException(ExceptionMessages.EVENTO_NAO_ENCONTRADO));
 
         Endereco endereco = iEnderecoJdbcTemplateDAO.procurarPorIdEvento(evento.getIdEvento())
                 .orElseThrow(() -> new CustomException(ExceptionMessages.ENDERECO_NAO_ENCONTRADO + evento.getNome_evento()));
 
-        List<Email> envioEmail = iEmailJdbcTemplateDAO.localizarPorIdEvento(idEvento);
+        List<Email> envioEmail = iEmailJdbcTemplateDAO.localizarPorIdEvento(request.getIdEvento());
         envioEmail.forEach(pessoa -> {
             String email = pessoa.getEmail();
             String nomePessoa = pessoa.getNome();
