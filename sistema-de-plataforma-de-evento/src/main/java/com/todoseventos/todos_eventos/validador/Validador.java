@@ -12,8 +12,8 @@ public class Validador {
     private final RegistroEstrategiasValidacao registro;
 
     @Autowired
-    public Validador(ConfiguracaoValidacao configuracao) {
-        this.registro = configuracao.obterRegistro();
+    public Validador(RegistroEstrategiasValidacao registro) {
+        this.registro = registro;
     }
 
     public <T> boolean validar(T objeto) {
