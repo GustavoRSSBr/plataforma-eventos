@@ -9,9 +9,10 @@ import com.todoseventos.todos_eventos.validador.validadoresObjeto.ValidadorClien
 import com.todoseventos.todos_eventos.validador.validadoresObjeto.ValidadorDepositoRequestDto;
 import com.todoseventos.todos_eventos.validador.validadoresObjeto.ValidadorEventoRequestDto;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
-@Component
+@Configuration
 public class ConfiguracaoValidacao {
 
     @Bean
